@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import {TabNavigator, StackNavigator} from 'react-navigation';
 
-import CounterViewContainer from '../counter/CounterViewContainer';
+import CounterViewContainer from '../inbox/InboxViewContainer';
 import ColorViewContainer from '../colors/ColorViewContainer';
 
 const headerColor = '#39babd';
