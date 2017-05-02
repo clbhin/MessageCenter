@@ -9,11 +9,11 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-class CounterView extends Component {
+class InboxView extends Component {
   static displayName = 'CounterView';
 
   static navigationOptions = {
-    title: 'Counter',
+    title: 'Inbox',
     tabBar: () => ({
       icon: (props) => (
         <Icon name='plus-one' size={24} color={props.tintColor} />
@@ -79,43 +79,17 @@ class CounterView extends Component {
 
     return (
       <View style={styles.container}>
-
         {this.renderUserInfo()}
-
-        <TouchableOpacity
-          accessible={true}
-          accessibilityLabel={'Increment counter'}
-          onPress={this.increment}
-          style={[styles.counterButton, loadingStyle]}>
-          <Text style={styles.counter}>
-            {this.props.counter}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-            accessible={true}
-            accessibilityLabel={'Reset counter'}
-            onPress={this.reset}>
-          <Text style={styles.linkButton}>
-            Reset0001119999
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-            accessible={true}
-            accessibilityLabel={'Randomize counter'}
-            onPress={this.random}>
-          <Text style={styles.linkButton}>
-            Random111
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this.bored} accessible={true}>
-          <Text style={styles.linkButton}>
-            {'I\'m bored!'}
-          </Text>
-        </TouchableOpacity>
-
+        <View style={{flexDirection:'row'}}>
+          <View style={circle}>
+            <Image  source={require('./../../../images/pepperoni.png')}></Image>
+          </View>
+          <View style={{flex:1}}>
+            <Text>fromName</Text>
+            <Text>Subject</Text>
+          </View>
+          <View style={circle}></View>
+        </View>
       </View>
     );
   }
@@ -123,9 +97,13 @@ class CounterView extends Component {
 
 const circle = {
   borderWidth: 0,
-  borderRadius: 40,
-  width: 80,
-  height: 80
+  width: 60,
+  height: 60,
+  borderRadius: 30,
+  backgroundColor:'red',
+  justifyContent:'center',
+  alignItems:'center',
+  overFlow:'hidden'
 };
 
 const styles = StyleSheet.create({
@@ -169,4 +147,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CounterView;
+export default InboxView;
