@@ -46,7 +46,7 @@ class InboxView extends Component {
   render() {
 
     return (
-      <ListView
+      <ListView style={{paddingTop:10}}
       dataSource={this.state.dataSource}
       renderRow={(rowData) => 
       <MessageView messageData={rowData}/>
