@@ -24,7 +24,7 @@ export const MainScreenNavigator = TabNavigator({
 });
 
 MainScreenNavigator.navigationOptions = {
-  title: 'Pepperoni App Template',
+  title: 'MessageCenter',
   header: {
     titleStyle: {color: 'white'},
     style: {

@@ -4,12 +4,21 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  View
+  View,
+  ListView
 } from 'react-native';
+import MessageView from './../../components/Message';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class InboxView extends Component {
+  constructor(props) {
+  super(props);
+  var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  this.state = {
+    dataSource: ds.cloneWithRows([{fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!'}, {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!'}]),
+  };
+}
   static displayName = 'CounterView';
 
   static navigationOptions = {
@@ -34,63 +43,14 @@ class InboxView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
-  increment = () => {
-    this.props.counterStateActions.increment();
-  };
-
-  reset = () => {
-    this.props.counterStateActions.reset();
-  };
-
-  random = () => {
-    this.props.counterStateActions.random();
-  };
-
-  bored = () => {
-    this.props.navigate({routeName: 'Color'});
-  };
-
-  renderUserInfo = () => {
-    if (!this.props.userName) {
-      return null;
-    }
-
-    return (
-      <View style={styles.userContainer}>
-        <Image
-          style={styles.userProfilePhoto}
-          source={{
-            uri: this.props.userProfilePhoto,
-            width: 80,
-            height: 80
-          }}
-          />
-        <Text style={styles.linkButton}>
-          Welcome, {this.props.userName}!
-        </Text>
-      </View>
-    );
-  };
-
   render() {
-    const loadingStyle = this.props.loading
-      ? {backgroundColor: '#eee'}
-      : null;
 
     return (
-      <View style={styles.container}>
-        {this.renderUserInfo()}
-        <View style={{flexDirection:'row'}}>
-          <View style={circle}>
-            <Image  source={require('./../../../images/pepperoni.png')}></Image>
-          </View>
-          <View style={{flex:1}}>
-            <Text>fromName</Text>
-            <Text>Subject</Text>
-          </View>
-          <View style={circle}></View>
-        </View>
-      </View>
+      <ListView
+      dataSource={this.state.dataSource}
+      renderRow={(rowData) => 
+      <MessageView messageData={rowData}/>
+      }/>
     );
   }
 }
@@ -103,15 +63,14 @@ const circle = {
   backgroundColor:'red',
   justifyContent:'center',
   alignItems:'center',
-  overFlow:'hidden'
+  overflow:'hidden'
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    paddingTop:10
   },
   userContainer: {
     justifyContent: 'center',
@@ -148,3 +107,27 @@ const styles = StyleSheet.create({
 });
 
 export default InboxView;
+
+
+      {/*<View style={styles.container}>
+        <View style={{flexDirection:'row',marginLeft:20,marginRight:10}}>
+          <View style={circle}>
+            <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../../images/pepperoni.png')}></Image>
+          </View>
+          <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
+            <Text style={{fontSize:18}}>fromName</Text>
+            <Text style={{fontSize:14}}>Subject</Text>
+            <Text style={{fontSize:14}}>This is Message Body!!</Text>
+          </View>
+        </View>
+        <View style={{flexDirection:'row',marginLeft:20,marginRight:10}}>
+          <View style={circle}>
+            <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../../images/pepperoni.png')}></Image>
+          </View>
+          <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
+            <Text style={{fontSize:18}}>fromName2</Text>
+            <Text style={{fontSize:14}}>Subject2</Text>
+            <Text style={{fontSize:14}}>This is Message Body2!!</Text>
+          </View>
+        </View>
+      </View>*/}
