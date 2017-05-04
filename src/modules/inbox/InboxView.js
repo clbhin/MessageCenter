@@ -22,6 +22,7 @@ class InboxView extends Component {
   this.state = {
     dataSource: ds.cloneWithRows(data),
   };
+  this.ds=ds;
 }
   static displayName = 'InboxView';
 
@@ -38,10 +39,14 @@ class InboxView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== this.props.value) {
+    try{
+      if (nextProps.value !== this.props.value) {
       this.setState({
         dataSource: this.ds.cloneWithRows(nextProps.value)
       });
+    }
+    }catch(err){
+      console.log(err)
     }
   }
 

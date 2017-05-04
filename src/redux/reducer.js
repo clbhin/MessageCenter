@@ -3,11 +3,13 @@ import {loop, combineReducers} from 'redux-loop-symbol-ponyfill';
 import NavigatorStateReducer from '../modules/navigator/NavigatorState';
 import CounterStateReducer from '../modules/counter/CounterState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
+import InboxStateReducer from '../modules/inbox/InboxState';
 
 const reducers = {
   // Counter sample app state. This can be removed in a live application
   counter: CounterStateReducer,
 
+  inbox:InboxStateReducer,
   // Navigator states
   navigatorState: NavigatorStateReducer,
 

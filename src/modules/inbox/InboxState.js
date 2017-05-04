@@ -3,9 +3,7 @@ import {loop, Effects} from 'redux-loop-symbol-ponyfill';
 import {GetMessages} from './../../services/messageCenterServices';
 
 // Initial state
-const initialState = Map({
-  value: []
-});
+const initialState = Map({value: []});
 
 // Actions
 
@@ -13,32 +11,34 @@ const GETMESSAGES_REQUEST = 'IndexState/GETMESSAGES_REQUEST';
 const GETMESSAGES_RESPONSE = 'IndexState/GETMESSAGES_RESPONSE';
 
 // Action creators
-export function getMessages(userId,inboxType) {
+export function getMessages(userId, inboxType) {
   return {
     type: GETMESSAGES_REQUEST,
-    payload: {userId,inboxType}
+    payload: {
+      userId,
+      inboxType
+    }
   };
 }
 
 export async function requestGetMessages(userId,inboxType) {
-  return {
-    type: GETMESSAGES_RESPONSE,
-    payload: await GetMessages(userId,inboxType)
-  };
+  try {
+    const result = await GetMessages(userId, inboxType);
+    return {type: GETMESSAGES_RESPONSE, payload: result};
+  } catch (err) {
+    return {type: GETMESSAGES_RESPONSE, payload: []};
+  }
 }
 
 // Reducer
-export default function CounterStateReducer(state = initialState, action = {}) {
+export default function InboxStateReducer(state = initialState, action = {}) {
   switch (action.type) {
-    
+
     case GETMESSAGES_REQUEST:
-      return loop(
-        Effects.promise(requestGetMessages,action.payload.userId,action.payload.inboxType)
-      );
+      return loop(state, Effects.promise(requestGetMessages,action.payload.userId,action.payload.inboxType));
 
     case GETMESSAGES_RESPONSE:
-      return state
-        .set('value', action.payload.ModelObject);
+      return state.set('value', action.payload.ModelObject);
 
     default:
       return state;

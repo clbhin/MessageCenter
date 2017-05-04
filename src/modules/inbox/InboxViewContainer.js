@@ -6,7 +6,7 @@ import * as InboxStateActions from '../inbox/InboxState';
 
 export default connect(
   state => ({
-    value: state.getIn(['counter', 'value']),
+    value: state.getIn(['inbox', 'value']),
   }),
   dispatch => {
     return {
