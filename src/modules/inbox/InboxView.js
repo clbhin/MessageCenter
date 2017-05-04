@@ -16,9 +16,12 @@ class InboxView extends Component {
   super(props);
   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const data=[
-    {fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!',timeStamp:'0619'}, 
-    {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!',timeStamp:'1011'},
-    {fromName:'fromName3',subjectName:'Subject3',messageBody:'This is Message Body333!!',timeStamp:'0912'}];
+    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'111',MessageBody:'<p>111</p>'}},
+    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
+  // const data=[
+  //   {fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!',timeStamp:'0619'}, 
+  //   {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!',timeStamp:'1011'},
+  //   {fromName:'fromName3',subjectName:'Subject3',messageBody:'This is Message Body333!!',timeStamp:'0912'}];
   this.state = {
     dataSource: ds.cloneWithRows(data),
   };
@@ -39,6 +42,7 @@ class InboxView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
     try{
       if (nextProps.value !== this.props.value) {
       this.setState({

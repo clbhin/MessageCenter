@@ -19,12 +19,12 @@ class MessageView extends Component{
         </View>
         <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-            <Text style={{fontSize:18}}>{this.props.messageData.fromName}</Text>
+            <Text style={{fontSize:18}}>{this.props.messageData.Message.From.PersonName}</Text>
             <Text>{this.props.messageData.timeStamp}</Text>
           </View>
           
-          <Text style={{fontSize:14}}>{this.props.messageData.subjectName}</Text>
-          <Text style={{fontSize:14}}>{this.props.messageData.messageBody}</Text>
+          <Text style={{fontSize:14}}>{this.props.messageData.Message.Subject}</Text>
+          <Text style={{fontSize:14}}>{this.props.messageData.Message.MessageBody}</Text>
         </View>
       </View>
   }
