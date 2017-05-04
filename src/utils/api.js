@@ -6,6 +6,7 @@ import {getAuthenticationToken} from '../utils/authentication';
 const EventEmitter = require('event-emitter');
 
 const TIMEOUT = 6000;
+const API_ROOT = getConfiguration('API_ROOT');
 
 /**
  * All HTTP errors are emitted on this channel for interested listeners
@@ -64,12 +65,8 @@ export async function del(path, suppressRedBox) {
 export async function request(method, path, body, suppressRedBox) {
   try {
     const response = await sendRequest(method, path, body, suppressRedBox);
-    return handleResponse(
-      path,
-      response
-    );
-  }
-  catch (error) {
+    return handleResponse(path, response);
+  } catch (error) {
     if (!suppressRedBox) {
       logError(error, url(path), method);
     }
@@ -97,9 +94,17 @@ async function sendRequest(method, path, body) {
     const token = await getAuthenticationToken();
     const headers = getRequestHeaders(body, token);
     const options = body
-      ? {method, headers, body: JSON.stringify(body)}
-      : {method, headers};
-
+      ? {
+        method,
+        headers,
+        body: JSON.stringify(body)
+      }
+      : {
+        method,
+        headers
+      };
+    console.log(endpoint);
+    console.log(options);
     return timeout(fetch(endpoint, options), TIMEOUT);
   } catch (e) {
     throw new Error(e);
@@ -119,9 +124,13 @@ async function handleResponse(path, response) {
       const message = await getErrorMessageSafely(response);
       const error = new HttpError(status, message);
 
-      // emit events on error channel, one for status-specific errors and other for all errors
+      // emit events on error channel, one for status-specific errors and other for
+      // all errors
       errors.emit(status.toString(), {path, message: error.message});
-      errors.emit('*', {path, message: error.message}, status);
+      errors.emit('*', {
+        path,
+        message: error.message
+      }, status);
 
       throw error;
     }
@@ -131,7 +140,9 @@ async function handleResponse(path, response) {
     return {
       status: response.status,
       headers: response.headers,
-      body: responseBody ? JSON.parse(responseBody) : null
+      body: responseBody
+        ? JSON.parse(responseBody)
+        : null
     };
   } catch (e) {
     throw e;
@@ -140,18 +151,26 @@ async function handleResponse(path, response) {
 
 function getRequestHeaders(body, token) {
   const headers = body
-    ? {'Accept': 'application/json', 'Content-Type': 'application/json'}
-    : {'Accept': 'application/json'};
+    ? {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+    : {
+      'Accept': 'application/json'
+    };
 
   if (token) {
-    return {...headers, Authorization: token};
+    return {
+      ...headers,
+      Authorization: token
+    };
   }
 
   return headers;
 }
 
-// try to get the best possible error message out of a response
-// without throwing errors while parsing
+// try to get the best possible error message out of a response without throwing
+// errors while parsing
 async function getErrorMessageSafely(response) {
   try {
     const body = await response.text();
@@ -180,12 +199,10 @@ async function getErrorMessageSafely(response) {
 function timeout(promise, ms) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('timeout')), ms);
-    promise
-      .then(response => {
-        clearTimeout(timer);
-        resolve(response);
-      })
-      .catch(reject);
+    promise.then(response => {
+      clearTimeout(timer);
+      resolve(response);
+    }).catch(reject);
   });
 }
 
@@ -205,8 +222,7 @@ function logError(error, endpoint, method) {
   if (error.status) {
     const summary = `(${error.status} ${error.statusText}): ${error._bodyInit}`;
     console.error(`API request ${method.toUpperCase()} ${endpoint} responded with ${summary}`);
-  }
-  else {
+  } else {
     console.error(`API request ${method.toUpperCase()} ${endpoint} failed with message "${error.message}"`);
   }
 }

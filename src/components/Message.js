@@ -18,7 +18,11 @@ class MessageView extends Component{
           <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../images/pepperoni.png')}></Image>
         </View>
         <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
-          <Text style={{fontSize:18}}>{this.props.messageData.fromName}</Text>
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <Text style={{fontSize:18}}>{this.props.messageData.fromName}</Text>
+            <Text>{this.props.messageData.timeStamp}</Text>
+          </View>
+          
           <Text style={{fontSize:14}}>{this.props.messageData.subjectName}</Text>
           <Text style={{fontSize:14}}>{this.props.messageData.messageBody}</Text>
         </View>

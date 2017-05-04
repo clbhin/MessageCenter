@@ -1,60 +1,44 @@
 import {Map} from 'immutable';
 import {loop, Effects} from 'redux-loop-symbol-ponyfill';
-import {generateRandomNumber} from '../../services/randomNumberService';
+import {GetMessages} from './../../services/messageCenterServices';
 
 // Initial state
 const initialState = Map({
-  value: 0,
-  loading: false
+  value: []
 });
 
 // Actions
-const INCREMENT = 'CounterState/INCREMENT';
-const RESET = 'CounterState/RESET';
-const RANDOM_REQUEST = 'CounterState/RANDOM_REQUEST';
-const RANDOM_RESPONSE = 'CounterState/RANDOM_RESPONSE';
+
+const GETMESSAGES_REQUEST = 'IndexState/GETMESSAGES_REQUEST';
+const GETMESSAGES_RESPONSE = 'IndexState/GETMESSAGES_RESPONSE';
 
 // Action creators
-export function increment() {
-  return {type: INCREMENT};
-}
-
-export function reset() {
-  return {type: RESET};
-}
-
-export function random() {
+export function getMessages(userId,inboxType) {
   return {
-    type: RANDOM_REQUEST
+    type: GETMESSAGES_REQUEST,
+    payload: {userId,inboxType}
   };
 }
 
-export async function requestRandomNumber() {
+export async function requestGetMessages(userId,inboxType) {
   return {
-    type: RANDOM_RESPONSE,
-    payload: await generateRandomNumber()
+    type: GETMESSAGES_RESPONSE,
+    payload: await GetMessages(userId,inboxType)
   };
 }
 
 // Reducer
 export default function CounterStateReducer(state = initialState, action = {}) {
   switch (action.type) {
-    case INCREMENT:
-      return state.update('value', value => value + 1);
-
-    case RESET:
-      return initialState;
-
-    case RANDOM_REQUEST:
+    
+    case GETMESSAGES_REQUEST:
       return loop(
-        state.set('loading', true),
-        Effects.promise(requestRandomNumber)
+        Effects.promise(requestGetMessages,action.payload.userId,action.payload.inboxType)
       );
 
-    case RANDOM_RESPONSE:
+    case GETMESSAGES_RESPONSE:
       return state
-        .set('loading', false)
-        .set('value', action.payload);
+        .set('value', action.payload.ModelObject);
 
     default:
       return state;

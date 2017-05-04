@@ -8,18 +8,22 @@ import {
   ListView
 } from 'react-native';
 import MessageView from './../../components/Message';
-
+import {GetMessages} from './../../services/messageCenterServices'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class InboxView extends Component {
   constructor(props) {
   super(props);
   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  const data=[
+    {fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!',timeStamp:'0619'}, 
+    {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!',timeStamp:'1011'},
+    {fromName:'fromName3',subjectName:'Subject3',messageBody:'This is Message Body333!!',timeStamp:'0912'}];
   this.state = {
-    dataSource: ds.cloneWithRows([{fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!'}, {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!'}]),
+    dataSource: ds.cloneWithRows(data),
   };
 }
-  static displayName = 'CounterView';
+  static displayName = 'InboxView';
 
   static navigationOptions = {
     title: 'Inbox',
@@ -31,24 +35,26 @@ class InboxView extends Component {
   }
 
   static propTypes = {
-    counter: PropTypes.number.isRequired,
-    userName: PropTypes.string,
-    userProfilePhoto: PropTypes.string,
-    loading: PropTypes.bool.isRequired,
-    counterStateActions: PropTypes.shape({
-      increment: PropTypes.func.isRequired,
-      reset: PropTypes.func.isRequired,
-      random: PropTypes.func.isRequired
-    }).isRequired,
-    navigate: PropTypes.func.isRequired
   };
 
-  render() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== this.props.value) {
+      this.setState({
+        dataSource: this.ds.cloneWithRows(nextProps.value)
+      });
+    }
+  }
 
+  componentWillMount(){
+    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+  }
+
+
+  render() {
     return (
       <ListView style={{paddingTop:10}}
-      dataSource={this.state.dataSource}
-      renderRow={(rowData) => 
+        dataSource={this.state.dataSource}
+        renderRow={(rowData) => 
       <MessageView messageData={rowData}/>
       }/>
     );
@@ -107,27 +113,3 @@ const styles = StyleSheet.create({
 });
 
 export default InboxView;
-
-
-      {/*<View style={styles.container}>
-        <View style={{flexDirection:'row',marginLeft:20,marginRight:10}}>
-          <View style={circle}>
-            <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../../images/pepperoni.png')}></Image>
-          </View>
-          <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
-            <Text style={{fontSize:18}}>fromName</Text>
-            <Text style={{fontSize:14}}>Subject</Text>
-            <Text style={{fontSize:14}}>This is Message Body!!</Text>
-          </View>
-        </View>
-        <View style={{flexDirection:'row',marginLeft:20,marginRight:10}}>
-          <View style={circle}>
-            <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../../images/pepperoni.png')}></Image>
-          </View>
-          <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
-            <Text style={{fontSize:18}}>fromName2</Text>
-            <Text style={{fontSize:14}}>Subject2</Text>
-            <Text style={{fontSize:14}}>This is Message Body2!!</Text>
-          </View>
-        </View>
-      </View>*/}
