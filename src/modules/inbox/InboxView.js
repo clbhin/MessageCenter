@@ -5,11 +5,13 @@ import {
   Image,
   Text,
   View,
-  ListView
+  ListView,
+  TextInput,
+  Picker
 } from 'react-native';
 import MessageView from './../../components/Message';
 import {GetMessages} from './../../services/messageCenterServices'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Entypo';
 
 class InboxView extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class InboxView extends Component {
   //   {fromName:'fromName3',subjectName:'Subject3',messageBody:'This is Message Body333!!',timeStamp:'0912'}];
   this.state = {
     dataSource: ds.cloneWithRows(data),
+    criteria:'All'
   };
   this.ds=ds;
 }
@@ -61,11 +64,38 @@ class InboxView extends Component {
 
   render() {
     return (
-      <ListView style={{paddingTop:10}}
-        dataSource={this.state.dataSource}
-        renderRow={(rowData) => 
-      <MessageView messageData={rowData}/>
-      }/>
+      <View>
+        <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
+          <TouchableOpacity>
+            <Image style={{width: 30,height: 40}}source={require('./../../../images/headbar.png')}></Image>
+          </TouchableOpacity>
+          <View style={{flex:1,marginLeft:20}}>
+            <Text style={{fontSize:18,color:'black'}}>Inbox</Text>
+            <Text style={{fontSize:12}}>welcome,Xiang Zhang</Text>
+          </View>
+        </View>
+        <View style={{flexDirection:'row',backgroundColor:'#eee',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
+          <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
+            <Text style={{flex:3,fontSize:12,textAlign:'center'}}>{this.state.criteria}</Text>
+            <Picker style={{flex:1}}
+              selectedValue={this.state.criteria}
+              onValueChange={(value) => this.setState({criteria: value})}>
+              <Picker.Item label="All" value="All" />
+              <Picker.Item label="Subject" value="Subject" />
+              <Picker.Item label="FromName" value="FromName" />
+              <Picker.Item label="ToName" value="ToName" />
+            </Picker>
+          </View>
+          <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
+
+        </View>
+        <ListView style={{paddingTop:10}}
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => 
+        <MessageView messageData={rowData}/>
+        }/>
+      </View>
+      
     );
   }
 }
