@@ -5,7 +5,8 @@ import {
   Image,
   Text,
   View,
-  ListView
+  ListView,
+  TouchableHighlight
 } from 'react-native';
 import {MessageFormatDate} from './../utils/dateTimeHelper'
 
@@ -14,22 +15,58 @@ class MessageView extends Component{
   static propTypes = {
     messageData:PropTypes.object
   };
-  render(){
-    return <View style={{flexDirection:'row',marginLeft:10,marginRight:10}}>
-        <View style={circle}>
-          <Image style={{width: 40,height: 40,borderRadius: 20}} source={require('./../../images/headportrait.png')}></Image>
-        </View>
-        <View style={{flex:3,marginLeft:10,borderBottomColor:'#ddd',borderBottomWidth:1,paddingBottom:4}}>
-          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-            <Text style={{fontSize:18}}>{this.props.messageData.Message.From.PersonName}</Text>
-            <Text>{MessageFormatDate(this.props.messageData.Message.Timestamp)}</Text>
-          </View>
-          
-          <Text style={{fontSize:14}}>{this.props.messageData.Message.Subject}</Text>
-          <Text style={{fontSize:14}}>{this.props.messageData.Message.MessageBody}</Text>
-        </View>
+  
+  open = () => {
+    console.log("this is message.js")
+    //this.props.navigate({routeName: 'MessageDetailStack'});
+  };
+
+render() {
+  return <TouchableOpacity onPress={this.open}>
+    <View
+      style={{
+      flexDirection: 'row',
+      marginLeft: 10,
+      marginRight: 10
+    }}>
+      <View style={circle}>
+        <Image
+          style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20
+        }}
+          source={require('./../../images/headportrait.png')}></Image>
       </View>
-  }
+      <View
+        style={{
+        flex: 3,
+        marginLeft: 10,
+        borderBottomColor: '#ddd',
+        borderBottomWidth: 1,
+        paddingBottom: 4
+      }}>
+        <View
+          style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}>
+          <Text style={{
+            fontSize: 18
+          }}>{this.props.messageData.Message.From.PersonName}</Text>
+          <Text>{MessageFormatDate(this.props.messageData.Message.Timestamp)}</Text>
+        </View>
+
+        <Text style={{
+          fontSize: 14
+        }}>{this.props.messageData.Message.Subject}</Text>
+        <Text style={{
+          fontSize: 14
+        }}>{this.props.messageData.Message.MessageBody}</Text>
+      </View>
+    </View>
+  </TouchableOpacity>
+}
 }
 const circle = {
   borderWidth: 0,
