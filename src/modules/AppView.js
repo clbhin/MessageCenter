@@ -5,6 +5,7 @@ import * as snapshotUtil from '../utils/snapshot';
 import * as SessionStateActions from '../modules/session/SessionState';
 import store from '../redux/store';
 import DeveloperMenu from '../components/DeveloperMenu';
+import IndexViewContainer from './inbox/InboxViewContainer'
 
 class AppView extends Component {
   static displayName = 'AppView';
@@ -43,7 +44,7 @@ class AppView extends Component {
     return (
       <View style={{flex: 1}}>
         <StatusBar backgroundColor='#455a64' barStyle='light-content' />
-        <NavigatorViewContainer />
+        <IndexViewContainer />
         {__DEV__ && <DeveloperMenu />}
       </View>
     );
