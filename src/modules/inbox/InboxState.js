@@ -24,6 +24,7 @@ export function getMessages(userId, inboxType) {
 export async function requestGetMessages(userId,inboxType) {
   try {
     const result = await GetMessages(userId, inboxType);
+    console.log(result);
     return {type: GETMESSAGES_RESPONSE, payload: result};
   } catch (err) {
     return {type: GETMESSAGES_RESPONSE, payload: []};
