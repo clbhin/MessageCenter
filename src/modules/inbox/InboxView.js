@@ -20,10 +20,6 @@ class InboxView extends Component {
   const data=[
     {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'111',MessageBody:'<p>111</p>'}},
     {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
-  // const data=[
-  //   {fromName:'fromName1',subjectName:'Subject1',messageBody:'This is Message Body!!',timeStamp:'0619'}, 
-  //   {fromName:'fromName2',subjectName:'Subject2',messageBody:'This is Message Body222!!',timeStamp:'1011'},
-  //   {fromName:'fromName3',subjectName:'Subject3',messageBody:'This is Message Body333!!',timeStamp:'0912'}];
   this.state = {
     dataSource: ds.cloneWithRows(data),
     criteria:'All'
@@ -33,19 +29,29 @@ class InboxView extends Component {
   static displayName = 'InboxView';
 
   static navigationOptions = {
-    title: 'Inbox',
+    title: 'MessageCenter',
     tabBar: () => ({
       icon: (props) => (
         <Icon name='plus-one' size={24} color={props.tintColor} />
-      )
-    })
+      ),
+    }),
+    header: {
+      tintColor: 'white',
+      style: {
+        backgroundColor: '#39babd'
+      }
+    }
   }
 
   static propTypes = {
   };
 
+  transformMessage = (currentMessage) => {
+    console.log(currentMessage)
+    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
+  };
+
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
     try{
       if (nextProps.value !== this.props.value) {
       this.setState({
@@ -92,7 +98,7 @@ class InboxView extends Component {
         <ListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => 
-        <MessageView messageData={rowData}/>
+        <MessageView messageData={rowData} transformMessage={this.transformMessage}/>
         }/>
       </View>
       

@@ -44,7 +44,7 @@ class AppView extends Component {
     return (
       <View style={{flex: 1}}>
         <StatusBar backgroundColor='#455a64' barStyle='light-content' />
-        <IndexViewContainer />
+        <NavigatorViewContainer />
         {__DEV__ && <DeveloperMenu />}
       </View>
     );

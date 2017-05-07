@@ -16,13 +16,8 @@ class MessageView extends Component{
     messageData:PropTypes.object
   };
   
-  open = () => {
-    console.log("this is message.js")
-    //this.props.navigate({routeName: 'MessageDetailStack'});
-  };
-
 render() {
-  return <TouchableOpacity onPress={this.open}>
+  return <TouchableOpacity onPress={this.props.transformMessage.bind(this,this.props.messageData)}>
     <View
       style={{
       flexDirection: 'row',
