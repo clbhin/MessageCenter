@@ -4,12 +4,15 @@ import NavigatorStateReducer from '../modules/navigator/NavigatorState';
 import CounterStateReducer from '../modules/counter/CounterState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 import InboxStateReducer from '../modules/inbox/InboxState';
+import CreateMessageStateReducer from '../modules/createMessage/CreateMessageState'
 
 const reducers = {
   // Counter sample app state. This can be removed in a live application
   counter: CounterStateReducer,
 
   inbox:InboxStateReducer,
+
+  createMessage:CreateMessageStateReducer,
   // Navigator states
   navigatorState: NavigatorStateReducer,
 

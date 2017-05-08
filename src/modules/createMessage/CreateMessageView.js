@@ -8,7 +8,7 @@ import {
   TextInput
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -17,11 +17,12 @@ import Icon from 'react-native-vector-icons/Entypo';
 class CreateMessageView extends Component {
     constructor(props) {
     super(props);
-    console.log(this)
     this.state = {
       background: 'red',
-      currentMessage:this.props.navigation.state.params
+      currentMessage:this.props.navigation.state.params,
+      text:''
     };
+    this.send=this.send.bind(this)
   }
   static displayName = 'MessageDetailView';
 
@@ -36,8 +37,14 @@ class CreateMessageView extends Component {
     header: {
       tintColor: 'white',
       style: {
-        backgroundColor: '#39babd'
-      }
+        backgroundColor: '#39babd',
+        paddingRight:10
+      },
+    right : (
+      <TouchableOpacity onPress={this.send}>
+        <Icon name={'send'} size={24} color='blue'/>
+      </TouchableOpacity>
+    )
     }
   }
 
@@ -45,15 +52,23 @@ class CreateMessageView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
-
+  send(){
+    console.log('这是onpress发来的')
+    this.props.CreateMessageStateActions.sendMessage(message);
+  }
 
   render() {
     return (
       <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:{this.state.currentMessage.Message.From.PersonName}</Text>
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>From:</Text>
+          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>From:Yanliang Sun</Text>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Subject:reply: {this.state.currentMessage.Message.Subject}</Text>
-          <TextInput style={{flex:1}} underlineColorAndroid="transparent" />
+          <TextInput
+            style={{borderColor: 'gray', minHeight:200,borderWidth: 1}}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+            multiline={true}
+          />
       </View>
       
     );
