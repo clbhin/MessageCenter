@@ -8,8 +8,7 @@ import {
   TextInput
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import Icon from 'react-native-vector-icons/Entypo';
 /**
  * Sample view to demonstrate StackNavigator
  * @TODO remove this module in a live application.
@@ -52,14 +51,23 @@ class CreateMessageView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
-  send(){
-    console.log('这是onpress发来的')
+  send(message){
     this.props.CreateMessageStateActions.sendMessage(message);
   }
 
   render() {
     return (
-      <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}>
+      <View>
+        <View style={{flexDirection:'row',height:40,borderBottomWidth:1,borderBottomColor:'#ccc',alignItems:'center'}}>
+           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex:1}}>
+            <Icon name='arrow-long-left' size={30} color={'orange'} />
+          </TouchableOpacity>
+          <Text style={{flex:5,textAlign:'center'}}>reply</Text>
+          <TouchableOpacity onPress={()=>this.send(this.state.currentMessage.Message)} style={{flex:1}}>
+            <Icon name='direction' size={30} color={'orange'} />
+          </TouchableOpacity>   
+        </View>
+        <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:{this.state.currentMessage.Message.From.PersonName}</Text>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>From:Yanliang Sun</Text>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Subject:reply: {this.state.currentMessage.Message.Subject}</Text>
@@ -69,6 +77,7 @@ class CreateMessageView extends Component {
             value={this.state.text}
             multiline={true}
           />
+        </View>
       </View>
       
     );
