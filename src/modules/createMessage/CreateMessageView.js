@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -48,6 +49,8 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
+    message.MessageBody=this.state.MessageBody;
+    message.From=this.state.From;
     formData.append('message', JSON.stringify(message))
 
     fetch('http://172.16.40.103:8079/api/Messages/SendMessage', {
@@ -58,11 +61,13 @@ class CreateMessageView extends Component {
       .then(response => response.json())
       .then(json => {
         console.log(json);
+        Alert.alert('Message success send')
       })
       .catch(function (error) {
         console.log('request failed: ', error)
       })
-
+      this.props.navigation.goBack(null);
+      
   }
 
   render() {

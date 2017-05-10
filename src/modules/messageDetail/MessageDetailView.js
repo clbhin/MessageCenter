@@ -51,17 +51,11 @@ class MessageDetailView extends Component {
   render() {
     return (
       <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column',justifyContent:'space-between'}}>
-        {/*<View style={{flexDirection:'row',height:40,borderBottomWidth:1,borderBottomColor:'#ccc',alignItems:'center'}}>
-           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex:1}}>
-            <Icon name='arrow-long-left' size={20} color={'orange'} />
-          </TouchableOpacity>
-          <Text style={{flex:5,textAlign:'center'}}>{this.state.currentMessage.Message.From.PersonName}</Text>   
-        </View>*/}
         <View>
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>toName:Xiang Zhang</Text>
           <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <Text style={{fontSize:16}}>{this.state.currentMessage.Message.MessageBody}</Text>
+          <Text style={{fontSize:16,minHeight:400}}>{this.state.currentMessage.Message.MessageBody}</Text>
         </View>
         <View style={{height:24,borderRadius:12,backgroundColor:'#ccc',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center'}}>
           <TouchableOpacity>
