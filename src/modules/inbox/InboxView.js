@@ -29,17 +29,20 @@ class InboxView extends Component {
   static displayName = 'InboxView';
 
   static navigationOptions = {
-    title: 'MessageCenter',
-    tabBar: () => ({
-      icon: (props) => (
-        <Icon name='plus-one' size={24} color={props.tintColor} />
-      ),
-    }),
-    header: {
-      tintColor: 'white',
-      style: {
-        backgroundColor: '#39babd'
-      }
+    // title: 'MessageCenter',
+    // tabBar: () => ({
+    //   icon: (props) => (
+    //     <Icon name='plus-one' size={24} color={props.tintColor} />
+    //   ),
+    // }),
+    // header: {
+    //   tintColor: 'white',
+    //   style: {
+    //     backgroundColor: '#39babd'
+    //   }
+    // }
+    header:{
+      style:{height:0}
     }
   }
 

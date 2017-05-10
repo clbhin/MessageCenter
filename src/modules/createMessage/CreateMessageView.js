@@ -19,14 +19,13 @@ class CreateMessageView extends Component {
     this.state = {
       background: 'red',
       currentMessage:this.props.navigation.state.params,
-      text:''
     };
     this.send=this.send.bind(this)
   }
   static displayName = 'MessageDetailView';
 
   static navigationOptions = {
-    title: 'CreateMessageView',
+    /*title: 'CreateMessageView',
     tabBar: () => ({
       icon: (props) => (
         <Icon name='color-lens' size={24} color={props.tintColor} />
@@ -44,6 +43,11 @@ class CreateMessageView extends Component {
         <Icon name={'send'} size={24} color='blue'/>
       </TouchableOpacity>
     )
+  }*/
+    header:{
+      style:{
+        height:0
+      }
     }
   }
 
@@ -51,28 +55,43 @@ class CreateMessageView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
-  send(message){
-    this.props.CreateMessageStateActions.sendMessage(message);
+  send(){
+    let formData=new FormData();
   }
 
   render() {
     return (
       <View>
-        <View style={{flexDirection:'row',height:40,borderBottomWidth:1,borderBottomColor:'#ccc',alignItems:'center'}}>
+        <View style={{flexDirection:'row',height:40,borderBottomWidth:1,borderBottomColor:'#ccc',alignItems:'center',backgroundColor: '#39babd'}}>
            <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex:1}}>
-            <Icon name='arrow-long-left' size={30} color={'orange'} />
+            <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{flex:5,textAlign:'center'}}>reply</Text>
-          <TouchableOpacity onPress={()=>this.send(this.state.currentMessage.Message)} style={{flex:1}}>
+          <TouchableOpacity  style={{flex:1}}>
             <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>   
         </View>
         <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}>
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:{this.state.currentMessage.Message.From.PersonName}</Text>
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>From:Yanliang Sun</Text>
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Subject:reply: {this.state.currentMessage.Message.Subject}</Text>
+          <View style={{flexDirection:'row',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>
+            <Text style={{fontSize:16,textAlign: 'center'}}>To:</Text>
+            <TextInput value={this.state.currentMessage.Message.From.PersonName} onChangeText={(PersonName) => {
+              this.setState({'currentMessage.Message.From.PersonName':PersonName})
+              }} style={{flex:1}}></TextInput>
+          </View>
+          <View style={{flexDirection:'row',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>
+             <Text style={{fontSize:16,textAlign: 'center'}}>Cc:</Text>
+            <TextInput value={''} style={{flex:1}}></TextInput>
+          </View>
+          <View style={{flexDirection:'row',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>
+             <Text style={{fontSize:16,textAlign: 'center'}}>Bcc:</Text>
+            <TextInput value={''} style={{flex:1}}></TextInput>
+          </View>
+          <View style={{flexDirection:'row',alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>
+            <Text style={{fontSize:16,textAlign: 'center'}}>Subject:</Text>
+            <TextInput value={'reply:'+this.state.currentMessage.Message.Subject} style={{flex:1}}></TextInput>
+          </View>
           <TextInput
-            style={{borderColor: 'gray', minHeight:200,borderWidth: 1}}
+            style={{borderColor: 'gray', minHeight:300,borderWidth: 1}}
             onChangeText={(text) => this.setState({text})}
             value={this.state.text}
             multiline={true}

@@ -42,6 +42,6 @@ const AppNavigator = StackNavigator({
   InfiniteColorStack: {screen: ColorViewContainer},
   MessageDetailStack:{screen:MessageDetailViewContainer},
   CreateMessageStack:{screen:CreateMessageViewContainer}
-},{headerMode:'none'});
+});
 
 export default AppNavigator;
