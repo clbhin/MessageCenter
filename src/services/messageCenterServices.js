@@ -8,5 +8,5 @@ import {post} from './../utils/api'
  }
 
  export async function SendMessage(message){
-   return post('Messages/SendMessage',Json.stringify(message))
+   return post('Messages/SendMessage',message)
  }

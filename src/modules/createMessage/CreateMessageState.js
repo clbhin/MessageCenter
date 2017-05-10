@@ -11,22 +11,25 @@ const CREATEMESSAGESTATE_REQUEST = 'CREATEMESSAGESTATE/SENDMESSAGE_REQUEST';
 const CREATEMESSAGESTATE_RESPONSE='CREATEMESSAGESTATE/SENDMESSAGE_RESPONSE'
 
 // Action creators
-export function sendMessage(message) {
+export function sendMessage(data) {
   return {
     type: CREATEMESSAGESTATE_REQUEST,
-    payload:message
+    payload:data
   };
 }
 
-export async function requestSendMessage(message) {
+export async function requestSendMessage(data) {
   try {
-    console.log(message)
-    const result = await sendMessage(message);
+    const result = await SendMessage(data);
+    console.log(result);
     return {
       type:CREATEMESSAGESTATE_RESPONSE
     }
   } catch (err) {
     console.log(err)
+    return {
+      type:CREATEMESSAGESTATE_RESPONSE
+    }
   }
 }
 
@@ -35,10 +38,10 @@ export default function CreateMessageStateReducer(state = initialState, action =
   switch (action.type) {
 
     case CREATEMESSAGESTATE_REQUEST:
-      return loop(state, Effects.promise(requestSendMessage,action.payload.message));
+      return loop(state, Effects.promise(requestSendMessage,action.payload));
 
      case CREATEMESSAGESTATE_RESPONSE:
-       return null;
+       return state;
 
     default:
       return state;
