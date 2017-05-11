@@ -7,11 +7,13 @@ import {
   View,
   ListView,
   TextInput,
-  Picker
+  Picker,
+  DrawerLayoutAndroid
 } from 'react-native';
 import MessageView from './../../components/Message';
 import {GetMessages} from './../../services/messageCenterServices'
 import Icon from 'react-native-vector-icons/Entypo';
+import DrawerView from './../drawer/DrawerView'; 
 
 class InboxView extends Component {
   constructor(props) {
@@ -25,22 +27,13 @@ class InboxView extends Component {
     criteria:'All'
   };
   this.ds=ds;
+  this.closeDrawer = this.closeDrawer.bind(this);
+  this.openDrawer = this.openDrawer.bind(this);
+  this.transformMessage = this.transformMessage.bind(this);
 }
   static displayName = 'InboxView';
 
   static navigationOptions = {
-    // title: 'MessageCenter',
-    // tabBar: () => ({
-    //   icon: (props) => (
-    //     <Icon name='plus-one' size={24} color={props.tintColor} />
-    //   ),
-    // }),
-    // header: {
-    //   tintColor: 'white',
-    //   style: {
-    //     backgroundColor: '#39babd'
-    //   }
-    // }
     header:{
       style:{height:0}
     }
@@ -51,7 +44,7 @@ class InboxView extends Component {
 
   transformMessage = (currentMessage) => {
     console.log(currentMessage)
-    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
+    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage,action:this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox')});
   };
 
   componentWillReceiveProps(nextProps) {
@@ -70,12 +63,28 @@ class InboxView extends Component {
     this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
   }
 
+   closeDrawer(){
+        this.refs['DRAWER'].closeDrawer();
+    }
+
+  openDrawer(){    
+    this.refs['DRAWER'].openDrawer();
+  }
 
   render() {
+    var navigationView =(
+      <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
+    );
+
     return (
-      <View>
+      <DrawerLayoutAndroid
+        drawerWidth={300}
+        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        renderNavigationView={()=>navigationView}
+        ref={'DRAWER'}
+      >
         <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{this.openDrawer()}}>
             <Image style={{width: 30,height: 40}}source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
           <View style={{flex:1,marginLeft:20}}>
@@ -103,7 +112,7 @@ class InboxView extends Component {
           renderRow={(rowData) => 
         <MessageView messageData={rowData} transformMessage={this.transformMessage}/>
         }/>
-      </View>
+      </DrawerLayoutAndroid>
       
     );
   }

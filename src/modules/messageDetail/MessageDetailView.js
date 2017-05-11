@@ -49,6 +49,7 @@ class MessageDetailView extends Component {
   };
 
   render() {
+    console.log(this)
     return (
       <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column',justifyContent:'space-between'}}>
         <View>
