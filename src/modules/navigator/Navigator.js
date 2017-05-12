@@ -5,6 +5,7 @@ import InboxViewContainer from '../inbox/InboxViewContainer';
 import ColorViewContainer from '../colors/ColorViewContainer';
 import MessageDetailViewContainer from './../messageDetail/MessageDetailViewContainer';
 import CreateMessageViewContainer from './../createMessage/CreateMessageViewContainer'
+import ContactViewContainer from './../contact/ContactViewContainer'
 
 const headerColor = '#39babd';
 const activeColor = 'white';
@@ -41,7 +42,8 @@ const AppNavigator = StackNavigator({
   Home: {screen: InboxViewContainer},
   InfiniteColorStack: {screen: ColorViewContainer},
   MessageDetailStack:{screen:MessageDetailViewContainer},
-  CreateMessageStack:{screen:CreateMessageViewContainer}
+  CreateMessageStack:{screen:CreateMessageViewContainer},
+  ContactStack:{screen:ContactViewContainer}
 });
 
 export default AppNavigator;

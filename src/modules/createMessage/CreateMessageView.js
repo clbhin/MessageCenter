@@ -70,61 +70,24 @@ class CreateMessageView extends Component {
       
   }
 
+
   render() {
     console.log(this)
     return (
       <View>
-        <View
-          style={{
-          flexDirection: 'row',
-          height: 40,
-          borderBottomWidth: 1,
-          borderBottomColor: '#ccc',
-          alignItems: 'center',
-          backgroundColor: '#39babd'
-        }}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.goBack(null)}
-            style={{
-            flex: 1
-          }}>
+        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
-          <Text
-            style={{
-            flex: 5,
-            textAlign: 'center'
-          }}>reply</Text>
-          <TouchableOpacity
-            style={{
-            flex: 1
-          }}
-            onPress={() => this.send()}>
+          <Text style={{flex: 5,textAlign: 'center'}}>reply</Text>
+          <TouchableOpacity style={{flex: 1}} onPress={() => this.send()}>
             <Icon name='direction' size={30} color={'orange'}/>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-          marginLeft: 10,
-          marginTop: 10,
-          marginRight: 10,
-          flexDirection: 'column'
-        }}>
-          <View
-            style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: '#ddd'
-          }}>
-            <Text
-              style={{
-              fontSize: 16,
-              textAlign: 'center'
-            }}>To:</Text>
-            <TextInput
-              value={this.state.From.PersonName}
-              onChangeText={(PersonName) => {
+        <View style={{marginLeft: 10,marginTop: 10,marginRight: 10,flexDirection: 'column'}}>
+          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
+            <Text style={{fontSize: 16,textAlign: 'center'}}>To:</Text>
+            <TextInput value={this.state.From.PersonName} onChangeText={(PersonName) => {
               this.setState({
                 'From': {
                   'PersonName': PersonName,
@@ -132,25 +95,15 @@ class CreateMessageView extends Component {
                 }
               })
             }}
-              style={{
-              flex: 1
-            }}></TextInput>
+              style={{flex: 1}}>
+            </TextInput>
+            <TouchableOpacity onPress={()=>this.props.navigate({routeName: 'ContactStack'})}>
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
+            </TouchableOpacity>  
           </View>
-          <View
-            style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: '#ddd'
-          }}>
-            <Text
-              style={{
-              fontSize: 16,
-              textAlign: 'center'
-            }}>Cc:</Text>
-            <TextInput
-              value={this.state.Cc && this.state.Cc.PersonName}
-              onChangeText={(text) => {
+          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
+            <Text style={{fontSize: 16,textAlign: 'center'}}>Cc:</Text>
+            <TextInput value={this.state.Cc && this.state.Cc.PersonName} onChangeText={(text) => {
               this.setState({
                 'Cc': {
                   'PersonName': text,
@@ -158,59 +111,27 @@ class CreateMessageView extends Component {
                 }
               })
             }}
-              style={{
-              flex: 1
-            }}></TextInput>
+              style={{flex: 1}}>
+            </TextInput>
+            <TouchableOpacity>
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
+            </TouchableOpacity> 
           </View>
-          <View
-            style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: '#ddd'
-          }}>
-            <Text
-              style={{
-              fontSize: 16,
-              textAlign: 'center'
-            }}>Bcc:</Text>
-            <TextInput value={''} style={{
-              flex: 1
-            }}></TextInput>
+          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
+            <Text style={{fontSize: 16,textAlign: 'center'}}>Bcc:</Text>
+            <TextInput value={''} style={{flex: 1}}></TextInput>
+            <TouchableOpacity>
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
+            </TouchableOpacity> 
           </View>
-          <View
-            style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: '#ddd'
-          }}>
-            <Text
-              style={{
-              fontSize: 16,
-              textAlign: 'center'
-            }}>Subject:</Text>
-            <TextInput
-              value={this.state.Subject}
-              onChangeText={(Subject) => {
-              this.setState({Subject})
-            }}
-              style={{
-              flex: 1
-            }}></TextInput>
+          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
+            <Text style={{fontSize: 16,textAlign: 'center'}}>Subject:</Text>
+            <TextInput value={this.state.Subject} onChangeText={(Subject) => {this.setState({Subject})}} style={{flex: 1}}></TextInput>
           </View>
           <TextInput
-            style={{
-            borderColor: 'gray',
-            minHeight: 300,
-            borderWidth: 1
-          }}
-            onChangeText={(text) => this.setState({'MessageBody': text})}
-            value={this.state.MessageBody}
-            multiline={true}/>
+            style={{borderColor: 'gray',minHeight: 300,borderWidth: 1}} onChangeText={(text) => this.setState({'MessageBody': text})} value={this.state.MessageBody} multiline={true}/>
         </View>
       </View>
-
     );
   }
 }

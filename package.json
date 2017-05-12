@@ -29,7 +29,9 @@
   },
   "jest": {
     "preset": "react-native",
-    "setupFiles": ["<rootDir>/test/setup.js"],
+    "setupFiles": [
+      "<rootDir>/test/setup.js"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-navigation)"
     ]
@@ -43,6 +45,7 @@
     "react": "~15.4.2",
     "react-dom": "~15.4.2",
     "react-native": "0.42.0",
+    "react-native-check-box": "^1.0.4",
     "react-native-vector-icons": "^4.0.0",
     "react-navigation": "^1.0.0-beta.7",
     "react-redux": "^4.4.5",
