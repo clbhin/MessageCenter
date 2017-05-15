@@ -5,7 +5,9 @@ import CreateMessageView from './CreateMessageView';
 import * as CreateMessageStateActions from '../createMessage/CreateMessageState';
 
 export default connect(
-   null,
+   state => ({
+    contactData: state.getIn(['contact', 'contactData']),
+  }),
    dispatch => {
      return {
        navigate: bindActionCreators(NavigationActions.navigate, dispatch),

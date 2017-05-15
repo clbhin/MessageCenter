@@ -23,11 +23,13 @@ class ContactView extends Component {
   static displayName = 'ContactView';
   constructor(props) {
     super(props);
-    const contactData=[{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},{Id:'Yanliang Sun',PersonName:'Yanliang Sun'}];
+    const data=[{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},{Id:'Yanliang Sun',PersonName:'Yanliang Sun'}];
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(contactData)
+      dataSource: ds.cloneWithRows(data),
+      contactData:[]
     };
+    this.data=data;
   }
   static navigationOptions = {
     header: {
@@ -40,21 +42,29 @@ class ContactView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
-selectContact=() =>{
-
+selectContact=(rowData) =>{
+  rowData.checked = !rowData.checked;
 }
 
+addContactName=() =>{
+  for(var i=0;i<this.data.length;i++){
+    if(this.data[i].checked){
+      this.state.contactData.push(this.data[i])
+    }
+  }
+  this.props.ContactStateActions.addContactName(this.state.contactData);
+  this.props.navigation.goBack(null);
+}
 
   render() {
-    const data={};
     return (
       <View>
         <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1, borderBottomColor:'#ccc',marginTop:10,paddingBottom:4}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
             <Icon name='cross' size={30}></Icon>
           </TouchableOpacity>
           <Text style={{fontSize:18,textAlign:'center'}}>Contacts</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.addContactName()}>
             <Icon name='check' size={30}></Icon>
           </TouchableOpacity>
         </View>
@@ -62,11 +72,11 @@ selectContact=() =>{
         <ListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => 
-        <TouchableOpacity style={{flexDirection:'row',marginLeft:10}}>
-          <Image style={{width: 40,height: 40,borderRadius: 20}}source={require('../../../images/headportrait.png')}></Image>
-          <Text style={{flex:2,marginLeft:10,marginTop:1,alignSelf:'center',textAlign:'center'}}>{rowData.PersonName}</Text>
-           <CheckBox style={{flex:1,padding: 0,alignSelf:'center'}} onClick={()=>this.selectContact(data)} isChecked={true}  />
-        </TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'row',marginLeft:10}}>
+            <Image style={{width: 40,height: 40,borderRadius: 20}}source={require('../../../images/headportrait.png')}></Image>
+            <Text style={{flex:2,marginLeft:10,marginTop:1,alignSelf:'center',textAlign:'center'}}>{rowData.PersonName}</Text>
+            <CheckBox style={{flex:1,padding: 0,alignSelf:'center'}} onClick={()=>this.selectContact(rowData)} isChecked={rowData.checked}  />
+          </TouchableOpacity>
         }/>
       </View>
     );

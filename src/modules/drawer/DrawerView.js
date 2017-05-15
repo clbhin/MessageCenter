@@ -14,7 +14,6 @@ class DrawerView extends Component{
 
     constructor(props) {
     super(props);
-    console.log(this)
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     const data=[
             'Inbox', 'Sent', 'Drafts', 'Deleted'

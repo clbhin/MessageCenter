@@ -42,6 +42,20 @@ class CreateMessageView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
+  componentWillReceiveProps(nextProps) {
+    try{
+      if (nextProps.contactData !== this.props.contactData) {
+        console.log(nextProps);
+        console.log(this)
+      this.setState({
+        To: nextProps.contactData[0]
+      });
+    }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   send() {
     let formData = new FormData();
     let message = {}
@@ -72,11 +86,10 @@ class CreateMessageView extends Component {
 
 
   render() {
-    console.log(this)
     return (
       <View>
         <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}style={{flex: 1}}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
           <Text style={{flex: 5,textAlign: 'center'}}>reply</Text>
@@ -87,9 +100,9 @@ class CreateMessageView extends Component {
         <View style={{marginLeft: 10,marginTop: 10,marginRight: 10,flexDirection: 'column'}}>
           <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
             <Text style={{fontSize: 16,textAlign: 'center'}}>To:</Text>
-            <TextInput value={this.state.From.PersonName} onChangeText={(PersonName) => {
+            <TextInput value={this.state.To.PersonName} onChangeText={(PersonName) => {
               this.setState({
-                'From': {
+                'To': {
                   'PersonName': PersonName,
                   'Id': PersonName
                 }

@@ -43,7 +43,6 @@ class InboxView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    console.log(currentMessage)
     this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage,action:this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox')});
   };
 
