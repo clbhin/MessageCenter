@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
+import {getNames} from '../../services/mcServices'
 /**
  * Sample view to demonstrate StackNavigator
  * @TODO remove this module in a live application.
@@ -25,7 +26,10 @@ class CreateMessageView extends Component {
       From: this.props.navigation.state.params.Message.From,
       Subject: this.props.navigation.state.params.Message.Subject,
       MessageBody: '',
-      To: [this.props.navigation.state.params.Message.From]
+      To: [this.props.navigation.state.params.Message.From],
+      ToNames:this.props.navigation.state.params.Message.From.PersonName,
+      BccNames:getNames(this.props.navigation.state.params.Message.Bcc),
+      CcNames:getNames(this.props.navigation.state.params.Message.Cc)
     };
   }
   static displayName = 'MessageDetailView';
@@ -43,14 +47,32 @@ class CreateMessageView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    console.log(this)
     try{
       if (nextProps.contactData !== this.props.contactData) {
-        console.log(nextProps);
-        console.log(this)
-      this.setState({
-        To: nextProps.contactData[0]
-      });
-    }
+        switch(nextProps.boxType){
+          case 'ToNames':
+            this.setState({
+              To: nextProps.contactData,
+              ToNames:getNames(nextProps.contactData)  
+            })
+            break;
+          case 'CcNames':
+            this.setState({
+              Cc: nextProps.contactData,
+              CcNames:getNames(nextProps.contactData)  
+            })
+            break;
+          case 'BccNames':
+            this.setState({
+              Bcc: nextProps.contactData,
+              BccNames:getNames(nextProps.contactData)  
+            })
+            break;
+          default:
+            return  
+        }
+      }
     }catch(err){
       console.log(err)
     }
@@ -83,6 +105,10 @@ class CreateMessageView extends Component {
       this.props.navigation.goBack(null);
       
   }
+  selectName(nameType){
+   this.props.CreateMessageStateActions.selectNames(nameType);
+   this.props.navigate({routeName: 'ContactStack'});
+  }
 
 
   render() {
@@ -100,7 +126,7 @@ class CreateMessageView extends Component {
         <View style={{marginLeft: 10,marginTop: 10,marginRight: 10,flexDirection: 'column'}}>
           <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
             <Text style={{fontSize: 16,textAlign: 'center'}}>To:</Text>
-            <TextInput value={this.state.To.PersonName} onChangeText={(PersonName) => {
+            <TextInput value={this.state.ToNames} onChangeText={(PersonName) => {
               this.setState({
                 'To': {
                   'PersonName': PersonName,
@@ -110,13 +136,13 @@ class CreateMessageView extends Component {
             }}
               style={{flex: 1}}>
             </TextInput>
-            <TouchableOpacity onPress={()=>this.props.navigate({routeName: 'ContactStack'})}>
+            <TouchableOpacity onPress={()=>this.selectName('ToNames')}>
               <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
             </TouchableOpacity>  
           </View>
           <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
             <Text style={{fontSize: 16,textAlign: 'center'}}>Cc:</Text>
-            <TextInput value={this.state.Cc && this.state.Cc.PersonName} onChangeText={(text) => {
+            <TextInput value={this.state.CcNames} onChangeText={(text) => {
               this.setState({
                 'Cc': {
                   'PersonName': text,
@@ -126,14 +152,14 @@ class CreateMessageView extends Component {
             }}
               style={{flex: 1}}>
             </TextInput>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>this.selectName('CcNames')} >
               <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
             </TouchableOpacity> 
           </View>
           <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
             <Text style={{fontSize: 16,textAlign: 'center'}}>Bcc:</Text>
-            <TextInput value={''} style={{flex: 1}}></TextInput>
-            <TouchableOpacity>
+            <TextInput value={this.state.BccNames} style={{flex: 1}}></TextInput>
+            <TouchableOpacity onPress={()=>this.selectName('BccNames')}>
               <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
             </TouchableOpacity> 
           </View>
@@ -141,8 +167,7 @@ class CreateMessageView extends Component {
             <Text style={{fontSize: 16,textAlign: 'center'}}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => {this.setState({Subject})}} style={{flex: 1}}></TextInput>
           </View>
-          <TextInput
-            style={{borderColor: 'gray',minHeight: 300,borderWidth: 1}} onChangeText={(text) => this.setState({'MessageBody': text})} value={this.state.MessageBody} multiline={true}/>
+          <TextInput style={{borderColor: 'gray',minHeight: 300,borderWidth: 1}} onChangeText={(text) => this.setState({'MessageBody': text})} value={this.state.MessageBody} multiline={true}/>
         </View>
       </View>
     );

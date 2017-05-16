@@ -52,7 +52,7 @@ class MessageDetailView extends Component {
     return (
       <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column',justifyContent:'space-between'}}>
         <View>
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>toName:Xiang Zhang</Text>
+          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:Xiang Zhang</Text>
           <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
           <Text style={{fontSize:16,minHeight:400}}>{this.state.currentMessage.Message.MessageBody}</Text>

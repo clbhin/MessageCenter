@@ -13,17 +13,12 @@ import {
 import Icon from 'react-native-vector-icons/Entypo';
 import CheckBox from 'react-native-check-box';
 
-const color = () => Math.floor(255 * Math.random());
 
-/**
- * Sample view to demonstrate StackNavigator
- * @TODO remove this module in a live application.
- */
 class ContactView extends Component {
   static displayName = 'ContactView';
   constructor(props) {
     super(props);
-    const data=[{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},{Id:'Yanliang Sun',PersonName:'Yanliang Sun'}];
+    const data=[{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},{Id:'Yanliang Sun',PersonName:'Yanliang Sun'},{ "Id": "Willian Simth", "PersonName": "Willian Simth" },{ "Id": "Simon Simth", "PersonName": "Simon Simth" }];
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows(data),
@@ -57,6 +52,7 @@ addContactName=() =>{
 }
 
   render() {
+    console.log(this);
     return (
       <View>
         <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1, borderBottomColor:'#ccc',marginTop:10,paddingBottom:4}}>

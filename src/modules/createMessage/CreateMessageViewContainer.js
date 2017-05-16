@@ -7,6 +7,7 @@ import * as CreateMessageStateActions from '../createMessage/CreateMessageState'
 export default connect(
    state => ({
     contactData: state.getIn(['contact', 'contactData']),
+    boxType:state.getIn(['createMessage','boxType'])
   }),
    dispatch => {
      return {
