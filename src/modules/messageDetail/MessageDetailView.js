@@ -4,11 +4,13 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
 import {MessageFormatAllDate} from '../../utils/dateTimeHelper'
+import lodash from 'lodash'
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -21,6 +23,7 @@ class MessageDetailView extends Component {
       background: 'red',
       currentMessage:this.props.navigation.state.params,
     };
+    this.screenSize = Dimensions.get('window');    
   }
   static displayName = 'MessageDetailView';
 
@@ -35,7 +38,7 @@ class MessageDetailView extends Component {
     header: {
       tintColor: 'white',
       style: {
-        backgroundColor: '#39babd'
+        height: 0
       }
     }
   }
@@ -45,30 +48,47 @@ class MessageDetailView extends Component {
   };
 
   reply = (currentMessage) => {
-    this.props.navigate({routeName: 'CreateMessageStack',params:currentMessage});
+    let data=lodash.cloneDeep(currentMessage);
+    data.Message.Cc=[];
+    data.Message.Bcc=[];
+    this.props.navigate({routeName: 'CreateMessageStack',params:data});
   };
+
+  replyAll=(currentMessage) =>{
+    this.props.navigate({routeName: 'CreateMessageStack',params:currentMessage});
+  }
 
   render() {
     return (
-      <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column',justifyContent:'space-between'}}>
-        <View>
+      <View>
+        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex: 1}}>
+            <Icon name='arrow-left' size={30} color={'orange'}/>
+          </TouchableOpacity>
+          <Text style={{flex: 5,textAlign: 'left'}}>MessageDetail</Text>
+        </View>
+        <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}> 
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:Xiang Zhang</Text>
           <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <Text style={{fontSize:16,minHeight:400}}>{this.state.currentMessage.Message.MessageBody}</Text>
+          <Text style={{fontSize:16}}>{this.state.currentMessage.Message.MessageBody}</Text>
         </View>
-        <View style={{height:24,borderRadius:12,backgroundColor:'#ccc',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center'}}>
-          <TouchableOpacity>
-            <Icon name='reply' size={20} color={'blue'} onPress={this.reply.bind(this,this.state.currentMessage)}/>
+        <View style={{height:40,borderRadius:20,backgroundColor:'#ccc',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center',position:'absolute',top:this.screenSize.height-80,left:0,right:0}}>
+          <TouchableOpacity style={{flexDirection:'column'}} onPress={this.reply.bind(this,this.state.currentMessage)}>
+            <Icon name='reply' size={20} color={'blue'} />
+            <Text>REPLY</Text>
           </TouchableOpacity>   
-          <TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'column'}} onPress={this.replyAll.bind(this,this.state.currentMessage)}>
             <Icon name='reply-all' size={20} color={'blue'}/>
+            <Text>REPLYALL</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'column'}}>
             <Icon name='trash' size={20} color={'blue'}/>
+            <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'column'}}>
             <Icon name='star-outlined' size={20} color={'orange'}/>
+            <Text>MARK</Text>
           </TouchableOpacity>   
         </View>
       </View>

@@ -21,8 +21,8 @@ class CreateMessageView extends Component {
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params,
-      Bcc: this.props.navigation.state.params.Message.Bcc[0],
-      Cc: this.props.navigation.state.params.Message.Cc[0],
+      Bcc: this.props.navigation.state.params.Message.Bcc,
+      Cc: this.props.navigation.state.params.Message.Cc,
       From: this.props.navigation.state.params.Message.From,
       Subject: this.props.navigation.state.params.Message.Subject,
       MessageBody: '',
@@ -47,7 +47,6 @@ class CreateMessageView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(this)
     try{
       if (nextProps.contactData !== this.props.contactData) {
         switch(nextProps.boxType){
@@ -105,6 +104,7 @@ class CreateMessageView extends Component {
       this.props.navigation.goBack(null);
       
   }
+  
   selectName(nameType){
    this.props.CreateMessageStateActions.selectNames(nameType);
    this.props.navigate({routeName: 'ContactStack'});
