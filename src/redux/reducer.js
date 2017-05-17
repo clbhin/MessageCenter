@@ -4,8 +4,10 @@ import NavigatorStateReducer from '../modules/navigator/NavigatorState';
 import CounterStateReducer from '../modules/counter/CounterState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 import InboxStateReducer from '../modules/inbox/InboxState';
-import CreateMessageStateReducer from '../modules/createMessage/CreateMessageState'
-import ContactStateReducer from '../modules/contact/ContactState'
+import CreateMessageStateReducer from '../modules/createMessage/CreateMessageState';
+import ContactStateReducer from '../modules/contact/ContactState';
+import SentStateReducer from '../modules/sent/SentState';
+import DraftStateReducer from '../modules/draft/DraftState';
 
 const reducers = {
   // Counter sample app state. This can be removed in a live application
@@ -19,7 +21,11 @@ const reducers = {
 
   session: SessionStateReducer,
 
-  contact: ContactStateReducer
+  contact: ContactStateReducer,
+
+  sent: SentStateReducer,
+
+  draft: DraftStateReducer
 
 };
 
