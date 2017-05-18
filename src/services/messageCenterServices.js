@@ -10,3 +10,7 @@ import {post} from './../utils/api'
  export async function SendMessage(message){
    return post('Messages/SendMessage',message)
  }
+
+ export async function ReadUserMessage(userMessage){
+   return post('Messages/ReadUserMessage',userMessage)
+ }

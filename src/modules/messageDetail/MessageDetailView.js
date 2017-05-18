@@ -47,6 +47,11 @@ class MessageDetailView extends Component {
     navigate: PropTypes.func.isRequired
   };
 
+  back=()=>{
+    this.props.navigation.goBack(null)
+    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+  }
+
   reply = (currentMessage) => {
     let data=lodash.cloneDeep(currentMessage);
     data.Message.Cc=[];
@@ -62,7 +67,7 @@ class MessageDetailView extends Component {
     return (
       <View>
         <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex: 1}}>
+          <TouchableOpacity onPress={() => this.back()} style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
           <Text style={{flex: 5,textAlign: 'left'}}>MessageDetail</Text>
