@@ -1,6 +1,5 @@
 import {get} from './../utils/api'
 import {post} from './../utils/api'
-import {del} from './../utils/api'
 
 
 
@@ -14,4 +13,8 @@ import {del} from './../utils/api'
 
  export async function DeleteMessage(message){
    return post('Messages/DeleteMessage',message)
+ }
+
+ export async function ReadUserMessage(userMessage){
+   return post('Messages/ReadUserMessage',userMessage)
  }
