@@ -8,7 +8,8 @@ import {
   ListView,
   TouchableHighlight
 } from 'react-native';
-import {MessageFormatDate} from './../utils/dateTimeHelper'
+import {MessageFormatDate} from './../utils/dateTimeHelper';
+import Icon from 'react-native-vector-icons/Entypo';
 
 
 class MessageView extends Component{
@@ -35,7 +36,10 @@ render() {
       </View>
       <View style={{flex: 3,marginLeft: 10,borderBottomColor: '#ddd',borderBottomWidth: 1,paddingBottom: 4}}>
         <View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
-          <Text style={{fontSize: 18}}>{this.props.messageData.Message.From.PersonName}</Text>
+          <View style={{flexDirection:'row',alignItems:'center'}}>
+            <Text style={{fontSize: 18}}>{this.props.messageData.Message.From.PersonName}</Text>
+            {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:null}
+          </View>
           <Text>{MessageFormatDate(this.props.messageData.Message.Timestamp)}</Text>
         </View>
         <Text style={{fontSize: 14}}>{this.props.messageData.Message.Subject}</Text>
