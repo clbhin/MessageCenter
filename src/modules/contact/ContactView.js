@@ -25,7 +25,7 @@ class ContactView extends Component {
       contactData:[]
     };
     this.data=data;
-  }
+  } 
   static navigationOptions = {
     header: {
       style: {

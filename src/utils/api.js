@@ -103,8 +103,8 @@ async function sendRequest(method, path, body) {
         method,
         headers
       };
-    console.log(endpoint);
-    console.log(options);
+    //console.log(endpoint);
+    //console.log(options);
     return timeout(fetch(endpoint, options), TIMEOUT);
   } catch (e) {
     throw new Error(e);

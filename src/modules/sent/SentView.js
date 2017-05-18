@@ -48,7 +48,7 @@ class SentView extends Component {
 
   componentWillReceiveProps(nextProps){
       try{
-        if(nextProps.value !== this.props.value){
+        if(nextProps.value !== this.props.value && nextProps.value){
             this.setState({
                 dataSource: this.ds.cloneWithRows(nextProps.value)
             });

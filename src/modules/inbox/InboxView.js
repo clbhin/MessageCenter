@@ -2,18 +2,21 @@ import React, {PropTypes, Component} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
+  Button,
   Image,
   Text,
   View,
   ListView,
   TextInput,
   Picker,
-  DrawerLayoutAndroid
+  DrawerLayoutAndroid,
+  Alert
 } from 'react-native';
 import MessageView from './../../components/Message';
 import {GetMessages} from './../../services/messageCenterServices'
 import Icon from 'react-native-vector-icons/Entypo';
 import DrawerView from './../drawer/DrawerView'; 
+import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 
 class InboxView extends Component {
   constructor(props) {
@@ -48,7 +51,7 @@ class InboxView extends Component {
 
   componentWillReceiveProps(nextProps) {
     try{
-      if (nextProps.value !== this.props.value) {
+      if (nextProps.value !== this.props.value && nextProps.value) {
       this.setState({
         dataSource: this.ds.cloneWithRows(nextProps.value)
       });
@@ -68,6 +71,11 @@ class InboxView extends Component {
 
   openDrawer(){    
     this.refs['DRAWER'].openDrawer();
+  }
+
+  deleteMessage(data){
+    console.log(data);
+   this.props.InboxStateActions.deleteMessage(data.UserMessage);
   }
 
   render() {
@@ -106,11 +114,31 @@ class InboxView extends Component {
           <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
 
         </View>
-        <ListView style={{paddingTop:10}}
+        <SwipeListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
-          renderRow={(rowData) => 
-        <MessageView messageData={rowData} transformMessage={this.transformMessage}/>
-        }/>
+          renderRow={(rowData, secId, rowId, rowMap) => 
+                      
+             <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
+            
+          }
+          renderHiddenRow={
+            (rowData,secId,rowId,rowMap) =>(
+              <View style={styles.rowBack}>
+                <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+                  <TouchableOpacity onPress={_=> rowMap[`${secId}${rowId}`].closeRow()}><Text>Right</Text></TouchableOpacity>
+                </View>
+                <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} 
+                onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                  <Text>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            )
+          }
+          rightOpenValue={-150} 
+          disableRightSwipe   
+          enableEmptySections={true}  
+          closeOnRowPress={true}             
+        />
       </DrawerLayoutAndroid>
       
     );
@@ -165,7 +193,34 @@ const styles = StyleSheet.create({
     color: '#CCCCCC',
     marginBottom: 10,
     padding: 5
-  }
+  },
+  rowBack: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingLeft: 15,
+	},
+  backRightBtn: {
+		alignItems: 'center',
+		bottom: 0,
+		justifyContent: 'center',
+		position: 'absolute',
+		top: 0,
+		width: 75
+	},
+  backRightBtnRight: {
+		backgroundColor: 'red',
+		right: 0
+	},
+  backRightBtnLeft: {
+		backgroundColor: 'blue',
+		right: 75
+	},
+  backTextWhite: {
+		color: '#FFF'
+	}
 });
 
 export default InboxView;

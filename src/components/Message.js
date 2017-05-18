@@ -12,12 +12,20 @@ import {MessageFormatDate} from './../utils/dateTimeHelper'
 
 
 class MessageView extends Component{
+  constructor(props) {
+  super(props);
+  
+  }
   static propTypes = {
     messageData:PropTypes.object
   };
   
 render() {
-  return <TouchableOpacity onPress={this.props.transformMessage.bind(this,this.props.messageData)}>
+  let secId = this.props.secId;
+  let rowId = this.props.rowId;
+  let rowMap = this.props.rowMap;
+  return <TouchableOpacity activeOpacity={1}
+    onPress={()=>{this.props.transformMessage(this.props.messageData);rowMap[`${secId}${rowId}`].closeRow()}} style={styles.rowFront}>
     <View
       style={{
       flexDirection: 'row',
@@ -72,5 +80,14 @@ const circle = {
   alignItems:'center',
   overflow:'hidden'
 };
+
+const styles = StyleSheet.create({
+  rowFront: {
+		alignItems: 'center',
+		backgroundColor: '#FFF',
+		borderBottomColor: 'black',		
+		justifyContent: 'center'		
+	}
+});
 
 export default MessageView;
