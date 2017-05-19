@@ -26,7 +26,11 @@ class InboxView extends Component {
     {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
   this.state = {
     dataSource: ds.cloneWithRows(data),
-    criteria:'All'
+    criteria:'',
+    userId:'Xiang Zhang',
+    type:'Inbox',
+    startIndex:0,
+    pageSize:10
   };
   this.ds=ds;
   this.closeDrawer = this.closeDrawer.bind(this);
@@ -81,6 +85,17 @@ class InboxView extends Component {
     this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
   }
 
+  searchMessage(){
+    let messageSearchCriteria={};
+    messageSearchCriteria.SearchText=this.state.criteria;
+    messageSearchCriteria.Type=this.state.type;
+    messageSearchCriteria.UserId=this.state.userId;
+    messageSearchCriteria.Start=this.state.startIndex;
+    messageSearchCriteria.PageSize=this.state.pageSize;
+    console.log(messageSearchCriteria);
+    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
+  }
+
   render() {
     var navigationView =(
       <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
@@ -91,9 +106,8 @@ class InboxView extends Component {
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={()=>navigationView}
-        ref={'DRAWER'}
-      >
-        <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
+        ref={'DRAWER'}>
+        <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1}}>
           <TouchableOpacity onPress={()=>{this.openDrawer()}}>
             <Image style={{width: 30,height: 40}}source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
@@ -102,20 +116,13 @@ class InboxView extends Component {
             <Text style={{fontSize:12}}>welcome,Xiang Zhang</Text>
           </View>
         </View>
-        <View style={{flexDirection:'row',backgroundColor:'#eee',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
+        <View style={{flexDirection:'row',backgroundColor:'white',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
           <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
-            <Text style={{flex:3,fontSize:12,textAlign:'center'}}>{this.state.criteria}</Text>
-            <Picker style={{flex:1}}
-              selectedValue={this.state.criteria}
-              onValueChange={(value) => this.setState({criteria: value})}>
-              <Picker.Item label="All" value="All" />
-              <Picker.Item label="Subject" value="Subject" />
-              <Picker.Item label="FromName" value="FromName" />
-              <Picker.Item label="ToName" value="ToName" />
-            </Picker>
+            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} onChangeText={(criteria) => this.setState({criteria})}/>
+            <TouchableOpacity onPress={()=>{this.searchMessage()}}>
+              <Icon name='magnifying-glass' size={24}></Icon>
+            </TouchableOpacity>
           </View>
-          <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
-
         </View>
         <SwipeListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
