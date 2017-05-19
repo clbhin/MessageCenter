@@ -15,6 +15,7 @@ import {
 import MessageView from './../../components/Message';
 import DrawerView from './../drawer/DrawerView'; 
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
+import Icon from 'react-native-vector-icons/Entypo';
 
 class InboxView extends Component {
   constructor(props) {
