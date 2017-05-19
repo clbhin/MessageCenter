@@ -125,11 +125,15 @@ class InboxView extends Component {
             (rowData,secId,rowId,rowMap) =>(
               <View style={styles.rowBack}>
                 <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                  <TouchableOpacity onPress={_=> rowMap[`${secId}${rowId}`].closeRow()}><Text>Right</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={_=> rowMap[`${secId}${rowId}`].closeRow()}>
+                    <Icon name='star' size={20} color={'yellow'}/>
+                    <Text style={styles.backRightBtnRightMark}>Mark</Text>
+                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} 
                 onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                  <Text>Delete</Text>
+                  <Icon name='trash' size={20} color={'gray'}/>
+                  <Text style={styles.backRightBtnRightDelete}>Delete</Text>
                 </TouchableOpacity>
               </View>
             )
@@ -211,11 +215,18 @@ const styles = StyleSheet.create({
 		width: 75
 	},
   backRightBtnRight: {
-		backgroundColor: 'red',
+		backgroundColor: '#DDD',
 		right: 0
 	},
+  backRightBtnRightDelete:{
+    marginTop: 5,
+    color: '#EF4A4A',
+  },
+  backRightBtnRightMark: {
+    marginTop: 5,
+  },
   backRightBtnLeft: {
-		backgroundColor: 'blue',
+		backgroundColor: '#DDD',
 		right: 75
 	},
   backTextWhite: {

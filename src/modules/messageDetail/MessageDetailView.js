@@ -63,6 +63,11 @@ class MessageDetailView extends Component {
     this.props.navigate({routeName: 'CreateMessageStack',params:currentMessage});
   }
 
+  deleteMessage(currentMessage){
+    this.props.InboxStateActions.deleteMessage(currentMessage.UserMessage);
+    this.props.navigation.goBack(null)
+  }
+
   render() {
     return (
       <View>
@@ -88,7 +93,7 @@ class MessageDetailView extends Component {
             <Icon name='reply-all' size={20} color={'blue'}/>
             <Text>REPLYALL</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:'column'}}>
+          <TouchableOpacity style={{flexDirection:'column'}} onPress={()=>this.deleteMessage(this.state.currentMessage)}>
             <Icon name='trash' size={20} color={'blue'}/>
             <Text>DELETE</Text>
           </TouchableOpacity>
