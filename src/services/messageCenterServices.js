@@ -18,3 +18,7 @@ import {post} from './../utils/api'
  export async function ReadUserMessage(userMessage){
    return post('Messages/ReadUserMessage',userMessage)
  }
+
+ export async function MarkUserMessage(userMessage){
+   return post('Messages/MarkUserMessage',userMessage)
+ }

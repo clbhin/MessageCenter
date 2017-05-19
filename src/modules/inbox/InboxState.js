@@ -1,7 +1,6 @@
 import {Map} from 'immutable';
 import {loop, Effects} from 'redux-loop-symbol-ponyfill';
-import {GetMessages, DeleteMessage} from './../../services/messageCenterServices';
-import {ReadUserMessage} from '../../services/messageCenterServices';
+import {GetMessages, DeleteMessage,ReadUserMessage,MarkUserMessage} from './../../services/messageCenterServices';
 
 
 // Initial state
@@ -16,6 +15,7 @@ const INBOXSTATE_REQUEST = 'INBOXSTATE/GETMESSAGES_REQUEST';
 const INBOXSTATE_RESPONSE = 'INBOXSTATE/GETMESSAGES_RESPONSE';
 const REQUEST_DELETE_INBOXSTATE = 'INBOXSTATE/REQUEST_DELETE_ATTACHMENT';
 const INBOXSTATE_READUSERMESSAGE='INBOXSTATE/READUSERMESSAGE';
+const INBOXSTATE_MARKMESSAGE='INBOXSTATE/MARKMESSAGE';
 
 export function transformMessage(){
   return type="";
@@ -39,6 +39,20 @@ export function readMessage(userMessage){
   }
 }
 
+export function deleteMessage(message){
+  return{
+    type: REQUEST_DELETE_INBOXSTATE,
+    payload: message
+  };
+}
+
+export function markMessage(userMessage){
+  return{
+    type:INBOXSTATE_MARKMESSAGE,
+    payload:userMessage
+  }
+}
+
 export async function requestGetMessages(userId,inboxType) {
   try {
     const result = await GetMessages(userId, inboxType);
@@ -48,12 +62,7 @@ export async function requestGetMessages(userId,inboxType) {
   }
 }
 
-export function deleteMessage(message){
-  return{
-    type: REQUEST_DELETE_INBOXSTATE,
-    payload: message
-  };
-}
+
 
 export async function deleteInbox(message) {
   try {
@@ -74,16 +83,33 @@ export async function deleteInbox(message) {
 export async function requestReadUserMessage(userMessage){
   try{
     const result=await ReadUserMessage(userMessage)
-    return {type:INBOXSTATE_REQUEST,
+    return {
+      type:INBOXSTATE_REQUEST,
       payload:{
-        userId:'Xiang Zhang',
-        inboxType:'Inbox'
+        userId:userMessage.UserId,
+        inboxType:userMessage.Type
       }
     }
   }catch(err){
     return {type: INBOXSTATE_RESPONSE, payload: []}
   }
 }
+
+export async function requestMarkUserMessage(userMessage){
+  try{
+    const result=await MarkUserMessage(userMessage)
+    return {
+      type:INBOXSTATE_REQUEST,
+      payload:{
+        userId:userMessage.UserId,
+        inboxType:userMessage.Type
+      }
+    }
+  }catch(err){
+    return {type: INBOXSTATE_RESPONSE, payload: []}
+  }
+}
+
 // Reducer
 export default function InboxStateReducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -99,6 +125,9 @@ export default function InboxStateReducer(state = initialState, action = {}) {
 
     case INBOXSTATE_READUSERMESSAGE:
       return loop(state,Effects.promise(requestReadUserMessage,action.payload));
+
+    case INBOXSTATE_MARKMESSAGE:
+      return loop(state,Effects.promise(requestMarkUserMessage,action.payload))  
 
     default:
       return state;

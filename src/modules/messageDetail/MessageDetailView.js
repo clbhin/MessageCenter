@@ -71,11 +71,12 @@ class MessageDetailView extends Component {
   render() {
     return (
       <View>
-        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
+        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd',paddingLeft:10,paddingRight:20}}>
           <TouchableOpacity onPress={() => this.back()} style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
           <Text style={{flex: 5,textAlign: 'left'}}>MessageDetail</Text>
+          {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:<Icon name='star-outlined' size={18} color={'#ccc'}/>}
         </View>
         <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}> 
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:Xiang Zhang</Text>
@@ -96,7 +97,7 @@ class MessageDetailView extends Component {
             <Icon name='trash' size={20} color={'blue'}/>
             <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:'column'}}>
+          <TouchableOpacity style={{flexDirection:'column'}} onPress={()=>this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
             <Icon name='star-outlined' size={20} color={'orange'}/>
             <Text>MARK</Text>
           </TouchableOpacity>   

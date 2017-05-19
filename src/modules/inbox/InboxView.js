@@ -13,8 +13,6 @@ import {
   Alert
 } from 'react-native';
 import MessageView from './../../components/Message';
-import {GetMessages} from './../../services/messageCenterServices'
-import Icon from 'react-native-vector-icons/Entypo';
 import DrawerView from './../drawer/DrawerView'; 
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 
@@ -74,8 +72,12 @@ class InboxView extends Component {
     this.refs['DRAWER'].openDrawer();
   }
 
-  deleteMessage(data){  
+  deleteMessage(data){
    this.props.InboxStateActions.deleteMessage(data.UserMessage);
+  }
+
+  markMessage(currentMessage){
+    this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
   }
 
   render() {
@@ -116,10 +118,8 @@ class InboxView extends Component {
         </View>
         <SwipeListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
-          renderRow={(rowData, secId, rowId, rowMap) => 
-                      
+          renderRow={(rowData, secId, rowId, rowMap) =>           
              <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
-            
           }
           renderHiddenRow={
             (rowData,secId,rowId,rowMap) =>(
