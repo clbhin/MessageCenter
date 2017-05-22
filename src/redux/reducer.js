@@ -8,6 +8,7 @@ import CreateMessageStateReducer from '../modules/createMessage/CreateMessageSta
 import ContactStateReducer from '../modules/contact/ContactState';
 import SentStateReducer from '../modules/sent/SentState';
 import DraftStateReducer from '../modules/draft/DraftState';
+import AddProfileStateReducer from '../modules/addProfile/addProfileState'
 
 const reducers = {
   // Counter sample app state. This can be removed in a live application
@@ -25,7 +26,9 @@ const reducers = {
 
   sent: SentStateReducer,
 
-  draft: DraftStateReducer
+  draft: DraftStateReducer,
+
+  addProfile: AddProfileStateReducer,
 
 };
 

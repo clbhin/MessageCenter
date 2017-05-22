@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from 'react';
+import React, { PropTypes, Component } from 'react';
 import {
   Button,
   View,
@@ -6,11 +6,12 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  ListView,
   Alert
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
-import {getNames} from '../../services/mcServices'
+import { getNames } from '../../services/mcServices'
 /**
  * Sample view to demonstrate StackNavigator
  * @TODO remove this module in a live application.
@@ -18,6 +19,7 @@ import {getNames} from '../../services/mcServices'
 class CreateMessageView extends Component {
   constructor(props) {
     super(props);
+    var proflieDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params,
@@ -27,10 +29,12 @@ class CreateMessageView extends Component {
       Subject: this.props.navigation.state.params.Message.Subject,
       MessageBody: '',
       To: [this.props.navigation.state.params.Message.From],
-      ToNames:this.props.navigation.state.params.Message.From.PersonName,
-      BccNames:getNames(this.props.navigation.state.params.Message.Bcc),
-      CcNames:getNames(this.props.navigation.state.params.Message.Cc)
+      ToNames: this.props.navigation.state.params.Message.From.PersonName,
+      BccNames: getNames(this.props.navigation.state.params.Message.Bcc),
+      CcNames: getNames(this.props.navigation.state.params.Message.Cc),
+      proflieDataSource,
     };
+    this.data = [];
   }
   static displayName = 'MessageDetailView';
 
@@ -47,32 +51,41 @@ class CreateMessageView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    try{
+    try {
       if (nextProps.contactData !== this.props.contactData) {
-        switch(nextProps.boxType){
+        switch (nextProps.boxType) {
           case 'ToNames':
             this.setState({
               To: nextProps.contactData,
-              ToNames:getNames(nextProps.contactData)  
+              ToNames: getNames(nextProps.contactData)
             })
             break;
           case 'CcNames':
             this.setState({
               Cc: nextProps.contactData,
-              CcNames:getNames(nextProps.contactData)  
+              CcNames: getNames(nextProps.contactData)
             })
             break;
           case 'BccNames':
             this.setState({
               Bcc: nextProps.contactData,
-              BccNames:getNames(nextProps.contactData)  
+              BccNames: getNames(nextProps.contactData)
             })
             break;
           default:
-            return  
+            return
         }
       }
-    }catch(err){
+      if (nextProps.selectedProfiles != this.props.selectedProfiles) {
+        if (nextProps.selectedProfiles.length > 0) {
+          var AttachedProfiles = [];
+          AttachedProfiles[0] = nextProps.selectedProfiles[0];
+          this.setState({
+            proflieDataSource: this.state.proflieDataSource.cloneWithRows(AttachedProfiles)
+          });
+        }
+      }
+    } catch (err) {
       console.log(err)
     }
   }
@@ -84,15 +97,15 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody=this.state.MessageBody;
-    message.From=this.state.From;
+    message.MessageBody = this.state.MessageBody;
+    message.From = this.state.From;
     formData.append('message', JSON.stringify(message))
 
     fetch('http://172.16.40.103:8079/api/Messages/SendMessage', {
       method: "POST",
       headers: {},
-        body: formData
-      })
+      body: formData
+    })
       .then(response => response.json())
       .then(json => {
         console.log(json);
@@ -101,31 +114,34 @@ class CreateMessageView extends Component {
       .catch(function (error) {
         console.log('request failed: ', error)
       })
-      this.props.navigation.goBack(null);
-      
-  }
-  
-  selectName(nameType){
-   this.props.CreateMessageStateActions.selectNames(nameType);
-   this.props.navigate({routeName: 'ContactStack'});
+    this.props.navigation.goBack(null);
+
   }
 
+  selectName(nameType) {
+    this.props.CreateMessageStateActions.selectNames(nameType);
+    this.props.navigate({ routeName: 'ContactStack' });
+  }
+
+  addProfile() {
+    this.props.navigate({ routeName: 'AddProfileStack' });
+  }
 
   render() {
     return (
       <View>
-        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd'}}>
-          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{flex: 1}}>
-            <Icon name='arrow-left' size={30} color={'orange'}/>
+        <View style={{ flexDirection: 'row', height: 40, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd' }}>
+          <TouchableOpacity onPress={() => this.props.navigation.goBack(null)} style={{ flex: 1 }}>
+            <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
-          <Text style={{flex: 5,textAlign: 'center'}}>reply</Text>
-          <TouchableOpacity style={{flex: 1}} onPress={() => this.send()}>
-            <Icon name='direction' size={30} color={'orange'}/>
+          <Text style={{ flex: 5, textAlign: 'center' }}>reply</Text>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => this.send()}>
+            <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>
         </View>
-        <View style={{marginLeft: 10,marginTop: 10,marginRight: 10,flexDirection: 'column'}}>
-          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
-            <Text style={{fontSize: 16,textAlign: 'center'}}>To:</Text>
+        <View style={{ marginLeft: 10, marginTop: 10, marginRight: 10, flexDirection: 'column' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>To:</Text>
             <TextInput value={this.state.ToNames} onChangeText={(PersonName) => {
               this.setState({
                 'To': {
@@ -134,14 +150,14 @@ class CreateMessageView extends Component {
                 }
               })
             }}
-              style={{flex: 1}}>
+              style={{ flex: 1 }}>
             </TextInput>
-            <TouchableOpacity onPress={()=>this.selectName('ToNames')}>
-              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
-            </TouchableOpacity>  
+            <TouchableOpacity onPress={() => this.selectName('ToNames')}>
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
+            </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
-            <Text style={{fontSize: 16,textAlign: 'center'}}>Cc:</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>Cc:</Text>
             <TextInput value={this.state.CcNames} onChangeText={(text) => {
               this.setState({
                 'Cc': {
@@ -150,24 +166,45 @@ class CreateMessageView extends Component {
                 }
               })
             }}
-              style={{flex: 1}}>
+              style={{ flex: 1 }}>
             </TextInput>
-            <TouchableOpacity onPress={()=>this.selectName('CcNames')} >
-              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
-            </TouchableOpacity> 
+            <TouchableOpacity onPress={() => this.selectName('CcNames')} >
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
+            </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
-            <Text style={{fontSize: 16,textAlign: 'center'}}>Bcc:</Text>
-            <TextInput value={this.state.BccNames} style={{flex: 1}}></TextInput>
-            <TouchableOpacity onPress={()=>this.selectName('BccNames')}>
-              <Icon name='circle-with-plus' size={30} color={'#007FFB'}/>
-            </TouchableOpacity> 
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>Bcc:</Text>
+            <TextInput value={this.state.BccNames} style={{ flex: 1 }}></TextInput>
+            <TouchableOpacity onPress={() => this.selectName('BccNames')}>
+              <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
+            </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row',alignItems: 'center',borderBottomWidth: 1,borderBottomColor: '#ddd'}}>
-            <Text style={{fontSize: 16,textAlign: 'center'}}>Subject:</Text>
-            <TextInput value={this.state.Subject} onChangeText={(Subject) => {this.setState({Subject})}} style={{flex: 1}}></TextInput>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
+            <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
-          <TextInput style={{borderColor: 'gray',minHeight: 300,borderWidth: 1}} onChangeText={(text) => this.setState({'MessageBody': text})} value={this.state.MessageBody} multiline={true}/>
+          <View>
+            <Button
+              onPress={() => this.addProfile()}
+              title="Add Profile"
+              color="#841584"
+              accessibilityLabel="Add Profile"
+            />
+          </View>
+          <TextInput style={{ borderColor: 'gray', minHeight: 300, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+          <View>
+            <ListView style={{ paddingTop: 10 }}
+              dataSource={this.state.proflieDataSource}
+              renderRow={(rowData) =>
+                <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }}>
+                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.FirstName}</Text>
+                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.LastName}</Text>
+                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Id}</Text>
+                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Ssn}</Text>
+                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Medicaid}</Text>
+                </TouchableOpacity>
+              } />
+          </View>
         </View>
       </View>
     );

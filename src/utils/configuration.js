@@ -1,6 +1,6 @@
 import {Map} from 'immutable';
 
-let configuration = Map({API_ROOT:'http://172.16.40.106:7089/api'});
+let configuration = Map({API_ROOT:'http://172.16.40.114:801/api'});
 
 export function setConfiguration(name, value) {
   configuration = configuration.set(name, value);

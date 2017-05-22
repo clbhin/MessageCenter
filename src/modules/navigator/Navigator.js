@@ -8,7 +8,7 @@ import CreateMessageViewContainer from './../createMessage/CreateMessageViewCont
 import ContactViewContainer from './../contact/ContactViewContainer';
 import SentViewContainer from './../sent/SentViewContainer';
 import DraftViewContainer from './../draft/DraftViewContainer';
-
+import AddProfileViewContainer from './../addProfile/addProfileViewContainer';
 const headerColor = '#39babd';
 const activeColor = 'white';
 
@@ -48,6 +48,7 @@ const AppNavigator = StackNavigator({
   ContactStack:{screen:ContactViewContainer},
   SentStack: {screen: SentViewContainer},
   DraftStack: {screen: DraftViewContainer},
+  AddProfileStack:{screen:AddProfileViewContainer},
 });
 
 export default AppNavigator;
