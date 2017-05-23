@@ -23,15 +23,15 @@ class CreateMessageView extends Component {
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params,
-      Bcc: this.props.navigation.state.params.Message.Bcc,
-      Cc: this.props.navigation.state.params.Message.Cc,
-      From: this.props.navigation.state.params.Message.From,
-      Subject: this.props.navigation.state.params.Message.Subject,
+      Bcc: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc,
+      Cc: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc,
+      From: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From,
+      Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
       MessageBody: '',
-      To: [this.props.navigation.state.params.Message.From],
-      ToNames: this.props.navigation.state.params.Message.From.PersonName,
-      BccNames: getNames(this.props.navigation.state.params.Message.Bcc),
-      CcNames: getNames(this.props.navigation.state.params.Message.Cc),
+      To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
+      BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
+      CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
       proflieDataSource,
     };
     this.data = [];
@@ -98,7 +98,7 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody;
-    message.From = this.state.From;
+    message.From ={PersonName:'Xiang Zhang',Id:'Xiang Zhang'};
     formData.append('message', JSON.stringify(message))
 
     fetch('http://172.16.40.103:8079/api/Messages/SendMessage', {
@@ -114,6 +114,7 @@ class CreateMessageView extends Component {
       .catch(function (error) {
         console.log('request failed: ', error)
       })
+    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
     this.props.navigation.goBack(null);
 
   }

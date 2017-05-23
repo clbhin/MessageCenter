@@ -64,7 +64,7 @@ addContactName=() =>{
             <Icon name='check' size={30}></Icon>
           </TouchableOpacity>
         </View>
-        <TextInput placeholder='serch contact' style={{height:30,borderRadius:15,marginLeft:10,marginTop:10,marginRight:10,backgroundColor:'#ccc',fontSize:14,padding:0}} underlineColorAndroid="transparent"></TextInput>
+        <TextInput placeholder='search contact' style={{height:30,borderRadius:15,marginLeft:10,marginTop:10,marginRight:10,backgroundColor:'#ccc',fontSize:14,padding:0}} underlineColorAndroid="transparent"></TextInput>
         <ListView style={{paddingTop:10}}
           dataSource={this.state.dataSource}
           renderRow={(rowData) => 

@@ -10,11 +10,13 @@ import {
   TextInput,
   Picker,
   DrawerLayoutAndroid,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import MessageView from './../../components/Message';
 import DrawerView from './../drawer/DrawerView'; 
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
+import Icon from 'react-native-vector-icons/Entypo';
 
 class InboxView extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ class InboxView extends Component {
   this.closeDrawer = this.closeDrawer.bind(this);
   this.openDrawer = this.openDrawer.bind(this);
   this.transformMessage = this.transformMessage.bind(this);
+  this.screenSize = Dimensions.get('window');
 }
   static displayName = 'InboxView';
 
@@ -78,6 +81,11 @@ class InboxView extends Component {
 
   markMessage(currentMessage){
     this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
+  }
+
+  createMessage(){
+    let data={};
+    this.props.navigate({routeName: 'CreateMessageStack',params:data});
   }
 
   render() {
@@ -139,6 +147,20 @@ class InboxView extends Component {
           enableEmptySections={true}  
           closeOnRowPress={true}             
         />
+        <View style={{flexDirection:'row',height:30,borderRadius:15,marginLeft:40,marginRight:40,backgroundColor:'white',position:'absolute',opacity:0.8,top:this.screenSize.height-60,left:0,right:0}}>
+            <TouchableOpacity style={{flex:1,alignItems:'center'}} onPress={()=>{this.createMessage()}}>
+              <Icon name='plus' size={14}></Icon>
+              <Text>New</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{flex:1,alignItems:'center'}}>
+              <Icon name='magnifying-glass' size={14}></Icon>
+              <Text>Search</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{flex:1,alignItems:'center'}}>
+              <Icon name='dots-three-vertical' size={14}></Icon>
+              <Text>More</Text>
+            </TouchableOpacity>
+        </View>
       </DrawerLayoutAndroid>
       
     );
