@@ -115,7 +115,7 @@ class InboxView extends Component {
     let messageLoadMore={};
     messageLoadMore.UserId=this.state.userId;
     messageLoadMore.Type=this.state.type;
-    messageLoadMore.Start=this.props.value.length;
+    messageLoadMore.Start=0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize=this.state.pageSize;
     messageLoadMore.SearchText=this.state.criteria;
     this.props.InboxStateActions.loadMoreMessages(messageLoadMore);
@@ -202,7 +202,6 @@ class InboxView extends Component {
           closeOnRowPress={true}
           renderFooter={()=>{return this.renderFooter()}}             
         />
-        {this.props.value && this.props.value.length?null:<Text style={{position:'absolute',opacity:0.8,top:this.screenSize.height/2,left:40,right:0}}>No Messages match the criteria</Text>}        
       </DrawerLayoutAndroid>
       
     );
