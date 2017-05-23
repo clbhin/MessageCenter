@@ -57,7 +57,7 @@ class InboxView extends Component {
 
   transformMessage = (currentMessage) => {
     this.props.InboxStateActions.readMessage(currentMessage.UserMessage);
-    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage,action:this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox')});
+    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
   };
 
   componentWillReceiveProps(nextProps) {

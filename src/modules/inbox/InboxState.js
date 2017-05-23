@@ -50,6 +50,7 @@ export function deleteMessage(message){
 }
 
 export function markMessage(userMessage){
+  userMessage.Mark==='Marked'?userMessage.Mark='UnMark':userMessage.Mark='Marked';
   return{
     type:REQUEST_MARK_MESSAGE,
     payload:userMessage
