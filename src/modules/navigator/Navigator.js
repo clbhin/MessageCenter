@@ -9,6 +9,7 @@ import ContactViewContainer from './../contact/ContactViewContainer';
 import SentViewContainer from './../sent/SentViewContainer';
 import DraftViewContainer from './../draft/DraftViewContainer';
 import AddProfileViewContainer from './../addProfile/addProfileViewContainer';
+import LoginInViewContainer from './../login/LoginViewContainer';
 const headerColor = '#39babd';
 const activeColor = 'white';
 
@@ -41,7 +42,8 @@ const activeColor = 'white';
 
 // Root navigator is a StackNavigator
 const AppNavigator = StackNavigator({
-  Home: {screen: InboxViewContainer},
+  Home: {screen: LoginInViewContainer},
+  InboxStack: {screen: InboxViewContainer},
   InfiniteColorStack: {screen: ColorViewContainer},
   MessageDetailStack:{screen:MessageDetailViewContainer},
   CreateMessageStack:{screen:CreateMessageViewContainer},

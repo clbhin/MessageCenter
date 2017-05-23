@@ -31,7 +31,7 @@ class InboxView extends Component {
   this.state = {
     dataSource: ds.cloneWithRows(data),
      criteria:'',
-     userId:'Xiang Zhang',
+     userId:'',
      type:'Inbox',
      startIndex:0,
      pageSize:10,
@@ -73,7 +73,7 @@ class InboxView extends Component {
   }
 
   componentWillMount(){
-    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+    this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
   }
 
    closeDrawer(){
@@ -130,11 +130,13 @@ class InboxView extends Component {
    }
 
   render() {
+          console.log(this);
     var navigationView =(
       <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
     );
 
     return (
+
       <DrawerLayoutAndroid
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
@@ -177,7 +179,7 @@ class InboxView extends Component {
             (rowData,secId,rowId,rowMap) =>(
               <View style={styles.rowBack}>
                 <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                  <TouchableOpacity onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                  <TouchableOpacity onPress={()=>{this.markMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
                     <Icon name='star' size={20} color={'#33373D'}/>
                     <Text style={styles.backRightBtnRightMark}>Mark</Text>
                   </TouchableOpacity>
