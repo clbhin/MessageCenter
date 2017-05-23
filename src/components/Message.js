@@ -5,8 +5,7 @@ import {
   Image,
   Text,
   View,
-  ListView,
-  TouchableHighlight
+  ListView
 } from 'react-native';
 import {MessageFormatDate} from './../utils/dateTimeHelper';
 import Icon from 'react-native-vector-icons/Entypo';

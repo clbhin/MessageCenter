@@ -42,7 +42,6 @@ class SentView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    //console.log(currentMessage)
     this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage,action:this.props.SentStateActions.getMessages('Xiang Zhang','Sent')});
   };
 
@@ -60,7 +59,6 @@ class SentView extends Component {
    
   componentWillMount(){
     this.props.SentStateActions.getMessages('Xiang Zhang','Sent');
-    console.log('data');
   }
 
   closeDrawer(){

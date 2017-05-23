@@ -27,8 +27,7 @@ class DrawerView extends Component{
     this.transformMessage = this.transformMessage.bind(this);
     }
 
-    transformMessage = (currentMessage) => {
-        console.log(currentMessage);      
+    transformMessage = (currentMessage) => {    
         if(currentMessage=== 'Inbox'){
             this.props.navigate({routeName: 'Home'});
         }else if(currentMessage=== 'Sent'){

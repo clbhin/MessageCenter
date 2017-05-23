@@ -28,7 +28,6 @@ export function getMessages(userId, draftType) {
 export async function requestGetMessages(userId,draftType) {
   try {
     const result = await GetMessages(userId, draftType);
-    //console.log(result);
     return {type: DRAFTSTATE_RESPONSE, payload: result};
   } catch (err) {
     return {type: DRAFTSTATE_RESPONSE, payload: []};

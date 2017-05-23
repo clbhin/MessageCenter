@@ -1,6 +1,6 @@
 import {Map} from 'immutable';
 import {loop, Effects} from 'redux-loop-symbol-ponyfill';
-import {GetMessages, DeleteMessage,ReadUserMessage,MarkUserMessage,SearchMessages} from './../../services/messageCenterServices';
+import {GetMessages, DeleteMessage,ReadUserMessage,MarkUserMessage,SearchMessages,LoadMoreMessages} from './../../services/messageCenterServices';
 
 
 // Initial state
@@ -17,6 +17,8 @@ const REQUEST_READ_USER_MESSAGE='InboxState/REQUEST_READ_USER_MESSAGE';
 const REQUEST_MARK_MESSAGE='InboxState/REQUEST_MARK_MESSAGE';
 const REQUEST_SEARCH_MESSAGES='InboxState/REQUEST_SEARCH_MESSAGES';
 const RESPONSE_SEARCH_MESSAGES='InboxState/RESPONSE_SEARCH_MESSAGES';
+const REQUEST_LOAD_MORE_MESSAGES='InboxState/REQUEST_LOAD_MORE_MESSAGES';
+const RESPONSE_LOAD_MORE_MESSAGES='InboxState/RESPONSE_LOAD_MORE_MESSAGES';
 
 export function transformMessage(){
   return type="";
@@ -59,6 +61,13 @@ export function searchMessage(criteriaCollection){
      type:REQUEST_SEARCH_MESSAGES,
      payload:criteriaCollection
    }
+}
+
+export function loadMoreMessages(userMessage) {
+  return {
+    type: REQUEST_LOAD_MORE_MESSAGES,
+    payload: userMessage
+  };
 }
 
 export async function requestGetMessages(userId,inboxType) {
@@ -130,6 +139,18 @@ export async function requestSearchMessage(criteriaCollection){
     }
 }
 
+export async function requestLoadMoreMessage(userMessage){
+  try{
+    const result=await LoadMoreMessages(userMessage)
+    return {
+      type:RESPONSE_LOAD_MORE_MESSAGES,
+      payload:result
+    }
+  }catch(err){
+    return {type: RESPONSE_GET_MESSAGES, payload: []}
+  }
+}
+
 // Reducer
 export default function InboxStateReducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -152,8 +173,17 @@ export default function InboxStateReducer(state = initialState, action = {}) {
     case REQUEST_SEARCH_MESSAGES:
       return loop(state,Effects.promise(requestSearchMessage,action.payload));
     
-     case RESPONSE_SEARCH_MESSAGES:
-       return state.set('value',action.payload.ModelObject)
+    case RESPONSE_SEARCH_MESSAGES:
+       return state.set('value',action.payload.ModelObject);
+
+    case REQUEST_LOAD_MORE_MESSAGES:
+      return loop(state,Effects.promise(requestLoadMoreMessage,action.payload));
+
+    case RESPONSE_LOAD_MORE_MESSAGES:     
+      let oldData=state.get('value');
+      let newData=[];
+      newData=oldData.concat(action.payload.ModelObject);
+      return state.set('value',newData);
 
     default:
       return state;

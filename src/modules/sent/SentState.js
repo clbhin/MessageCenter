@@ -28,7 +28,6 @@ export function getMessages(userId, sentType) {
 export async function requestGetMessages(userId,sentType) {
   try {
     const result = await GetMessages(userId, sentType);
-    console.log(result);
     return {type: SENTSTATE_RESPONSE, payload: result};
   } catch (err) {
     return {type: SENTSTATE_RESPONSE, payload: []};

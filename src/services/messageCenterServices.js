@@ -26,3 +26,7 @@ import {post} from './../utils/api'
  export async function SearchMessages(criteriaCollection){
    return post('Messages/SearchMessages',criteriaCollection)
  }
+
+ export async function LoadMoreMessages(userMessage){
+   return post('Messages/SearchMessages',userMessage)
+ }

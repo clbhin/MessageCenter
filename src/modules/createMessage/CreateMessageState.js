@@ -29,7 +29,6 @@ export function selectNames(nameType){
 export async function requestSendMessage(data) {
   try {
     const result = await SendMessage(data);
-    console.log(result);
     return {
       type:CREATEMESSAGESTATE_RESPONSE
     }

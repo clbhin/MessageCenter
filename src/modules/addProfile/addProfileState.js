@@ -27,8 +27,7 @@ export function search(search) {
 export async function requestSearch(searchCriteria) {
     try {
         const result =
-            await post('Messages/SearchClientProfiles', searchCriteria);
-        console.log(result);
+            await post('Messages/SearchClientProfiles', searchCriteria);        
         return {
             type: ADDPROFILESTATE_SEARCH_RESPONSE,
             payload: result.ModelObject

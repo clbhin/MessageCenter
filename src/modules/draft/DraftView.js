@@ -42,7 +42,6 @@ class DraftView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    //console.log(currentMessage)
     this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage,action:this.props.DraftStateActions.getMessages('Xiang Zhang','Draft')});
   };
 
@@ -60,7 +59,6 @@ class DraftView extends Component {
    
   componentWillMount(){
     this.props.DraftStateActions.getMessages('Xiang Zhang','Draft');
-    console.log('data');
   }
 
   closeDrawer(){

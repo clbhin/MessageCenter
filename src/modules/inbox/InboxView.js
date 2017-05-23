@@ -11,12 +11,15 @@ import {
   Picker,
   DrawerLayoutAndroid,
   Alert,
-  Dimensions
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native';
 import MessageView from './../../components/Message';
 import DrawerView from './../drawer/DrawerView'; 
-import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
+import {SwipeListView} from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
+import LoadMoreFooter from './../../components/LoadMoreFooter';
 
 class InboxView extends Component {
   constructor(props) {
@@ -31,13 +34,15 @@ class InboxView extends Component {
      userId:'Xiang Zhang',
      type:'Inbox',
      startIndex:0,
-     pageSize:10
+     pageSize:10,
+     onEndReached: false,
   };
   this.ds=ds;
   this.closeDrawer = this.closeDrawer.bind(this);
   this.openDrawer = this.openDrawer.bind(this);
   this.transformMessage = this.transformMessage.bind(this);
   this.screenSize = Dimensions.get('window');
+  this.renderFooter = this.renderFooter.bind(this);
 }
   static displayName = 'InboxView';
 
@@ -94,7 +99,6 @@ class InboxView extends Component {
     messageSearchCriteria.UserId=this.state.userId;
     messageSearchCriteria.Start=this.state.startIndex;
     messageSearchCriteria.PageSize=this.state.pageSize;
-    console.log(messageSearchCriteria);
     this.props.InboxStateActions.searchMessage(messageSearchCriteria);
    }
 
@@ -102,6 +106,28 @@ class InboxView extends Component {
     let data={};
     this.props.navigate({routeName: 'CreateMessageStack',params:data});
   }
+
+  reloadData(){
+    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+  }
+
+  toEnd(){
+    let messageLoadMore={};
+    messageLoadMore.UserId=this.state.userId;
+    messageLoadMore.Type=this.state.type;
+    messageLoadMore.Start=this.props.value.length;
+    messageLoadMore.PageSize=this.state.pageSize;
+    messageLoadMore.SearchText=this.state.criteria;
+    this.props.InboxStateActions.loadMoreMessages(messageLoadMore);
+  }
+
+  renderFooter(){
+    if((this.props.value && this.props.value.length % 10) === 0 ){
+      return <LoadMoreFooter />
+    }else{
+      return <LoadMoreFooter isLoadAll={true} />
+    }
+   }
 
   render() {
     var navigationView =(
@@ -114,6 +140,7 @@ class InboxView extends Component {
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={()=>navigationView}
         ref={'DRAWER'}
+        style={{backgroundColor: '#fff', paddingBottom: 260}}
       >
         <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
           <TouchableOpacity onPress={()=>{this.openDrawer()}}>
@@ -122,6 +149,11 @@ class InboxView extends Component {
           <View style={{flex:1,marginLeft:20}}>
             <Text style={{fontSize:18,color:'black'}}>Inbox</Text>
             <Text style={{fontSize:12}}>welcome,Xiang Zhang</Text>
+          </View>
+          <View style={{}}>
+            <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent: 'center',marginRight: 7, width: 30}} onPress={()=>{this.createMessage()}}>
+              <Icon name='plus' size={20} color={'#33373D'}></Icon>              
+            </TouchableOpacity>    
           </View>
         </View>
         <View style={{flexDirection:'row',backgroundColor:'white',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
@@ -134,6 +166,9 @@ class InboxView extends Component {
 
         </View>
         <SwipeListView style={{paddingTop:10}}
+          refreshControl={
+              < RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
+              />}
           dataSource={this.state.dataSource}
           renderRow={(rowData, secId, rowId, rowMap) =>           
              <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
@@ -142,35 +177,30 @@ class InboxView extends Component {
             (rowData,secId,rowId,rowMap) =>(
               <View style={styles.rowBack}>
                 <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                  <TouchableOpacity onPress={_=> rowMap[`${secId}${rowId}`].closeRow()}><Text>Right</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                    <Icon name='star' size={20} color={'#33373D'}/>
+                    <Text style={styles.backRightBtnRightMark}>Mark</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} 
-                onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                  <Text>Delete</Text>
+                <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+                  <TouchableOpacity  onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                  <Icon name='trash' size={20} color={'#EE3B3B'}/>
+                  <Text style={styles.backRightBtnRightDelete}>Delete</Text>
                 </TouchableOpacity>
+                </View>
+                
               </View>
             )
           }
+          onEndReached={()=>{this.toEnd()}}
+          onEndReachedThreshold={10}
           rightOpenValue={-150} 
           disableRightSwipe   
           enableEmptySections={true}  
-          closeOnRowPress={true}             
+          closeOnRowPress={true}
+          renderFooter={()=>{return this.renderFooter()}}             
         />
-        {this.props.value.length?null:<Text style={{position:'absolute',opacity:0.8,top:this.screenSize.height/2,left:40,right:0}}>No Messages match the criteria</Text>}
-        <View style={{flexDirection:'row',height:30,borderRadius:15,marginLeft:40,marginRight:40,backgroundColor:'white',position:'absolute',opacity:0.8,top:this.screenSize.height-60,left:0,right:0}}>
-            <TouchableOpacity style={{flex:1,alignItems:'center'}} onPress={()=>{this.createMessage()}}>
-              <Icon name='plus' size={14}></Icon>
-              <Text>New</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{flex:1,alignItems:'center'}}>
-              <Icon name='magnifying-glass' size={14}></Icon>
-              <Text>Search</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{flex:1,alignItems:'center'}}>
-              <Icon name='dots-three-vertical' size={14}></Icon>
-              <Text>More</Text>
-            </TouchableOpacity>
-        </View>
+        {this.props.value && this.props.value.length?null:<Text style={{position:'absolute',opacity:0.8,top:this.screenSize.height/2,left:40,right:0}}>No Messages match the criteria</Text>}        
       </DrawerLayoutAndroid>
       
     );
@@ -243,16 +273,30 @@ const styles = StyleSheet.create({
 		width: 75
 	},
   backRightBtnRight: {
-		backgroundColor: 'red',
+		backgroundColor: '#F5F5F5',
 		right: 0
 	},
   backRightBtnLeft: {
-		backgroundColor: 'blue',
+		backgroundColor: '#F5F5F5',
 		right: 75
 	},
   backTextWhite: {
 		color: '#FFF'
-	}
+	},
+  loadMessage :{
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backRightBtnRightDelete: {
+    color: '#EE3B3B',
+    marginTop: 5,
+    fontSize: 12
+  },
+  backRightBtnRightMark: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#33373D' 
+  }
 });
 
 export default InboxView;

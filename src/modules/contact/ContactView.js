@@ -52,7 +52,6 @@ addContactName=() =>{
 }
 
   render() {
-    console.log(this);
     return (
       <View>
         <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1, borderBottomColor:'#ccc',marginTop:10,paddingBottom:4}}>
