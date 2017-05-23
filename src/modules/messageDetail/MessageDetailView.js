@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  ListView,
   Dimensions
 } from 'react-native';
 
@@ -19,10 +20,17 @@ import lodash from 'lodash'
 class MessageDetailView extends Component {
     constructor(props) {
     super(props);
+    var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       background: 'red',
       currentMessage:this.props.navigation.state.params,
+      profileDataSource: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.AttachedProfiles &&
+        this.props.navigation.state.params.Message.AttachedProfiles.length > 0 ?
+        ds.cloneWithRows(this.props.navigation.state.params.Message.AttachedProfiles)
+        : ds.cloneWithRows([])
     };
+    this.data = [];
+    this.ds = ds;
     this.screenSize = Dimensions.get('window');    
   }
   static displayName = 'MessageDetailView';

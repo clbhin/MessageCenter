@@ -19,7 +19,7 @@ import { getNames } from '../../services/mcServices'
 class CreateMessageView extends Component {
   constructor(props) {
     super(props);
-    var proflieDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params,
@@ -32,9 +32,13 @@ class CreateMessageView extends Component {
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
-      proflieDataSource,
+      profileDataSource: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.AttachedProfiles &&
+        this.props.navigation.state.params.Message.AttachedProfiles.length > 0 ?
+        ds.cloneWithRows(this.props.navigation.state.params.Message.AttachedProfiles)
+        : ds.cloneWithRows([])
     };
     this.data = [];
+    this.ds = ds;
   }
   static displayName = 'MessageDetailView';
 
@@ -78,10 +82,9 @@ class CreateMessageView extends Component {
       }
       if (nextProps.selectedProfiles != this.props.selectedProfiles) {
         if (nextProps.selectedProfiles.length > 0) {
-          var AttachedProfiles = [];
-          AttachedProfiles[0] = nextProps.selectedProfiles[0];
+          this.data[0] = nextProps.selectedProfiles[0];
           this.setState({
-            proflieDataSource: this.state.proflieDataSource.cloneWithRows(AttachedProfiles)
+            profileDataSource: this.ds.cloneWithRows(this.data),
           });
         }
       }
@@ -98,10 +101,10 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody;
-    message.From ={PersonName:'Xiang Zhang',Id:'Xiang Zhang'};
+    message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
 
-    fetch('http://172.16.40.103:8079/api/Messages/SendMessage', {
+    fetch('http://172.16.40.114:801/api/Messages/SendMessage', {
       method: "POST",
       headers: {},
       body: formData
@@ -114,7 +117,7 @@ class CreateMessageView extends Component {
       .catch(function (error) {
         console.log('request failed: ', error)
       })
-    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+    this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
     this.props.navigation.goBack(null);
 
   }
@@ -126,6 +129,14 @@ class CreateMessageView extends Component {
 
   addProfile() {
     this.props.navigate({ routeName: 'AddProfileStack' });
+  }
+
+  removeProfile(profile) {
+    var indexOfItem = this.data.findIndex((item) => item.Id === profile.Id);
+    this.data.splice(indexOfItem, 1);
+    this.setState({
+      profileDataSource: this.ds.cloneWithRows(this.data),
+    });
   }
 
   render() {
@@ -185,17 +196,19 @@ class CreateMessageView extends Component {
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
           <View>
-            <Button
-              onPress={() => this.addProfile()}
-              title="Add Profile"
-              color="#841584"
-              accessibilityLabel="Add Profile"
-            />
+            {this.state.profileDataSource.getRowCount > 0 ? null
+              : <Button
+                onPress={() => this.addProfile()}
+                title="Add Profile"
+                color="#841584"
+                accessibilityLabel="Add Profile"
+              />
+            }
           </View>
-          <TextInput style={{ borderColor: 'gray', minHeight: 300, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+          <TextInput style={{ borderColor: 'gray', minHeight: 230, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
           <View>
             <ListView style={{ paddingTop: 10 }}
-              dataSource={this.state.proflieDataSource}
+              dataSource={this.state.profileDataSource}
               renderRow={(rowData) =>
                 <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }}>
                   <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.FirstName}</Text>
@@ -203,6 +216,7 @@ class CreateMessageView extends Component {
                   <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Id}</Text>
                   <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Ssn}</Text>
                   <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Medicaid}</Text>
+                  <Button onPress={() => this.removeProfile(rowData)} accessibilityLabel='Remove' title='Remove'></Button>
                 </TouchableOpacity>
               } />
           </View>
