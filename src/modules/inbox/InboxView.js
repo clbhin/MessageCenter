@@ -27,7 +27,11 @@ class InboxView extends Component {
     {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
   this.state = {
     dataSource: ds.cloneWithRows(data),
-    criteria:'All'
+     criteria:'',
+     userId:'Xiang Zhang',
+     type:'Inbox',
+     startIndex:0,
+     pageSize:10
   };
   this.ds=ds;
   this.closeDrawer = this.closeDrawer.bind(this);
@@ -83,6 +87,17 @@ class InboxView extends Component {
     this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
   }
 
+  searchMessage(){
+    let messageSearchCriteria={};
+    messageSearchCriteria.SearchText=this.state.criteria;
+    messageSearchCriteria.Type=this.state.type;
+    messageSearchCriteria.UserId=this.state.userId;
+    messageSearchCriteria.Start=this.state.startIndex;
+    messageSearchCriteria.PageSize=this.state.pageSize;
+    console.log(messageSearchCriteria);
+    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
+   }
+
   createMessage(){
     let data={};
     this.props.navigate({routeName: 'CreateMessageStack',params:data});
@@ -109,19 +124,13 @@ class InboxView extends Component {
             <Text style={{fontSize:12}}>welcome,Xiang Zhang</Text>
           </View>
         </View>
-        <View style={{flexDirection:'row',backgroundColor:'#eee',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
+        <View style={{flexDirection:'row',backgroundColor:'white',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
           <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
-            <Text style={{flex:3,fontSize:12,textAlign:'center'}}>{this.state.criteria}</Text>
-            <Picker style={{flex:1}}
-              selectedValue={this.state.criteria}
-              onValueChange={(value) => this.setState({criteria: value})}>
-              <Picker.Item label="All" value="All" />
-              <Picker.Item label="Subject" value="Subject" />
-              <Picker.Item label="FromName" value="FromName" />
-              <Picker.Item label="ToName" value="ToName" />
-            </Picker>
+            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} onChangeText={(criteria) => this.setState({criteria})}/>
+             <TouchableOpacity onPress={()=>{this.searchMessage()}}>
+               <Icon name='magnifying-glass' size={24}></Icon>
+             </TouchableOpacity>
           </View>
-          <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
 
         </View>
         <SwipeListView style={{paddingTop:10}}
@@ -147,6 +156,7 @@ class InboxView extends Component {
           enableEmptySections={true}  
           closeOnRowPress={true}             
         />
+        {this.props.value.length?null:<Text style={{position:'absolute',opacity:0.8,top:this.screenSize.height/2,left:40,right:0}}>No Messages match the criteria</Text>}
         <View style={{flexDirection:'row',height:30,borderRadius:15,marginLeft:40,marginRight:40,backgroundColor:'white',position:'absolute',opacity:0.8,top:this.screenSize.height-60,left:0,right:0}}>
             <TouchableOpacity style={{flex:1,alignItems:'center'}} onPress={()=>{this.createMessage()}}>
               <Icon name='plus' size={14}></Icon>

@@ -22,3 +22,7 @@ import {post} from './../utils/api'
  export async function MarkUserMessage(userMessage){
    return post('Messages/MarkUserMessage',userMessage)
  }
+
+ export async function SearchMessages(criteriaCollection){
+   return post('Messages/SearchMessages',criteriaCollection)
+ }
