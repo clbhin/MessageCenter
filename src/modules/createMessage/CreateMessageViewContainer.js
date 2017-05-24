@@ -9,7 +9,6 @@ export default connect(
   state => ({
     contactData: state.getIn(['contact', 'contactData']),
     boxType: state.getIn(['createMessage', 'boxType']),
-    selectedProfiles: state.getIn(['addProfile', 'selectedProfiles']),
   }),
   dispatch => {
     return {

@@ -52,7 +52,7 @@ class addProfileView extends Component {
 
     addProfile = () => {
         var selectedProfiles = [];
-        for (var i = 0; i < this.data.length; i++) {
+        for (let i = 0; i < this.data.length; i++) {
             if (this.data[i].checked) {
                 selectedProfiles.push(this.data[i])
             }

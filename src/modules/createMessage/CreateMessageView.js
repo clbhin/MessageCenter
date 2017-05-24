@@ -32,10 +32,6 @@ class CreateMessageView extends Component {
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
-      profileDataSource: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.AttachedProfiles &&
-        this.props.navigation.state.params.Message.AttachedProfiles.length > 0 ?
-        ds.cloneWithRows(this.props.navigation.state.params.Message.AttachedProfiles)
-        : ds.cloneWithRows([])
     };
     this.data = [];
     this.ds = ds;
@@ -80,14 +76,6 @@ class CreateMessageView extends Component {
             return
         }
       }
-      if (nextProps.selectedProfiles != this.props.selectedProfiles) {
-        if (nextProps.selectedProfiles.length > 0) {
-          this.data[0] = nextProps.selectedProfiles[0];
-          this.setState({
-            profileDataSource: this.ds.cloneWithRows(this.data),
-          });
-        }
-      }
     } catch (err) {
       console.log(err)
     }
@@ -125,18 +113,6 @@ class CreateMessageView extends Component {
   selectName(nameType) {
     this.props.CreateMessageStateActions.selectNames(nameType);
     this.props.navigate({ routeName: 'ContactStack' });
-  }
-
-  addProfile() {
-    this.props.navigate({ routeName: 'AddProfileStack' });
-  }
-
-  removeProfile(profile) {
-    var indexOfItem = this.data.findIndex((item) => item.Id === profile.Id);
-    this.data.splice(indexOfItem, 1);
-    this.setState({
-      profileDataSource: this.ds.cloneWithRows(this.data),
-    });
   }
 
   render() {
@@ -195,32 +171,7 @@ class CreateMessageView extends Component {
             <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
-          <View>
-            {this.state.profileDataSource.getRowCount > 0 ? null
-              : <Button
-                onPress={() => this.addProfile()}
-                title="Add Profile"
-                color="#841584"
-                accessibilityLabel="Add Profile"
-              />
-            }
-          </View>
-          <TextInput style={{ borderColor: 'gray', minHeight: 230, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-          <View>
-            <ListView style={{ paddingTop: 10 }}
-              dataSource={this.state.profileDataSource}
-              renderRow={(rowData) =>
-                <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }}>
-                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.FirstName}</Text>
-                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.LastName}</Text>
-                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Id}</Text>
-                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Ssn}</Text>
-                  <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Medicaid}</Text>
-                  <Button onPress={() => this.removeProfile(rowData)} accessibilityLabel='Remove' title='Remove'></Button>
-                </TouchableOpacity>
-              } 
-              enableEmptySections={true}/>
-          </View>
+          <TextInput style={{ borderColor: 'gray', minHeight: 250, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
         </View>
       </View>
     );

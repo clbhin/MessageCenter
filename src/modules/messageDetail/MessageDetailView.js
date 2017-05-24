@@ -24,10 +24,6 @@ class MessageDetailView extends Component {
     this.state = {
       background: 'red',
       currentMessage:this.props.navigation.state.params,
-      profileDataSource: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.AttachedProfiles &&
-        this.props.navigation.state.params.Message.AttachedProfiles.length > 0 ?
-        ds.cloneWithRows(this.props.navigation.state.params.Message.AttachedProfiles)
-        : ds.cloneWithRows([])
     };
     this.data = [];
     this.ds = ds;
