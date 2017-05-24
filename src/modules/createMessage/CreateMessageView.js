@@ -171,7 +171,7 @@ class CreateMessageView extends Component {
             <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
-          <TextInput style={{ borderColor: 'gray', minHeight: 250, borderWidth: 1 }} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+          <TextInput style={{ borderColor: 'gray', minHeight: 250, borderWidth: 1,textAlignVertical: 'top' }}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
         </View>
       </View>
     );

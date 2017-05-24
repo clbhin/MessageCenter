@@ -102,7 +102,8 @@ class MessageDetailView extends Component {
             <Text>DELETE</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{flexDirection:'column'}} onPress={()=>this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
-            <Icon name='star-outlined' size={20} color={'orange'}/>
+            {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={20} color={'orange'}/>:<Icon name='star-outlined' size={20} color={'orange'}/>}
+            
             <Text>MARK</Text>
           </TouchableOpacity>   
         </View>
