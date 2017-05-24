@@ -218,7 +218,8 @@ class CreateMessageView extends Component {
                   <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.Medicaid}</Text>
                   <Button onPress={() => this.removeProfile(rowData)} accessibilityLabel='Remove' title='Remove'></Button>
                 </TouchableOpacity>
-              } />
+              } 
+              enableEmptySections={true}/>
           </View>
         </View>
       </View>
