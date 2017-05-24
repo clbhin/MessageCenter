@@ -20,16 +20,15 @@ class LoadMoreFooter extends Component {
     render(){
         return(
             <View>
-                <View>{this.props.isLoadAll ?  
+                {this.props.isLoadAll ?  
                     <View style={{alignItems: 'center',justifyContent: 'center'}}>
-                        <Text style={{alignItems: 'center',justifyContent: 'center', fontSize: 15, }}>Have No More Message</Text>
+                        <Text style={{alignItems: 'center',justifyContent: 'center', fontSize: 13, color: '#434343'}}>Have No More Message</Text>
                     </View>:
                     <View style={styles.loading}>
-                        <ActivityIndicator size='large' style={styles.centering}/>
+                        <ActivityIndicator size='small' style={styles.centering}/>
                          <Text style={{color: '#EF4A4A'}}>Loading</Text>
                     </View>                             
-                    }
-                </View>
+                    }               
             </View>
         )
     }
@@ -48,6 +47,8 @@ const styles = StyleSheet.create({
         padding: 8
     },
     loading: {
+        flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',    
     }

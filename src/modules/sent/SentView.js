@@ -19,8 +19,7 @@ class SentView extends Component {
   super(props);
   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   const data=[
-    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'111',MessageBody:'<p>111</p>'}},
-    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
+    ]
   this.state = {
     dataSource: ds.cloneWithRows(data),
     criteria:'All'
@@ -109,7 +108,9 @@ class SentView extends Component {
           dataSource={this.state.dataSource}
           renderRow={(rowData) => 
         <MessageView messageData={rowData} transformMessage={this.transformMessage}/>
-        }/>        
+        }
+        enableEmptySections={true}
+        />        
       </DrawerLayoutAndroid>
       
     );

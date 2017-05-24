@@ -130,7 +130,6 @@ class InboxView extends Component {
    }
 
   render() {
-          console.log(this);
     var navigationView =(
       <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
     );
