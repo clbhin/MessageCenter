@@ -104,7 +104,7 @@ class CreateMessageView extends Component {
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
 
-    fetch('http://172.16.40.114:801/api/Messages/SendMessage', {
+    fetch('http://172.16.40.117/MessageCenter/MessageCenter.IISHost.Messages/api/Messages/SendMessage', {
       method: "POST",
       headers: {},
       body: formData

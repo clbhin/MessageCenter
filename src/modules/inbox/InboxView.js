@@ -64,7 +64,8 @@ class InboxView extends Component {
     try{
       if (nextProps.value !== this.props.value && nextProps.value) {
       this.setState({
-        dataSource: this.ds.cloneWithRows(nextProps.value)
+        dataSource: this.ds.cloneWithRows(nextProps.value),
+        userId:nextProps.userId
       });
     }
     }catch(err){
@@ -149,7 +150,7 @@ class InboxView extends Component {
           </TouchableOpacity>
           <View style={{flex:1,marginLeft:20}}>
             <Text style={{fontSize:18,color:'black'}}>Inbox</Text>
-            <Text style={{fontSize:12}}>welcome,Xiang Zhang</Text>
+            <Text style={{fontSize:12}}>welcome,{this.state.userId}</Text>
           </View>
           <View style={{}}>
             <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent: 'center',marginRight: 7, width: 30}} onPress={()=>{this.createMessage()}}>
@@ -157,7 +158,7 @@ class InboxView extends Component {
             </TouchableOpacity>    
           </View>
         </View>
-        <View style={{flexDirection:'row',backgroundColor:'white',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
+        <View style={{flexDirection:'row',backgroundColor:'#ccc',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
           <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
             <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} onChangeText={(criteria) => this.setState({criteria})}/>
              <TouchableOpacity onPress={()=>{this.searchMessage()}}>
