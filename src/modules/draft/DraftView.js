@@ -8,11 +8,14 @@ import {
   ListView,
   TextInput,
   Picker,
-  DrawerLayoutAndroid
+  DrawerLayoutAndroid,
+  RefreshControl
 } from 'react-native';
 import DrawerView from './../drawer/DrawerView';
 import MessageView from './../../components/Message';
 import {GetMessages} from './../../services/messageCenterServices';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import Icon from 'react-native-vector-icons/Entypo';
 
 class DraftView extends Component {
   constructor(props) {
@@ -69,7 +72,7 @@ class DraftView extends Component {
 
   render() {
     var navigationView =(
-      <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
+      <DrawerView closeDrawer={this.closeDrawer} navigation={this.props.navigation} navigate={this.props.navigate}/>
     );
 
     return (
@@ -103,13 +106,42 @@ class DraftView extends Component {
           <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
           
         </View>
-        <ListView style={{paddingTop:10}}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => 
-        <MessageView messageData={rowData} transformMessage={this.transformMessage}/>
-        }
-        enableEmptySections={true}
-        />        
+         <View style={{flex: 1}}>
+          <SwipeListView style={{paddingTop:10, flex: 1}}
+            refreshControl={
+                < RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
+                />}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, secId, rowId, rowMap) =>           
+              <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
+            }
+            renderHiddenRow={
+              (rowData,secId,rowId,rowMap) =>(
+                <View style={styles.rowBack}>
+                  <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+                    <TouchableOpacity onPress={()=>{this.markMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                      <Icon name='star' size={20} color={'#33373D'}/>
+                      <Text style={styles.backRightBtnRightMark}>Mark</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+                    <TouchableOpacity  onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                    <Icon name='trash' size={20} color={'#EE3B3B'}/>
+                    <Text style={styles.backRightBtnRightDelete}>Delete</Text>
+                  </TouchableOpacity>
+                  </View>
+                  
+                </View>
+              )
+            }
+           
+                    
+            rightOpenValue={-150} 
+            disableRightSwipe   
+            enableEmptySections={true}  
+            closeOnRowPress={true}                       
+          />
+        </View>
       </DrawerLayoutAndroid>
       
     );
@@ -164,6 +196,47 @@ const styles = StyleSheet.create({
     color: '#CCCCCC',
     marginBottom: 10,
     padding: 5
+  },
+  rowBack: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingLeft: 15,
+	},
+  backRightBtn: {
+		alignItems: 'center',
+		bottom: 0,
+		justifyContent: 'center',
+		position: 'absolute',
+		top: 0,
+		width: 75
+	},
+  backRightBtnRight: {
+		backgroundColor: '#F5F5F5',
+		right: 0
+	},
+  backRightBtnLeft: {
+		backgroundColor: '#F5F5F5',
+		right: 75
+	},
+  backTextWhite: {
+		color: '#FFF'
+	},
+  loadMessage :{
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backRightBtnRightDelete: {
+    color: '#EE3B3B',
+    marginTop: 5,
+    fontSize: 12
+  },
+  backRightBtnRightMark: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#33373D' 
   }
 });
 
