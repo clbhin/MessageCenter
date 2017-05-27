@@ -118,7 +118,6 @@ class CreateMessageView extends Component {
   }
 
   render() {
-    console.log(this)
     return (
       <View>
         <View style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd' }}>

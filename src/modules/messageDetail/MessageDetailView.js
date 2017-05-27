@@ -6,11 +6,13 @@ import {
   Text,
   TouchableOpacity,
   ListView,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
-import {MessageFormatAllDate} from '../../utils/dateTimeHelper'
+import {MessageFormatAllDate} from '../../utils/dateTimeHelper';
+import {getNames} from '../../services/mcServices';
 import lodash from 'lodash'
 
 /**
@@ -95,12 +97,12 @@ class MessageDetailView extends Component {
           {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:<Icon name='star-outlined' size={18} color={'#ccc'}/>}
         </View>
         <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}> 
-          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:Xiang Zhang</Text>
-          <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>{this.state.currentMessage.Message.Subject}</Text>
-          <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <Text style={{fontSize:16}}>{this.state.currentMessage.Message.MessageBody}</Text>
+          <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
+          <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>Subject:{this.state.currentMessage.Message.Subject}</Text>
+          <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
+          <ScrollView><Text style={{fontSize:14}}>{this.state.currentMessage.Message.MessageBody}</Text></ScrollView>
         </View>
-        <View style={{height:40,borderRadius:20,backgroundColor:'#ccc',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center',position:'absolute',top:this.screenSize.height-80,left:0,right:0}}>
+        <View style={{height:40,borderRadius:20,backgroundColor:'white',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center',position:'absolute',top:this.screenSize.height-80,left:0,right:0,opacity:0.8}}>
           <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={this.reply.bind(this,this.state.currentMessage)}>
             <Icon name='reply' size={20} color={'blue'} />
             <Text>REPLY</Text>
@@ -118,7 +120,7 @@ class MessageDetailView extends Component {
             <Text>DELETE</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={()=>this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
-            {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={20} color={'orange'}/>:<Icon name='star-outlined' size={20} color={'orange'}/>}
+            {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={20} color={'orange'}/>:<Icon name='star-outlined' size={20} color={'#ccc'}/>}
             <Text>MARK</Text>
           </TouchableOpacity>   
         </View>
