@@ -7,8 +7,9 @@ import {GetMessages, DeleteMessage,ReadUserMessage,MarkUserMessage,SearchMessage
 const initialState = Map({
   value: [],
   InboxMessages: [],
+  loadMore: true,
 });
-
+ 
 // Actions
 const REQUEST_GET_MESSAGES = 'InboxState/REQUEST_GET_MESSAGES';
 const RESPONSE_GET_MESSAGES = 'InboxState/RESPONSE_GET_MESSAGES';
@@ -58,10 +59,10 @@ export function markMessage(userMessage){
 }
 
 export function searchMessage(criteriaCollection){
-   return {
+    return {
      type:REQUEST_SEARCH_MESSAGES,
      payload:criteriaCollection
-   }
+    }
 }
 
 export function loadMoreMessages(userMessage) {
@@ -160,8 +161,12 @@ export default function InboxStateReducer(state = initialState, action = {}) {
       return loop(state, Effects.promise(requestGetMessages,action.payload.userId,action.payload.inboxType));
 
     case RESPONSE_GET_MESSAGES:
-      return state.set('value', action.payload.ModelObject);
-
+      if(action.payload.ModelObject.length==10){
+         return state.set('loadMore',true).set('value', action.payload.ModelObject);
+      }else{
+        return state.set('loadMore',false).set('value', action.payload.ModelObject);
+      }
+     
     case REQUEST_DELETE_MESSAGE:
       return loop(state,Effects.promise(deleteInbox, action.payload));   
 
@@ -172,19 +177,30 @@ export default function InboxStateReducer(state = initialState, action = {}) {
       return loop(state,Effects.promise(requestMarkUserMessage,action.payload))  
     
     case REQUEST_SEARCH_MESSAGES:
+
       return loop(state,Effects.promise(requestSearchMessage,action.payload));
     
     case RESPONSE_SEARCH_MESSAGES:
-       return state.set('value',action.payload.ModelObject);
+      if(action.payload.ModelObject.length==10){
+         return state.set('loadMore',true).set('value', action.payload.ModelObject);
+      }else{
+        return state.set('loadMore',false).set('value', action.payload.ModelObject);
+      }    
 
     case REQUEST_LOAD_MORE_MESSAGES:
       return loop(state,Effects.promise(requestLoadMoreMessage,action.payload));
 
     case RESPONSE_LOAD_MORE_MESSAGES:     
+      
       let oldData=state.get('value');
       let newData=[];
       newData=oldData.concat(action.payload.ModelObject);
-      return state.set('value',newData);
+      if(action.payload.ModelObject.length ==10){
+        return state.set('loadMore', true).set('value',[...(newData||[])]); 
+        
+      }else{
+        return state.set('loadMore', false).set('value',[...(newData||[])]);
+      }
 
     default:
       return state;

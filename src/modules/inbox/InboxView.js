@@ -13,7 +13,8 @@ import {
   Alert,
   Dimensions,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native';
 import MessageView from './../../components/Message';
 import DrawerView from './../drawer/DrawerView'; 
@@ -36,14 +37,18 @@ class InboxView extends Component {
      startIndex:0,
      pageSize:10,
      onEndReached: false,
-  };
+  }
   this.ds=ds;
   this.closeDrawer = this.closeDrawer.bind(this);
   this.openDrawer = this.openDrawer.bind(this);
   this.transformMessage = this.transformMessage.bind(this);
   this.screenSize = Dimensions.get('window');
   this.renderFooter = this.renderFooter.bind(this);
+  //this.toEnd = this.toEnd.bind(this);
+  this.searchMessage = this.searchMessage.bind(this);
+  console.log(this.props .loadMore);
 }
+
   static displayName = 'InboxView';
 
   static navigationOptions = {
@@ -56,6 +61,7 @@ class InboxView extends Component {
   };
 
   transformMessage = (currentMessage) => {
+    console.log(this.props);
     this.props.InboxStateActions.readMessage(currentMessage.UserMessage);
     this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
   };
@@ -65,7 +71,8 @@ class InboxView extends Component {
       if (nextProps.value !== this.props.value && nextProps.value) {
       this.setState({
         dataSource: this.ds.cloneWithRows(nextProps.value),
-        userId:nextProps.userId
+        userId:nextProps.userId,
+        noMoreMessage: (nextProps.value.length - this.props.value.length == 10) || (nextProps.value.length ==10 && this.props.value.length == 10)  ? true : false
       });
     }
     }catch(err){
@@ -84,7 +91,7 @@ class InboxView extends Component {
   openDrawer(){    
     this.refs['DRAWER'].openDrawer();
   }
-
+ 
   deleteMessage(data){
    this.props.InboxStateActions.deleteMessage(data.UserMessage);
   }
@@ -97,10 +104,14 @@ class InboxView extends Component {
     let messageSearchCriteria={};
     messageSearchCriteria.SearchText=this.state.criteria;
     messageSearchCriteria.Type=this.state.type;
-    messageSearchCriteria.UserId=this.state.userId;
-    messageSearchCriteria.Start=this.state.startIndex;
+    messageSearchCriteria.UserId=this.state.userId;  
     messageSearchCriteria.PageSize=this.state.pageSize;
-    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
+    messageSearchCriteria.Start=this.state.startIndex;   
+    if(messageSearchCriteria.SearchText == ''){
+      this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
+    }else{
+          this.props.InboxStateActions.searchMessage(messageSearchCriteria);
+    }
    }
 
   createMessage(){
@@ -109,10 +120,10 @@ class InboxView extends Component {
   }
 
   reloadData(){
-    this.props.InboxStateActions.getMessages('Xiang Zhang','Inbox');
+    this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
   }
 
-  toEnd(){
+  loadMore(){
     let messageLoadMore={};
     messageLoadMore.UserId=this.state.userId;
     messageLoadMore.Type=this.state.type;
@@ -123,19 +134,20 @@ class InboxView extends Component {
   }
 
   renderFooter(){
-    if((this.props.value && this.props.value.length % 10) === 0 ){
-      return <LoadMoreFooter />
-    }else{
+    if(this.state.noMoreMessage){
       return <LoadMoreFooter isLoadAll={true} />
+    }else{
+      return <LoadMoreFooter />
     }
    }
 
   render() {
     var navigationView =(
-      <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate}/>
+      <DrawerView closeDrawer={this.closeDrawer} navigation={this.props.navigation} navigate={this.props.navigate}/>
     );
 
     return (
+      
 
       <DrawerLayoutAndroid
         drawerWidth={300}
@@ -160,50 +172,56 @@ class InboxView extends Component {
         </View>
         <View style={{flexDirection:'row',backgroundColor:'#ccc',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
           <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
-            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} onChangeText={(criteria) => this.setState({criteria})}/>
+            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} 
+            onChangeText={(criteria) => this.setState({criteria})}/>
              <TouchableOpacity onPress={()=>{this.searchMessage()}}>
                <Icon name='magnifying-glass' size={24}></Icon>
              </TouchableOpacity>
           </View>
 
         </View>
-        <SwipeListView style={{paddingTop:10}}
+        <ScrollView 
           refreshControl={
-              < RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
-              />}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData, secId, rowId, rowMap) =>           
-             <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
-          }
-          renderHiddenRow={
-            (rowData,secId,rowId,rowMap) =>(
-              <View style={styles.rowBack}>
-                <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                  <TouchableOpacity onPress={()=>{this.markMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                    <Icon name='star' size={20} color={'#33373D'}/>
-                    <Text style={styles.backRightBtnRightMark}>Mark</Text>
+              <RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
+                />}>        
+          <SwipeListView style={{paddingTop:10, flex: 1}} 
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, secId, rowId, rowMap) =>           
+              <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
+            }
+            renderHiddenRow={
+              (rowData,secId,rowId,rowMap) =>(
+                <View style={styles.rowBack}>
+                  <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+                    <TouchableOpacity onPress={()=>{this.markMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                      <Icon name='star' size={20} color={'#33373D'}/>
+                      <Text style={styles.backRightBtnRightMark}>Mark</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
+                    <TouchableOpacity  onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
+                    <Icon name='trash' size={20} color={'#EE3B3B'}/>
+                    <Text style={styles.backRightBtnRightDelete}>Delete</Text>
                   </TouchableOpacity>
+                  </View>   
                 </View>
-                <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
-                  <TouchableOpacity  onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                  <Icon name='trash' size={20} color={'#EE3B3B'}/>
-                  <Text style={styles.backRightBtnRightDelete}>Delete</Text>
-                </TouchableOpacity>
-                </View>
-                
-              </View>
-            )
-          }
-          onEndReached={()=>{this.toEnd()}}
-          onEndReachedThreshold={10}
-          rightOpenValue={-150} 
-          disableRightSwipe   
-          enableEmptySections={true}  
-          closeOnRowPress={true}
-          renderFooter={()=>{return this.renderFooter()}}             
-        />
+              )
+            }
+            //onEndReached={()=>{this.searchMessage()}}
+            //onEndReachedThreshold={20}         
+            rightOpenValue={-150} 
+            disableRightSwipe   
+            enableEmptySections={true}  
+            closeOnRowPress={true}
+            closeOnScroll={true}
+            //renderFooter={()=>{return this.renderFooter()}}             
+          />          
+        <TouchableOpacity style={{justifyContent: 'center',alignItems: 'center'}} onPress={()=>this.loadMore()}>
+            {this.props.loadMore?<Text>click more </Text> : <Text>No More Message </Text> }
+        </TouchableOpacity>    
+       </ScrollView>
       </DrawerLayoutAndroid>
-      
+    
     );
   }
 }
