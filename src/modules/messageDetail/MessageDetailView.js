@@ -60,11 +60,14 @@ class MessageDetailView extends Component {
     let data=lodash.cloneDeep(currentMessage);
     data.Message.Cc=[];
     data.Message.Bcc=[];
+    data.Message.Subject='RE:'+data.Message.Subject;
     this.props.navigate({routeName: 'CreateMessageStack',params:data});
   };
 
   replyAll=(currentMessage) =>{
-    this.props.navigate({routeName: 'CreateMessageStack',params:currentMessage});
+    let data=lodash.cloneDeep(currentMessage);
+    data.Message.Subject='RE:'+data.Message.Subject;
+    this.props.navigate({routeName: 'CreateMessageStack',params:data});
   }
 
   deleteMessage(currentMessage){
@@ -72,10 +75,19 @@ class MessageDetailView extends Component {
    this.props.navigation.goBack(null);
   }
 
+  forward=(currentMessage)=>{
+    let data=lodash.cloneDeep(currentMessage);
+    data.Message.From={}
+    data.Message.Cc=[];
+    data.Message.Bcc=[];
+    data.Message.Subject='FW:'+data.Message.Subject;
+    this.props.navigate({routeName: 'CreateMessageStack',params:data});
+  }
+
   render() {
     return (
       <View>
-        <View style={{flexDirection: 'row',height: 40,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd',paddingLeft:10,paddingRight:20}}>
+        <View style={{flexDirection: 'row',height: 50,borderBottomWidth: 1,borderBottomColor: '#ccc',alignItems: 'center',backgroundColor: '#39babd',paddingLeft:10,paddingRight:20}}>
           <TouchableOpacity onPress={() => this.back()} style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
@@ -89,21 +101,24 @@ class MessageDetailView extends Component {
           <Text style={{fontSize:16}}>{this.state.currentMessage.Message.MessageBody}</Text>
         </View>
         <View style={{height:40,borderRadius:20,backgroundColor:'#ccc',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center',position:'absolute',top:this.screenSize.height-80,left:0,right:0}}>
-          <TouchableOpacity style={{flexDirection:'column'}} onPress={this.reply.bind(this,this.state.currentMessage)}>
+          <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={this.reply.bind(this,this.state.currentMessage)}>
             <Icon name='reply' size={20} color={'blue'} />
             <Text>REPLY</Text>
           </TouchableOpacity>   
-          <TouchableOpacity style={{flexDirection:'column'}} onPress={this.replyAll.bind(this,this.state.currentMessage)}>
+          <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={this.replyAll.bind(this,this.state.currentMessage)}>
             <Icon name='reply-all' size={20} color={'blue'}/>
             <Text>REPLYALL</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:'column'}} onPress={()=>{this.deleteMessage(this.state.currentMessage)}}>
+          <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={()=>{this.forward(this.state.currentMessage)}}>
+            <Icon name='forward' size={20} color={'blue'}/>
+            <Text>FORWARD</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={()=>{this.deleteMessage(this.state.currentMessage)}}>
             <Icon name='trash' size={20} color={'blue'}/>
             <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection:'column'}} onPress={()=>this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
+          <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={()=>this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
             {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={20} color={'orange'}/>:<Icon name='star-outlined' size={20} color={'orange'}/>}
-            
             <Text>MARK</Text>
           </TouchableOpacity>   
         </View>
