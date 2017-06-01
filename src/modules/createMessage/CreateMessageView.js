@@ -30,8 +30,8 @@ class CreateMessageView extends Component {
       Cc: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc,
       From: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From,
       Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
-      MessageBody: '',
-      LastMessageBody:lodash.isEmpty(this.props.navigation.state.params.Message)?'':spliceMessage(this.props.navigation.state.params.Message),
+      MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type==='Draft'?this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody:'',
+      LastMessageBody:lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type==='Draft')?'':spliceMessage(this.props.navigation.state.params.Message),
       To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
@@ -142,7 +142,7 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody+'\n\n'+this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody+this.state.LastMessageBody;
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
 
@@ -218,8 +218,10 @@ class CreateMessageView extends Component {
             <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
-          <TextInput style={{ borderColor: 'gray', minHeight: 100, borderLeftWidth:0,borderRightWidth: 0,borderBottomWidth:0,borderTopWidth:0.1,textAlignVertical: 'top'}} autoFocus={true}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-          {lodash.isEmpty(this.state.LastMessageBody)?null:<TextInput style={{ borderColor: 'gray', minHeight: 300, borderLeftWidth:0,borderRightWidth: 0,borderTopWidth:1,textAlignVertical:'top'}} onChangeText={(text) => this.setState({ 'LastMessageBody': text })} value={this.state.LastMessageBody} multiline={true} />} 
+          <View style={{flexDirection:'column',height:300}}>
+            <TextInput style={{flex:1, borderColor: 'gray', borderLeftWidth:0,borderRightWidth: 0,borderBottomWidth:0,borderTopWidth:0.1,textAlignVertical: 'top'}} autoFocus={true}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+            {lodash.isEmpty(this.state.LastMessageBody)?null:<TextInput style={{ flex:1,borderColor: 'gray', borderLeftWidth:0,borderRightWidth: 0,borderTopWidth:1,textAlignVertical:'top'}} onChangeText={(text) => this.setState({ 'LastMessageBody': text })} value={this.state.LastMessageBody} multiline={true} />} 
+          </View>
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save}/>
       </View>

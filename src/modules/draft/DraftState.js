@@ -1,23 +1,22 @@
 import {Map} from 'immutable';
 import {loop, Effects} from 'redux-loop-symbol-ponyfill';
-import {GetMessages} from './../../services/messageCenterServices';
+import {GetMessages,ReadUserMessage} from './../../services/messageCenterServices';
 
 // Initial state
 const initialState = Map({value: []});
 
 // Actions
 
-const DRAFTSTATE_REQUEST = 'SENTSTATE/GETMESSAGES_REQUEST';
-const DRAFTSTATE_RESPONSE = 'SENTSTATE/GETMESSAGES_RESPONSE';
 
-export function transformMessage(){
-  return type="";
-}
+const REQUEST_GET_MESSAGES = 'SentState/REQUEST_GET_MESSAGES';
+const RESPONSE_GET_MESSAGES = 'SentState/RESPONSE_GET_MESSAGES';
+const REQUEST_READ_USER_MESSAGE='SentState/REQUEST_READ_USER_MESSAGE';
+
 
 // Action creators
 export function getMessages(userId, draftType) {
   return {
-    type: DRAFTSTATE_REQUEST,
+    type: REQUEST_GET_MESSAGES,
     payload: {
       userId,
       draftType
@@ -25,12 +24,34 @@ export function getMessages(userId, draftType) {
   };
 }
 
+export function readMessage(userMessage){
+  return {
+    type: REQUEST_READ_USER_MESSAGE,
+    payload: userMessage
+  }
+}
+
 export async function requestGetMessages(userId,draftType) {
   try {
     const result = await GetMessages(userId, draftType);
-    return {type: DRAFTSTATE_RESPONSE, payload: result};
+    return {type: RESPONSE_GET_MESSAGES, payload: result};
   } catch (err) {
-    return {type: DRAFTSTATE_RESPONSE, payload: []};
+    return {type: RESPONSE_GET_MESSAGES, payload: []};
+  }
+}
+
+export async function requestReadUserMessage(userMessage){
+  try{
+    const result=await ReadUserMessage(userMessage)
+    return {
+      type:REQUEST_GET_MESSAGES,
+      payload:{
+        userId:userMessage.UserId,
+        inboxType:userMessage.Type
+      }
+    }
+  }catch(err){
+    return {type: RESPONSE_GET_MESSAGES, payload: []}
   }
 }
 
@@ -38,11 +59,14 @@ export async function requestGetMessages(userId,draftType) {
 export default function SentStateReducer(state = initialState, action = {}) {
   switch (action.type) {
 
-    case DRAFTSTATE_REQUEST:
+    case REQUEST_GET_MESSAGES:
       return loop(state, Effects.promise(requestGetMessages,action.payload.userId,action.payload.draftType));
 
-    case DRAFTSTATE_RESPONSE:
+    case RESPONSE_GET_MESSAGES:
       return state.set('value', action.payload.ModelObject);
+
+    case REQUEST_READ_USER_MESSAGE:
+      return loop(state,Effects.promise(requestReadUserMessage,action.payload));  
 
     default:
       return state;

@@ -43,6 +43,7 @@ class DraftView extends Component {
   };
 
   transformMessage = (currentMessage) => {
+    this.props.DraftStateActions.readMessage(currentMessage.UserMessage);
     this.props.navigate({routeName: 'CreateMessageStack',params:currentMessage});
   };
 

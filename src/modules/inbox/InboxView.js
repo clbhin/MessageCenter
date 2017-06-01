@@ -61,7 +61,6 @@ class InboxView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    console.log(this.props);
     this.props.InboxStateActions.readMessage(currentMessage.UserMessage);
     this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
   };
