@@ -5,8 +5,10 @@ import SentView from './SentView';
 import * as SentStateActions from './SentState';
 
 export default connect(
-    state => ({
+    state =>({
         value: state.getIn(['sent', 'value']),
+        userId: state.getIn(['login', 'userId']),
+        loadMore: state.getIn(['sent', 'loadMore'])
     }),
    dispatch => {
      return {

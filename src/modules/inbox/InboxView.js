@@ -46,7 +46,6 @@ class InboxView extends Component {
   this.renderFooter = this.renderFooter.bind(this);
   //this.toEnd = this.toEnd.bind(this);
   this.searchMessage = this.searchMessage.bind(this);
-  console.log(this.props .loadMore);
 }
 
   static displayName = 'InboxView';

@@ -11,17 +11,14 @@ import Modal from 'react-native-modal';
 class ModalComponent extends Component {   
 
     constructor(props){
-        super(props);
-        this.state = {
-            isModalVisible: this.props.isModalVisible
-        }
+        super(props);       
     }
     render(){
         return(
             <Modal isVisible={this.props.isModalVisible} style={styles.wrapModal}>
                 <View>
                     <TouchableOpacity style={styles.modalDelete} onPress={()=>this.props.deleteModal()}>
-                        <Text style={styles.textDelete}>Delete</Text>
+                        <Text style={styles.textDelete}>Discard Changes</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalSave} onPress={()=>this.props.save()}>
                         <Text style={styles.textSave}>Save</Text>

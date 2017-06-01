@@ -9,7 +9,8 @@ import {
   TextInput,
   Picker,
   DrawerLayoutAndroid,
-  RefreshControl
+  RefreshControl,
+  ScrollView
 } from 'react-native';
 import DrawerView from './../drawer/DrawerView';
 import MessageView from './../../components/Message';
@@ -25,7 +26,11 @@ class SentView extends Component {
     ]
   this.state = {
     dataSource: ds.cloneWithRows(data),
-    criteria:'All'
+    criteria:'',
+    userId:'',
+    type:'Sent',
+    startIndex:0,
+    pageSize:10,
   };
   this.ds=ds;
   this.closeDrawer = this.closeDrawer.bind(this);
@@ -48,10 +53,12 @@ class SentView extends Component {
   };
 
   componentWillReceiveProps(nextProps){
+    console.log(nextProps);
       try{
         if(nextProps.value !== this.props.value && nextProps.value){
             this.setState({
-                dataSource: this.ds.cloneWithRows(nextProps.value)
+                dataSource: this.ds.cloneWithRows(nextProps.value),
+                userId:nextProps.userId,
             });
         }
       }catch(err){
@@ -60,7 +67,7 @@ class SentView extends Component {
   }
    
   componentWillMount(){
-    this.props.SentStateActions.getMessages('Xiang Zhang','Sent');
+    this.props.SentStateActions.getMessages(this.props.userId,'Sent');
   }
 
   closeDrawer(){
@@ -69,6 +76,39 @@ class SentView extends Component {
 
   openDrawer(){    
     this.refs['DRAWER'].openDrawer();
+  }
+
+  deleteMessage(data){
+   this.props.SentStateActions.deleteMessage(data.UserMessage);
+  }
+
+  searchMessage(){
+    let messageSearchCriteria={};
+    messageSearchCriteria.SearchText=this.state.criteria;
+    messageSearchCriteria.Type=this.state.type;
+    messageSearchCriteria.UserId=this.state.userId;  
+    messageSearchCriteria.PageSize=this.state.pageSize;
+    messageSearchCriteria.Start=this.state.startIndex;   
+    if(messageSearchCriteria.SearchText == ''){
+      this.props.SentStateActions.getMessages(this.props.userId,'Sent');
+    }else{
+          this.props.SentStateActions.searchMessage(messageSearchCriteria);
+    }
+   }
+
+   loadMore(){
+    let messageLoadMore={};
+    messageLoadMore.UserId=this.state.userId;
+    messageLoadMore.Type=this.state.type;
+    messageLoadMore.Start=0 || (this.props.value && this.props.value.length);
+    messageLoadMore.PageSize=this.state.pageSize;
+    messageLoadMore.SearchText=this.state.criteria;
+    this.props.SentStateActions.loadMoreMessages(messageLoadMore);
+  }
+
+  createMessage(){
+    let data={};
+    this.props.navigate({routeName: 'CreateMessageStack',params:data});
   }
 
   render() {
@@ -82,36 +122,35 @@ class SentView extends Component {
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={()=>navigationView}
         ref={'DRAWER'}
+         style={{backgroundColor: '#fff', paddingBottom: 260}}
       >
         <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
           <TouchableOpacity onPress={()=>{this.openDrawer()}}>
             <Image style={{width: 30,height: 40}}source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
           <View style={{flex:1,marginLeft:20,alignItems: 'flex-start', justifyContent: 'center' }}>
-            <Text style={{fontSize:18,color:'black'}}>Sent</Text>
-            
+            <Text style={{fontSize:18,color:'black'}}>Sent</Text>  
+          </View>
+          <View style={{}}>
+            <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent: 'center',marginRight: 7, width: 30}} onPress={()=>{this.createMessage()}}>
+              <Icon name='plus' size={20} color={'#33373D'}></Icon>              
+            </TouchableOpacity>    
           </View>
         </View>
-        <View style={{flexDirection:'row',backgroundColor:'#eee',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
+         <View style={{flexDirection:'row',backgroundColor:'#ccc',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
           <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
-            <Text style={{flex:3,fontSize:12,textAlign:'center'}}>{this.state.criteria}</Text>
-            <Picker style={{flex:1}}
-              selectedValue={this.state.criteria}
-              onValueChange={(value) => this.setState({criteria: value})}>
-              <Picker.Item label="All" value="All" />
-              <Picker.Item label="Subject" value="Subject" />
-              <Picker.Item label="FromName" value="FromName" />
-              <Picker.Item label="ToName" value="ToName" />
-            </Picker>
+            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} 
+            onChangeText={(criteria) => this.setState({criteria})}/>
+             <TouchableOpacity onPress={()=>{this.searchMessage()}}>
+               <Icon name='magnifying-glass' size={24}></Icon>
+             </TouchableOpacity>
           </View>
-          <TextInput placeholder='Search' style={{flex:10,padding: 0,color:'black'}} underlineColorAndroid="transparent" />
-          
         </View>
-        <View style={{flex: 1}}>
-          <SwipeListView style={{paddingTop:10, flex: 1}}
-            refreshControl={
-                < RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
-                />}
+        <ScrollView 
+          refreshControl={
+              <RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
+                />}>        
+          <SwipeListView style={{paddingTop:10, flex: 1}} 
             dataSource={this.state.dataSource}
             renderRow={(rowData, secId, rowId, rowMap) =>           
               <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
@@ -130,19 +169,20 @@ class SentView extends Component {
                     <Icon name='trash' size={20} color={'#EE3B3B'}/>
                     <Text style={styles.backRightBtnRightDelete}>Delete</Text>
                   </TouchableOpacity>
-                  </View>
-                  
+                  </View>   
                 </View>
               )
-            }
-           
-                    
+            }        
             rightOpenValue={-150} 
             disableRightSwipe   
             enableEmptySections={true}  
-            closeOnRowPress={true}                       
-          />
-        </View>
+            closeOnRowPress={true}
+            closeOnScroll={true}                       
+          />          
+          <TouchableOpacity style={{justifyContent: 'center',alignItems: 'center'}} onPress={()=>this.loadMore()}>
+            {this.props.loadMore?<Text>click more </Text> : <Text>No More Message </Text> }
+          </TouchableOpacity>    
+        </ScrollView>
       </DrawerLayoutAndroid>
       
     );
