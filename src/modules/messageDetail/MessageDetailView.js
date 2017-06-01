@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ListView,
   Dimensions,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -29,7 +30,7 @@ class MessageDetailView extends Component {
     };
     this.data = [];
     this.ds = ds;
-    this.screenSize = Dimensions.get('window');    
+    this.screenSize = Dimensions.get('window');   
   }
   static displayName = 'MessageDetailView';
 
@@ -93,11 +94,14 @@ class MessageDetailView extends Component {
           <TouchableOpacity onPress={() => this.back()} style={{flex: 1}}>
             <Icon name='arrow-left' size={30} color={'orange'}/>
           </TouchableOpacity>
-          <Text style={{flex: 5,textAlign: 'left'}}>MessageDetail</Text>
+          <Image style={{width: 30,height: 30}}source={require('./../../../images/user_1.png')}></Image>
+          <Text style={{flex: 5,textAlign: 'left',marginLeft: 5}}>{this.state.currentMessage.Message&&this.state.currentMessage.Message.From.Id}</Text>
           {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:<Icon name='star-outlined' size={18} color={'#ccc'}/>}
         </View>
         <View style={{marginLeft:10,marginTop:10,marginRight:10,flexDirection:'column'}}> 
           <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
+          {getNames(this.state.currentMessage.Message.Cc)? <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Cc:{getNames(this.state.currentMessage.Message.Cc)}</Text>: null}
+          {getNames(this.state.currentMessage.Message.Bcc)? <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text>: null}
           <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>Subject:{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
           <ScrollView><Text style={{fontSize:14}}>{this.state.currentMessage.Message.MessageBody}</Text></ScrollView>
