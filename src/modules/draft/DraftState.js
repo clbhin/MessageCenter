@@ -47,7 +47,7 @@ export async function requestReadUserMessage(userMessage){
       type:REQUEST_GET_MESSAGES,
       payload:{
         userId:userMessage.UserId,
-        inboxType:userMessage.Type
+        draftType:userMessage.Type
       }
     }
   }catch(err){
