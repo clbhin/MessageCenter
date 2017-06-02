@@ -1,5 +1,5 @@
-import React, {PropTypes, Component} from 'react';
-import {addNavigationHelpers} from 'react-navigation';
+import React, { PropTypes, Component } from 'react';
+import { addNavigationHelpers } from 'react-navigation';
 
 import AppNavigator from './Navigator';
 

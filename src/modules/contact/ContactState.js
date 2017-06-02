@@ -1,9 +1,9 @@
-import {Map} from 'immutable';
-import {loop, Effects} from 'redux-loop-symbol-ponyfill';
+import { Map } from 'immutable';
+import { loop, Effects } from 'redux-loop-symbol-ponyfill';
 
 
 // Initial state
-const initialState = Map({contactData: []});
+const initialState = Map({ contactData: [] });
 
 // Actions
 

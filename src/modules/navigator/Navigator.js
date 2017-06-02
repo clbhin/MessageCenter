@@ -1,5 +1,5 @@
-import {Platform} from 'react-native';
-import {TabNavigator, StackNavigator} from 'react-navigation';
+import { Platform } from 'react-native';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 
 import InboxViewContainer from '../inbox/InboxViewContainer';
 import ColorViewContainer from '../colors/ColorViewContainer';
@@ -42,15 +42,15 @@ const activeColor = 'white';
 
 // Root navigator is a StackNavigator
 const AppNavigator = StackNavigator({
-  Home: {screen: LoginInViewContainer},
-  InboxStack: {screen: InboxViewContainer},
-  InfiniteColorStack: {screen: ColorViewContainer},
-  MessageDetailStack:{screen:MessageDetailViewContainer},
-  CreateMessageStack:{screen:CreateMessageViewContainer},
-  ContactStack:{screen:ContactViewContainer},
-  SentStack: {screen: SentViewContainer},
-  DraftStack: {screen: DraftViewContainer},
-  AddProfileStack:{screen:AddProfileViewContainer},
+  Home: { screen: LoginInViewContainer },
+  InboxStack: { screen: InboxViewContainer },
+  InfiniteColorStack: { screen: ColorViewContainer },
+  MessageDetailStack: { screen: MessageDetailViewContainer },
+  CreateMessageStack: { screen: CreateMessageViewContainer },
+  ContactStack: { screen: ContactViewContainer },
+  SentStack: { screen: SentViewContainer },
+  DraftStack: { screen: DraftViewContainer },
+  AddProfileStack: { screen: AddProfileViewContainer },
 });
 
 export default AppNavigator;

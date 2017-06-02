@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from 'react';
+import React, { PropTypes, Component } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -17,42 +17,42 @@ import {
   ScrollView
 } from 'react-native';
 import MessageView from './../../components/Message';
-import DrawerView from './../drawer/DrawerView'; 
-import {SwipeListView} from 'react-native-swipe-list-view';
+import DrawerView from './../drawer/DrawerView';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
 import LoadMoreFooter from './../../components/LoadMoreFooter';
 
 class InboxView extends Component {
   constructor(props) {
-  super(props);
-  var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-  const data=[
-    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'111',MessageBody:'<p>111</p>'}},
-    {Message:{From:{Id:'Xiang Zhang',PersonName:'Xiang Zhang'},Subject:'222',MessageBody:'<p>222</p>'}}]
-  this.state = {
-    dataSource: ds.cloneWithRows(data),
-     criteria:'',
-     userId:'',
-     type:'Inbox',
-     startIndex:0,
-     pageSize:10,
-     onEndReached: false,
+    super(props);
+    let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const data = [
+      { Message: { From: { Id: 'Xiang Zhang', PersonName: 'Xiang Zhang' }, Subject: '111', MessageBody: '<p>111</p>' } },
+      { Message: { From: { Id: 'Xiang Zhang', PersonName: 'Xiang Zhang' }, Subject: '222', MessageBody: '<p>222</p>' } }]
+    this.state = {
+      dataSource: ds.cloneWithRows(data),
+      criteria: '',
+      userId: '',
+      type: 'Inbox',
+      startIndex: 0,
+      pageSize: 10,
+      onEndReached: false,
+    }
+    this.ds = ds;
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.transformMessage = this.transformMessage.bind(this);
+    this.screenSize = Dimensions.get('window');
+    this.renderFooter = this.renderFooter.bind(this);
+    //this.toEnd = this.toEnd.bind(this);
+    this.searchMessage = this.searchMessage.bind(this);
   }
-  this.ds=ds;
-  this.closeDrawer = this.closeDrawer.bind(this);
-  this.openDrawer = this.openDrawer.bind(this);
-  this.transformMessage = this.transformMessage.bind(this);
-  this.screenSize = Dimensions.get('window');
-  this.renderFooter = this.renderFooter.bind(this);
-  //this.toEnd = this.toEnd.bind(this);
-  this.searchMessage = this.searchMessage.bind(this);
-}
 
   static displayName = 'InboxView';
 
   static navigationOptions = {
-    header:{
-      style:{height:0}
+    header: {
+      style: { height: 0 }
     }
   }
 
@@ -61,165 +61,165 @@ class InboxView extends Component {
 
   transformMessage = (currentMessage) => {
     this.props.InboxStateActions.readMessage(currentMessage.UserMessage);
-    this.props.navigate({routeName: 'MessageDetailStack',params:currentMessage});
+    this.props.navigate({ routeName: 'MessageDetailStack', params: currentMessage });
   };
 
   componentWillReceiveProps(nextProps) {
-    try{
+    try {
       if (nextProps.value !== this.props.value && nextProps.value) {
-      this.setState({
-        dataSource: this.ds.cloneWithRows(nextProps.value),
-        userId:nextProps.userId,
-        noMoreMessage: (nextProps.value.length - this.props.value.length == 10) || (nextProps.value.length ==10 && this.props.value.length == 10)  ? true : false
-      });
-    }
-    }catch(err){
+        this.setState({
+          dataSource: this.ds.cloneWithRows(nextProps.value),
+          userId: nextProps.userId,
+          noMoreMessage: (nextProps.value.length - this.props.value.length == 10) || (nextProps.value.length == 10 && this.props.value.length == 10) ? true : false
+        });
+      }
+    } catch (err) {
       console.log(err)
     }
   }
 
-  componentWillMount(){
-    this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
+  componentWillMount() {
+    this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
   }
 
-   closeDrawer(){
-        this.refs['DRAWER'].closeDrawer();
-    }
+  closeDrawer() {
+    this.refs['DRAWER'].closeDrawer();
+  }
 
-  openDrawer(){    
+  openDrawer() {
     this.refs['DRAWER'].openDrawer();
   }
- 
-  deleteMessage(data){
-   this.props.InboxStateActions.deleteMessage(data.UserMessage);
+
+  deleteMessage(data) {
+    this.props.InboxStateActions.deleteMessage(data.UserMessage);
   }
 
-  markMessage(currentMessage){
+  markMessage(currentMessage) {
     this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
   }
 
-  searchMessage(){
-    let messageSearchCriteria={};
-    messageSearchCriteria.SearchText=this.state.criteria;
-    messageSearchCriteria.Type=this.state.type;
-    messageSearchCriteria.UserId=this.state.userId;  
-    messageSearchCriteria.PageSize=this.state.pageSize;
-    messageSearchCriteria.Start=this.state.startIndex;   
-    if(messageSearchCriteria.SearchText == ''){
-      this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
-    }else{
-          this.props.InboxStateActions.searchMessage(messageSearchCriteria);
+  searchMessage() {
+    let messageSearchCriteria = {};
+    messageSearchCriteria.SearchText = this.state.criteria;
+    messageSearchCriteria.Type = this.state.type;
+    messageSearchCriteria.UserId = this.state.userId;
+    messageSearchCriteria.PageSize = this.state.pageSize;
+    messageSearchCriteria.Start = this.state.startIndex;
+    if (messageSearchCriteria.SearchText == '') {
+      this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+    } else {
+      this.props.InboxStateActions.searchMessage(messageSearchCriteria);
     }
-   }
-
-  createMessage(){
-    let data={};
-    this.props.navigate({routeName: 'CreateMessageStack',params:data});
   }
 
-  reloadData(){
-    this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
+  createMessage() {
+    let data = {};
+    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
-  loadMore(){
-    let messageLoadMore={};
-    messageLoadMore.UserId=this.state.userId;
-    messageLoadMore.Type=this.state.type;
-    messageLoadMore.Start=0 || (this.props.value && this.props.value.length);
-    messageLoadMore.PageSize=this.state.pageSize;
-    messageLoadMore.SearchText=this.state.criteria;
+  reloadData() {
+    this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+  }
+
+  loadMore() {
+    let messageLoadMore = {};
+    messageLoadMore.UserId = this.state.userId;
+    messageLoadMore.Type = this.state.type;
+    messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
+    messageLoadMore.PageSize = this.state.pageSize;
+    messageLoadMore.SearchText = this.state.criteria;
     this.props.InboxStateActions.loadMoreMessages(messageLoadMore);
   }
 
-  renderFooter(){
-    if(this.state.noMoreMessage){
+  renderFooter() {
+    if (this.state.noMoreMessage) {
       return <LoadMoreFooter isLoadAll={true} />
-    }else{
+    } else {
       return <LoadMoreFooter />
     }
-   }
+  }
 
   render() {
-    var navigationView =(
-      <DrawerView closeDrawer={this.closeDrawer} navigation={this.props.navigation} navigate={this.props.navigate}/>
+    let navigationView = (
+      <DrawerView closeDrawer={this.closeDrawer} navigation={this.props.navigation} navigate={this.props.navigate} />
     );
 
     return (
-      
+
 
       <DrawerLayoutAndroid
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={()=>navigationView}
+        renderNavigationView={() => navigationView}
         ref={'DRAWER'}
-        style={{backgroundColor: '#fff', paddingBottom: 260}}
+        style={{ backgroundColor: '#fff', paddingBottom: 260 }}
       >
-        <View style={{flexDirection:'row',paddingLeft:10,paddingRight:10,borderBottomWidth:1,borderBottomColor:'#ccc'}}>
-          <TouchableOpacity onPress={()=>{this.openDrawer()}}>
-            <Image style={{width: 30,height: 40}}source={require('./../../../images/headbar.png')}></Image>
+        <View style={{ flexDirection: 'row', paddingLeft: 10, paddingRight: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
+          <TouchableOpacity onPress={() => { this.openDrawer() }}>
+            <Image style={{ width: 30, height: 40 }} source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
-          <View style={{flex:1,marginLeft:20}}>
-            <Text style={{fontSize:18,color:'black'}}>Inbox</Text>
-            <Text style={{fontSize:12}}>welcome,{this.state.userId}</Text>
+          <View style={{ flex: 1, marginLeft: 20 }}>
+            <Text style={{ fontSize: 18, color: 'black' }}>Inbox</Text>
+            <Text style={{ fontSize: 12 }}>welcome,{this.state.userId}</Text>
           </View>
           <View style={{}}>
-            <TouchableOpacity style={{flex:1,alignItems:'center',justifyContent: 'center',marginRight: 7, width: 30}} onPress={()=>{this.createMessage()}}>
-              <Icon name='plus' size={20} color={'#33373D'}></Icon>              
-            </TouchableOpacity>    
+            <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginRight: 7, width: 30 }} onPress={() => { this.createMessage() }}>
+              <Icon name='plus' size={20} color={'#33373D'}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={{flexDirection:'row',backgroundColor:'#ccc',height:24,borderRadius:12,marginLeft:10,marginRight:10,marginTop:6}}>
-          <View style={{flexDirection:'row',flex:3,alignItems: 'center',justifyContent: 'center',}}>
-            <TextInput placeholder='Search' style={{flex:10,padding: 0,paddingLeft:10,color:'black'}} underlineColorAndroid="transparent" value={this.state.criteria} 
-            onChangeText={(criteria) => this.setState({criteria})}/>
-             <TouchableOpacity onPress={()=>{this.searchMessage()}}>
-               <Icon name='magnifying-glass' size={24}></Icon>
-             </TouchableOpacity>
+        <View style={{ flexDirection: 'row', backgroundColor: '#ccc', height: 24, borderRadius: 12, marginLeft: 10, marginRight: 10, marginTop: 6 }}>
+          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
+            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }} underlineColorAndroid="transparent" value={this.state.criteria}
+              onChangeText={(criteria) => this.setState({ criteria })} />
+            <TouchableOpacity onPress={() => { this.searchMessage() }}>
+              <Icon name='magnifying-glass' size={24}></Icon>
+            </TouchableOpacity>
           </View>
 
         </View>
-        <ScrollView 
+        <ScrollView
           refreshControl={
-              <RefreshControl refreshing={false} onRefresh={()=>{this.reloadData()}}              
-                />}>        
-          <SwipeListView style={{paddingTop:10, flex: 1}} 
+            <RefreshControl refreshing={false} onRefresh={() => { this.reloadData() }}
+            />}>
+          <SwipeListView style={{ paddingTop: 10, flex: 1 }}
             dataSource={this.state.dataSource}
-            renderRow={(rowData, secId, rowId, rowMap) =>           
-              <MessageView  messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap}  transformMessage={this.transformMessage} />
+            renderRow={(rowData, secId, rowId, rowMap) =>
+              <MessageView messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap} transformMessage={this.transformMessage} />
             }
             renderHiddenRow={
-              (rowData,secId,rowId,rowMap) =>(
+              (rowData, secId, rowId, rowMap) => (
                 <View style={styles.rowBack}>
                   <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                    <TouchableOpacity onPress={()=>{this.markMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                      <Icon name='star' size={20} color={'#33373D'}/>
+                    <TouchableOpacity onPress={() => { this.markMessage(rowData); rowMap[`${secId}${rowId}`].closeRow() }}>
+                      <Icon name='star' size={20} color={'#33373D'} />
                       <Text style={styles.backRightBtnRightMark}>Mark</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={[styles.backRightBtn, styles.backRightBtnRight]}>
-                    <TouchableOpacity  onPress={()=>{this.deleteMessage(rowData);rowMap[`${secId}${rowId}`].closeRow()}}>
-                    <Icon name='trash' size={20} color={'#EE3B3B'}/>
-                    <Text style={styles.backRightBtnRightDelete}>Delete</Text>
-                  </TouchableOpacity>
-                  </View>   
+                    <TouchableOpacity onPress={() => { this.deleteMessage(rowData); rowMap[`${secId}${rowId}`].closeRow() }}>
+                      <Icon name='trash' size={20} color={'#EE3B3B'} />
+                      <Text style={styles.backRightBtnRightDelete}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               )
             }
             //onEndReached={()=>{this.searchMessage()}}
             //onEndReachedThreshold={20}         
-            rightOpenValue={-150} 
-            disableRightSwipe   
-            enableEmptySections={true}  
+            rightOpenValue={-150}
+            disableRightSwipe
+            enableEmptySections={true}
             closeOnRowPress={true}
             closeOnScroll={true}
-            //renderFooter={()=>{return this.renderFooter()}}             
-          />          
-        <TouchableOpacity style={{justifyContent: 'center',alignItems: 'center'}} onPress={()=>this.loadMore()}>
-            {this.props.loadMore?<Text>click more </Text> : <Text>No More Message </Text> }
-        </TouchableOpacity>    
-       </ScrollView>
+          //renderFooter={()=>{return this.renderFooter()}}             
+          />
+          <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
+            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+          </TouchableOpacity>
+        </ScrollView>
       </DrawerLayoutAndroid>
-    
+
     );
   }
 }
@@ -229,17 +229,17 @@ const circle = {
   width: 60,
   height: 60,
   borderRadius: 30,
-  backgroundColor:'red',
-  justifyContent:'center',
-  alignItems:'center',
-  overflow:'hidden'
+  backgroundColor: 'red',
+  justifyContent: 'center',
+  alignItems: 'center',
+  overflow: 'hidden'
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop:10
+    paddingTop: 10
   },
   userContainer: {
     justifyContent: 'center',
@@ -274,33 +274,33 @@ const styles = StyleSheet.create({
     padding: 5
   },
   rowBack: {
-		alignItems: 'center',
-		backgroundColor: '#DDD',
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingLeft: 15,
-	},
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
   backRightBtn: {
-		alignItems: 'center',
-		bottom: 0,
-		justifyContent: 'center',
-		position: 'absolute',
-		top: 0,
-		width: 75
-	},
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 75
+  },
   backRightBtnRight: {
-		backgroundColor: '#F5F5F5',
-		right: 0
-	},
+    backgroundColor: '#F5F5F5',
+    right: 0
+  },
   backRightBtnLeft: {
-		backgroundColor: '#F5F5F5',
-		right: 75
-	},
+    backgroundColor: '#F5F5F5',
+    right: 75
+  },
   backTextWhite: {
-		color: '#FFF'
-	},
-  loadMessage :{
+    color: '#FFF'
+  },
+  loadMessage: {
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
   backRightBtnRightMark: {
     marginTop: 5,
     fontSize: 12,
-    color: '#33373D' 
+    color: '#33373D'
   }
 });
 

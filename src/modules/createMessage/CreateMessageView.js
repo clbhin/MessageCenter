@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
-import { getNames ,spliceMessage} from '../../services/mcServices';
+import { getNames, spliceMessage } from '../../services/mcServices';
 import lodash from 'lodash';
 import ModalComponent from './../../components/Modal';
 
@@ -22,7 +22,7 @@ import ModalComponent from './../../components/Modal';
 class CreateMessageView extends Component {
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params,
@@ -30,8 +30,8 @@ class CreateMessageView extends Component {
       Cc: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc,
       From: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From,
       Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
-      MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type==='Draft'?this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody:'',
-      LastMessageBody:lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type==='Draft')?'':spliceMessage(this.props.navigation.state.params.Message),
+      MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody : '',
+      LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
       To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
@@ -96,7 +96,7 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody+'\n\n'+this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
 
@@ -123,26 +123,26 @@ class CreateMessageView extends Component {
     this.props.navigate({ routeName: 'ContactStack' });
   }
 
-  back(){
-    return this.setState({isModalVisible: true})
+  back() {
+    return this.setState({ isModalVisible: true })
   }
 
-  hideModal(){
-    return this.setState({isModalVisible: false})
+  hideModal() {
+    return this.setState({ isModalVisible: false })
   }
 
-  deleteModal(){
+  deleteModal() {
     this.props.navigation.goBack(null);
   }
 
-  save(){
-     let formData = new FormData();
+  save() {
+    let formData = new FormData();
     let message = {}
     message.Bcc = this.state.Bcc;
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody+this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
 
@@ -157,7 +157,7 @@ class CreateMessageView extends Component {
       })
       .catch(function (error) {
         console.log('request failed: ', error)
-      })   
+      })
     this.props.navigation.goBack(null);
 
   }
@@ -218,12 +218,12 @@ class CreateMessageView extends Component {
             <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
-          <View style={{flexDirection:'column',height:300}}>
-            <TextInput style={{flex:1, borderColor: 'gray', borderLeftWidth:0,borderRightWidth: 0,borderBottomWidth:0,borderTopWidth:0.1,textAlignVertical: 'top'}} autoFocus={true}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-            {lodash.isEmpty(this.state.LastMessageBody)?null:<TextInput style={{ flex:1,borderColor: 'gray', borderLeftWidth:0,borderRightWidth: 0,borderTopWidth:1,textAlignVertical:'top'}} onChangeText={(text) => this.setState({ 'LastMessageBody': text })} value={this.state.LastMessageBody} multiline={true} />} 
+          <View style={{ flexDirection: 'column', height: 300 }}>
+            <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }} autoFocus={true} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+            {lodash.isEmpty(this.state.LastMessageBody) ? null : <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderTopWidth: 1, textAlignVertical: 'top' }} onChangeText={(text) => this.setState({ 'LastMessageBody': text })} value={this.state.LastMessageBody} multiline={true} />}
           </View>
         </View>
-        <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save}/>
+        <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />
       </View>
     );
   }

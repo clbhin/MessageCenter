@@ -1,7 +1,7 @@
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import InboxView from './InboxView';
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import * as InboxStateActions from '../inbox/InboxState';
 
 export default connect(
