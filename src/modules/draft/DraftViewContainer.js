@@ -7,6 +7,8 @@ import * as DraftStateActions from './DraftState';
 export default connect(
     state => ({
         value: state.getIn(['draft', 'value']),
+        userId: state.getIn(['login', 'userId']),
+        loadMore: state.getIn(['draft', 'loadMore'])
     }),
    dispatch => {
      return {
