@@ -7,3 +7,8 @@ export function getNames(personNames) {
 export function spliceMessage(message) {
   return '\n-----original message-----\nSubject:' + message.Subject + '\nFrom:' + message.From.PersonName + '\nTo:' + getNames(message.To) + '\nCc:' + getNames(message.Cc) + '\nBcc:' + getNames(message.Bcc) + '\n' + message.MessageBody
 }
+
+export function formatStyle(labelString){
+  return labelString.replace(/style=\".+?\"/gi,'')
+
+}

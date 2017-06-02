@@ -13,8 +13,9 @@ import {
 
 import Icon from 'react-native-vector-icons/Entypo';
 import {MessageFormatAllDate} from '../../utils/dateTimeHelper';
-import {getNames} from '../../services/mcServices';
-import lodash from 'lodash'
+import {getNames,formatStyle} from '../../services/mcServices';
+import lodash from 'lodash';
+import HTML from 'react-native-fence-html';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -104,7 +105,7 @@ class MessageDetailView extends Component {
           {getNames(this.state.currentMessage.Message.Bcc)? <Text style={{fontSize:16,height:30,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text>: null}
           <Text style={{fontSize:16,height:20,justifyContent: 'center'}}>Subject:{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{fontSize:10,height:20,justifyContent: 'center',borderBottomWidth:1,borderBottomColor:'#ddd'}}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <ScrollView><Text style={{fontSize:14}}>{this.state.currentMessage.Message.MessageBody}</Text></ScrollView>
+          <ScrollView><HTML html={formatStyle(this.state.currentMessage.Message.MessageBody)}></HTML></ScrollView>
         </View>
         <View style={{height:40,borderRadius:20,backgroundColor:'white',flexDirection:'row',justifyContent:'space-between',paddingLeft:24,paddingRight:24,alignItems:'center',position:'absolute',top:this.screenSize.height-80,left:0,right:0,opacity:0.8}}>
           <TouchableOpacity style={{flexDirection:'column',alignItems:'center'}} onPress={this.reply.bind(this,this.state.currentMessage)}>
