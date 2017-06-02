@@ -99,20 +99,7 @@ class CreateMessageView extends Component {
     message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
     formData.append('message', JSON.stringify(message))
-
-    fetch('http://172.16.40.117/MessageCenter/MessageCenter.IISHost.Messages/api/Messages/SendMessage', {
-      method: "POST",
-      headers: {},
-      body: formData
-    })
-      .then(response => response.json())
-      .then(json => {
-        console.log(json);
-        Alert.alert('Message success send')
-      })
-      .catch(function (error) {
-        console.log('request failed: ', error)
-      })
+    this.props.CreateMessageStateActions.sendMessage(formData);
     this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
     this.props.navigation.goBack(null);
 
@@ -144,22 +131,9 @@ class CreateMessageView extends Component {
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
-    formData.append('message', JSON.stringify(message))
-
-    fetch('http://172.16.40.117/MessageCenter/MessageCenter.IISHost.Messages/api/Messages/SaveAsDraft', {
-      method: "POST",
-      headers: {},
-      body: formData
-    })
-      .then(response => response.json())
-      .then(json => {
-        console.log(json);
-      })
-      .catch(function (error) {
-        console.log('request failed: ', error)
-      })
+    formData.append('message', JSON.stringify(message));
+    this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);
-
   }
 
   render() {
