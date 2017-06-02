@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {MessageFormatDate} from './../utils/dateTimeHelper';
 import Icon from 'react-native-vector-icons/Entypo';
+import {getNames,formatLabelStyle} from '../services/mcServices';
 
 
 class MessageView extends Component{
@@ -36,14 +37,14 @@ render() {
       <View style={{flex: 3,marginLeft: 10,borderBottomColor: '#ddd',borderBottomWidth: 1,paddingBottom: 4}}>
         <View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
           <View style={{flexDirection:'row',alignItems:'center'}}>
-            <Text style={{fontSize: 18}}>{this.props.messageData.Message.From.PersonName}</Text>
+            {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.Type==='Sent')?<Text style={{fontSize: 18,overflow:'hidden'}}>{getNames(this.props.messageData.Message.To)}</Text>:<Text style={{fontSize: 18,overflow:'hidden'}}>{this.props.messageData.Message.From.PersonName}</Text>}
             {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:null}
           </View>
           <Text>{MessageFormatDate(this.props.messageData.Message.Timestamp)}</Text>
         </View>
         <Text style={{fontSize: 14}}>{this.props.messageData.Message.Subject}</Text>
         <View style={{height:14,overflow:'hidden'}}>
-          <Text style={{fontSize: 14}}>{this.props.messageData.Message.MessageBody}</Text>
+          {(this.props.messageData.Message && this.props.messageData.Message.MessageBody)?<Text style={{fontSize: 14}}>{formatLabelStyle(this.props.messageData.Message.MessageBody)}</Text>:null}  
         </View>
       </View>
     </View>

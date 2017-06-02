@@ -10,5 +10,8 @@ export function spliceMessage(message) {
 
 export function formatStyle(labelString) {
   return labelString.replace(/style=\".+?\"/gi, '')
+}
 
+export function formatLabelStyle(labelString) {
+  return labelString.replace(/\<.*?\>/gi, '')
 }
