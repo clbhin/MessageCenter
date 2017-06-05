@@ -33,7 +33,8 @@ class CreateMessageView extends Component {
       MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody : '',
       LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
       To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
-      ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
+      ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
+        this.props.navigation.state.params.Message.To[0].PersonName : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
       type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
@@ -99,7 +100,7 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
-    message.From = { PersonName: this.props.userId, Id: this.props.userId };
+    message.From = { PersonName: this.props.userId, Id: this.props.userId }; 
     formData.append('message', JSON.stringify(message))
     this.props.CreateMessageStateActions.sendMessage(formData);
     // this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
