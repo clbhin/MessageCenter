@@ -1,6 +1,7 @@
 import { Map } from 'immutable';
 import { loop, Effects } from 'redux-loop-symbol-ponyfill';
-import { GetMessages, ReadUserMessage, DeleteMessage, SearchMessages, LoadMoreMessages } from './../../services/messageCenterServices';
+import {GetMessages,ReadUserMessage, DeleteMessage, SearchMessages, LoadMoreMessages, MarkUserMessage} from './../../services/messageCenterServices';
+
 
 // Initial state
 const initialState = Map({
@@ -19,6 +20,8 @@ const REQUEST_SEARCH_MESSAGES = 'DraftState/REQUEST_SEARCH_MESSAGES';
 const RESPONSE_SEARCH_MESSAGES = 'DraftState/RESPONSE_SEARCH_MESSAGES';
 const REQUEST_LOAD_MORE_MESSAGES = 'DraftState/REQUEST_LOAD_MORE_MESSAGES';
 const RESPONSE_LOAD_MORE_MESSAGES = 'DraftState/RESPONSE_LOAD_MORE_MESSAGES';
+const REQUEST_MARK_MESSAGE='DraftState/REQUEST_MARK_MESSAGE';
+
 
 
 // Action creators
@@ -58,6 +61,14 @@ export function loadMoreMessages(userMessage) {
     type: REQUEST_LOAD_MORE_MESSAGES,
     payload: userMessage
   };
+}
+
+export function markMessage(userMessage){
+  userMessage.Mark==='Marked'?userMessage.Mark='UnMark':userMessage.Mark='Marked';
+  return{
+    type:REQUEST_MARK_MESSAGE,
+    payload:userMessage
+  }
 }
 
 export async function requestGetMessages(userId, draftType) {
@@ -125,6 +136,21 @@ export async function requestLoadMoreMessage(userMessage) {
   }
 }
 
+export async function requestMarkUserMessage(userMessage){
+  try{
+    const result=await MarkUserMessage(userMessage)
+    return {
+      type:REQUEST_GET_MESSAGES,
+      payload:{
+        userId:userMessage.UserId,
+        draftType:userMessage.Type
+      }
+    }
+  }catch(err){
+    return {type: RESPONSE_GET_MESSAGES, payload: []}
+  }
+}
+
 // Reducer
 export default function SentStateReducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -168,6 +194,9 @@ export default function SentStateReducer(state = initialState, action = {}) {
       } else {
         return state.set('loadMore', false).set('value', [...(newData || [])]);
       }
+
+    case REQUEST_MARK_MESSAGE:
+      return loop(state,Effects.promise(requestMarkUserMessage,action.payload))
 
     default:
       return state;

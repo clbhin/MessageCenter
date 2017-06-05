@@ -110,6 +110,14 @@ class SentView extends Component {
     this.props.navigate({ routeName: 'CreateMessageStack', params: {} });
   }
 
+  markMessage(currentMessage){
+    this.props.SentStateActions.markMessage(currentMessage.UserMessage);
+  }
+
+  reloadData(){
+    this.props.SentStateActions.getMessages(this.props.userId,'Sent');
+  }
+
   render() {
     let navigationView = (
       <DrawerView closeDrawer={this.closeDrawer} navigate={this.props.navigate} />

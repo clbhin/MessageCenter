@@ -66,7 +66,7 @@ class DraftView extends Component {
   }
 
   componentWillMount() {
-    this.props.DraftStateActions.getMessages('Xiang Zhang', 'Draft');
+    this.props.DraftStateActions.getMessages(this.props.userId, 'Draft');
   }
 
   closeDrawer() {
@@ -109,6 +109,14 @@ class DraftView extends Component {
     let data = {};
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
+
+  markMessage(currentMessage){
+    this.props.DraftStateActions.markMessage(currentMessage.UserMessage);
+  }
+
+  reloadData(){
+    this.props.DraftStateActions.getMessages(this.props.userId,'Draft');
+  }  
 
   render() {
     let navigationView = (
