@@ -67,13 +67,13 @@ class MessageDetailView extends Component {
     let data = lodash.cloneDeep(currentMessage);
     data.Message.Cc = [];
     data.Message.Bcc = [];
-    data.Message.Subject = 'RE:' + data.Message.Subject;
+    data.Message.Subject = 'RE:' +(lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   };
 
   replyAll = (currentMessage) => {
     let data = lodash.cloneDeep(currentMessage);
-    data.Message.Subject = 'RE:' + data.Message.Subject;
+    data.Message.Subject = 'RE:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
@@ -87,7 +87,7 @@ class MessageDetailView extends Component {
     data.Message.From = {}
     data.Message.Cc = [];
     data.Message.Bcc = [];
-    data.Message.Subject = 'FW:' + data.Message.Subject;
+    data.Message.Subject = 'FW:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
