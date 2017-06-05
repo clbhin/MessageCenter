@@ -57,9 +57,12 @@ class MessageDetailView extends Component {
 
   back = () => {
     this.props.navigation.goBack(null)
-    this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
+    if(this.state.currentMessage.UserMessage.Type == 'Inbox'){
+      this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
+    }else if(this.state.currentMessage.UserMessage.Type == 'Sent'){
+      this.props.InboxStateActions.getMessages(this.props.userId,'Sent');
+    } 
   }
-
   reply = (currentMessage) => {
     let data = lodash.cloneDeep(currentMessage);
     data.Message.Cc = [];

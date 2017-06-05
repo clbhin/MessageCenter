@@ -5,7 +5,9 @@ import MessageDetailView from './MessageDetailView';
 import * as InboxStateActions from '../inbox/InboxState';
 
 export default connect(
-  null,
+  state => ({    
+    userId: state.getIn(['login', 'userId']),
+  }),
   dispatch => {
     return {
       navigate: bindActionCreators(NavigationActions.navigate, dispatch),
