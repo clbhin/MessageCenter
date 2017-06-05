@@ -36,6 +36,8 @@ class CreateMessageView extends Component {
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
+      type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
+      id: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.MessageId,     
       isModalVisible: false
     };
     this.data = [];
@@ -97,12 +99,20 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
-    message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
+    message.From = { PersonName: this.props.userId, Id: this.props.userId };
     formData.append('message', JSON.stringify(message))
     this.props.CreateMessageStateActions.sendMessage(formData);
-    this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
-    this.props.navigation.goBack(null);
-
+    // this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
+    // this.props.navigation.goBack(null);
+     if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
+      this.props.navigation.goBack(null);
+    }else if(this.state.type == 'Draft'){
+      this.props.InboxStateActions.getMessages(this.props.userId, 'Draft');
+      this.props.navigation.goBack(null);
+    }else{
+      this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+      this.props.navigate({routeName: 'InboxStack'});
+    } 
   }
 
   selectName(nameType) {
@@ -130,7 +140,10 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
-    message.From = { PersonName: 'Xiang Zhang', Id: 'Xiang Zhang' };
+    message.From = { PersonName: this.props.userId, Id: this.props.userId  };
+    if(this.state.type && this.state.type == 'Draft'){
+      message.Id = this.state.id;
+    } 
     formData.append('message', JSON.stringify(message));
     this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);

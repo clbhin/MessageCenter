@@ -9,6 +9,7 @@ export default connect(
   state => ({
     contactData: state.getIn(['contact', 'contactData']),
     boxType: state.getIn(['createMessage', 'boxType']),
+    userId: state.getIn(['login', 'userId']),
   }),
   dispatch => {
     return {
