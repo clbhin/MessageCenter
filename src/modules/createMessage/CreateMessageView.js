@@ -34,7 +34,7 @@ class CreateMessageView extends Component {
       LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
       To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
-        this.props.navigation.state.params.Message.To[0].PersonName : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
+        getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
       type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
