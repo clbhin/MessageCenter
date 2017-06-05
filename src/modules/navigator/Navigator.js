@@ -10,6 +10,7 @@ import SentViewContainer from './../sent/SentViewContainer';
 import DraftViewContainer from './../draft/DraftViewContainer';
 import AddProfileViewContainer from './../addProfile/addProfileViewContainer';
 import LoginInViewContainer from './../login/LoginViewContainer';
+import ArchiveViewContailer from '../archive/ArchiveViewContainer'
 const headerColor = '#39babd';
 const activeColor = 'white';
 
@@ -51,6 +52,7 @@ const AppNavigator = StackNavigator({
   SentStack: { screen: SentViewContainer },
   DraftStack: { screen: DraftViewContainer },
   AddProfileStack: { screen: AddProfileViewContainer },
+  ArchiveStack:{screen:ArchiveViewContailer}
 });
 
 export default AppNavigator;

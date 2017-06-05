@@ -10,6 +10,7 @@ import SentStateReducer from '../modules/sent/SentState';
 import DraftStateReducer from '../modules/draft/DraftState';
 import AddProfileStateReducer from '../modules/addProfile/addProfileState';
 import LoginStateReducer from './../modules/login/LoginState';
+import ArchiveStateReducer from '../modules/archive/ArchiveState'
 
 const reducers = {
   // Counter sample app state. This can be removed in a live application
@@ -31,7 +32,9 @@ const reducers = {
 
   addProfile: AddProfileStateReducer,
   
-  login: LoginStateReducer
+  login: LoginStateReducer,
+
+  archive:ArchiveStateReducer
 
 };
 

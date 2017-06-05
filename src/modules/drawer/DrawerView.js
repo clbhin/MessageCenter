@@ -16,7 +16,7 @@ class DrawerView extends Component {
         super(props);
         let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         const data = [
-            'Inbox', 'Sent', 'Draft', 'Login Out'
+            'Inbox', 'Sent', 'Draft', 'Archive','Login Out'
         ]
         this.state = {
             dataSource: ds.cloneWithRows(data),
@@ -34,10 +34,11 @@ class DrawerView extends Component {
             this.props.navigate({ routeName: 'SentStack' });
         } else if (currentMessage === 'Draft') {
             this.props.navigate({ routeName: 'DraftStack' });
+        } else if (currentMessage === 'Archive') {
+            this.props.navigate({ routeName: 'ArchiveStack' });
         } else if (currentMessage === 'Login Out') {
             this.props.navigate({ routeName: 'Home' });
         }
-
     };
 
     render() {
