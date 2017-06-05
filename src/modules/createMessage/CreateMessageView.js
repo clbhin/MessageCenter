@@ -101,15 +101,16 @@ class CreateMessageView extends Component {
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
     message.From = { PersonName: this.props.userId, Id: this.props.userId }; 
+    if(this.state.type && this.state.type == 'Draft'){
+      message.Id = this.state.id;
+    } 
     formData.append('message', JSON.stringify(message))
     this.props.CreateMessageStateActions.sendMessage(formData);
-    // this.props.InboxStateActions.getMessages('Xiang Zhang', 'Inbox');
-    // this.props.navigation.goBack(null);
      if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
       this.props.navigation.goBack(null);
     }else if(this.state.type == 'Draft'){
       this.props.InboxStateActions.getMessages(this.props.userId, 'Draft');
-      this.props.navigation.goBack(null);
+      this.props.navigate({routeName: 'DraftStack'});
     }else{
       this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
       this.props.navigate({routeName: 'InboxStack'});
