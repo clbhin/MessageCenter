@@ -7,11 +7,11 @@ const initialState = Map({ value: [], boxType: '' });
 
 // Actions
 
-const REQUEST_SEND_MESSAGES = 'CreateMessageDetail/REQUEST_SEND_MESSAGES';
-const RESPONSE_SEND_MESSAGES = 'CreateMessageDetail/RESPONSE_SEND_MESSAGES';
-const REQUEST_SAVE_AS_DRAFT_MESSAGES = 'CreateMessageDetail/REQUEST_SAVE_AS_DRAFT_MESSAGES';
-const RESPONSE_SAVE_AS_DRAFT_MESSAGES = 'CreateMessageDetail/RESPONSE_SAVE_AS_DRAFT_MESSAGES';
-const REQUEST_SELECT_NAME = 'CreateMessageDetail/REQUEST_SELECT_NAME';
+const REQUEST_SEND_MESSAGES = 'CreateMessage/REQUEST_SEND_MESSAGES';
+const RESPONSE_SEND_MESSAGES = 'CreateMessage/RESPONSE_SEND_MESSAGES';
+const REQUEST_SAVE_AS_DRAFT_MESSAGES = 'CreateMessage/REQUEST_SAVE_AS_DRAFT_MESSAGES';
+const RESPONSE_SAVE_AS_DRAFT_MESSAGES = 'CreateMessage/RESPONSE_SAVE_AS_DRAFT_MESSAGES';
+const REQUEST_SELECT_NAME = 'CreateMessage/REQUEST_SELECT_NAME';
 
 // Action creators
 export function sendMessage(data) {

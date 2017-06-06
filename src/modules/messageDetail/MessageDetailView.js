@@ -8,7 +8,8 @@ import {
   ListView,
   Dimensions,
   ScrollView,
-  Image
+  Image,
+  WebView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -108,7 +109,7 @@ class MessageDetailView extends Component {
           {getNames(this.state.currentMessage.Message.Bcc) ? <Text style={{ fontSize: 16, height: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text> : null}
           <Text style={{ fontSize: 16, height: 20, justifyContent: 'center' }}>Subject:{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{ fontSize: 10, height: 20, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <ScrollView>{this.state.currentMessage.Message.MessageBody?<HTML html={formatStyle(this.state.currentMessage.Message.MessageBody)}></HTML>:null}</ScrollView>
+          <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:400}}/>
         </View>
         <View style={{ height: 40, borderRadius: 20, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', position: 'absolute', top: this.screenSize.height - 80, left: 0, right: 0, opacity: 0.8 }}>
           <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.reply.bind(this, this.state.currentMessage)}>

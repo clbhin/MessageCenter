@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   ListView,
-  Alert
+  Alert,
+  WebView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -209,7 +210,7 @@ class CreateMessageView extends Component {
           </View>
           <View style={{ flexDirection: 'column', height: 300 }}>
             <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }} autoFocus={true} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-            {lodash.isEmpty(this.state.LastMessageBody) ? null : <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderTopWidth: 1, textAlignVertical: 'top' }} onChangeText={(text) => this.setState({ 'LastMessageBody': text })} value={this.state.LastMessageBody} multiline={true} />}
+            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{minHeight:400}}/>}
           </View>
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />
