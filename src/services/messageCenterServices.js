@@ -51,3 +51,7 @@ export async function SearchMessages(criteriaCollection) {
 export async function LoadMoreMessages(userMessage) {
   return post('Messages/SearchMessages', userMessage)
 }
+
+export async function SearchUsers(searchCriteria) {
+  return post('Messages/SearchUsers', searchCriteria)
+}

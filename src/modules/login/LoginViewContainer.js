@@ -1,11 +1,13 @@
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import LoginView from './LoginView';
-import {NavigationActions} from 'react-navigation';
-import * as LoginStateActions from '../login/LoginState';
+import { NavigationActions } from 'react-navigation';
+import * as LoginStateActions from './LoginState';
 
 export default connect(
-  null,
+  state => ({
+    users: state.getIn(['login', 'users']),
+  }),
   dispatch => {
     return {
       navigate: bindActionCreators(NavigationActions.navigate, dispatch),
