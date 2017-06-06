@@ -7,30 +7,30 @@ const initialState = Map({ value: [], boxType: '' });
 
 // Actions
 
-const CREATEMESSAGESTATE_REQUEST = 'CREATEMESSAGESTATE/SENDMESSAGE_REQUEST';
-const CREATEMESSAGESTATE_RESPONSE = 'CREATEMESSAGESTATE/SENDMESSAGE_RESPONSE';
-const SAVEASDRAFTMESSAGESTATE_REQUEST = 'SAVEASDRAFTMESSAGESTATE/SENDMESSAGE_REQUEST';
-const SAVEASDRAFTMESSAGESTATE_RESPONSE = 'SAVEASDRAFTEMESSAGESTATE/SENDMESSAGE_RESPONSE';
-const CREATEMESSAGESTATE_SELECTNAME = 'CREATEMESSAGESTATE/SELECTNAME';
+const REQUEST_SEND_MESSAGES = 'CreateMessageDetail/REQUEST_SEND_MESSAGES';
+const RESPONSE_SEND_MESSAGES = 'CreateMessageDetail/RESPONSE_SEND_MESSAGES';
+const REQUEST_SAVE_AS_DRAFT_MESSAGES = 'CreateMessageDetail/REQUEST_SAVE_AS_DRAFT_MESSAGES';
+const RESPONSE_SAVE_AS_DRAFT_MESSAGES = 'CreateMessageDetail/RESPONSE_SAVE_AS_DRAFT_MESSAGES';
+const REQUEST_SELECT_NAME = 'CreateMessageDetail/REQUEST_SELECT_NAME';
 
 // Action creators
 export function sendMessage(data) {
   return {
-    type: CREATEMESSAGESTATE_REQUEST,
+    type: REQUEST_SEND_MESSAGES,
     payload: data
   };
 }
 
 export function saveAsDraft(data) {
   return {
-    type: SAVEASDRAFTMESSAGESTATE_REQUEST,
+    type: REQUEST_SAVE_AS_DRAFT_MESSAGES,
     payload: data
   };
 }
 
 export function selectNames(nameType) {
   return {
-    type: CREATEMESSAGESTATE_SELECTNAME,
+    type: REQUEST_SELECT_NAME,
     payload: nameType
   }
 }
@@ -45,12 +45,12 @@ export async function requestSendMessage(data) {
     .catch(function (error) {
     });
     return {
-      type: CREATEMESSAGESTATE_RESPONSE
+      type: RESPONSE_SEND_MESSAGES
     }
   } catch (err) {
     console.log(err)
     return {
-      type: CREATEMESSAGESTATE_RESPONSE
+      type: RESPONSE_SEND_MESSAGES
     }
   }
 }
@@ -63,12 +63,12 @@ export async function requestSaveAsDraftMessage(data) {
     .catch(function (error) {
     });
     return {
-      type: SAVEASDRAFTMESSAGESTATE_RESPONSE
+      type: RESPONSE_SAVE_AS_DRAFT_MESSAGES
     }
   } catch (err) {
     console.log(err)
     return {
-      type: SAVEASDRAFTMESSAGESTATE_RESPONSE
+      type: RESPONSE_SAVE_AS_DRAFT_MESSAGES
     }
   }
 }
@@ -77,20 +77,21 @@ export async function requestSaveAsDraftMessage(data) {
 export default function CreateMessageStateReducer(state = initialState, action = {}) {
   switch (action.type) {
 
-    case CREATEMESSAGESTATE_REQUEST:
+    case REQUEST_SEND_MESSAGES:
       return loop(state, Effects.promise(requestSendMessage, action.payload));
 
-    case CREATEMESSAGESTATE_RESPONSE:
+    case RESPONSE_SEND_MESSAGES:
       return state;
 
-    case SAVEASDRAFTMESSAGESTATE_REQUEST:
+    case REQUEST_SAVE_AS_DRAFT_MESSAGES:
       return loop(state, Effects.promise(requestSaveAsDraftMessage, action.payload));
 
-    case SAVEASDRAFTMESSAGESTATE_RESPONSE:
+    case RESPONSE_SAVE_AS_DRAFT_MESSAGES:
       return state;
 
-    case CREATEMESSAGESTATE_SELECTNAME:
+    case REQUEST_SELECT_NAME:
       return state.set('boxType', action.payload);
+
     default:
       return state;
   }
