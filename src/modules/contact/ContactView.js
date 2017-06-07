@@ -18,13 +18,14 @@ class ContactView extends Component {
   static displayName = 'ContactView';
   constructor(props) {
     super(props);
-    const data = [{ Id: 'Xiang Zhang', PersonName: 'Xiang Zhang' }, { Id: 'Yanliang Sun', PersonName: 'Yanliang Sun' }, { "Id": "Willian Simth", "PersonName": "Willian Simth" }, { "Id": "Simon Simth", "PersonName": "Simon Simth" }];
+    const data = this.props.users;
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds.cloneWithRows(data),
       contactData: []
     };
     this.data = data;
+    this.ds=ds;
   }
   static navigationOptions = {
     header: {
@@ -49,6 +50,18 @@ class ContactView extends Component {
     }
     this.props.ContactStateActions.addContactName(this.state.contactData);
     this.props.navigation.goBack(null);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    try {
+      if (nextProps.userInfo !== this.props.userInfo && nextProps.userInfo) {
+        this.setState({
+          dataSource: this.ds.cloneWithRows(nextProps.userInfo),
+        });
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   render() {

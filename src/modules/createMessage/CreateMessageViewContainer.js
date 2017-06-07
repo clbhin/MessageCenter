@@ -7,9 +7,9 @@ import * as InboxStateActions from '../inbox/InboxState';
 
 export default connect(
   state => ({
-    contactData: state.getIn(['contact', 'contactData']),
+    contactData: state.getIn(['contact', 'contactData']) && state.getIn(['contact', 'contactData']).toJS?state.getIn(['contact', 'contactData']).toJS():state.getIn(['contact', 'contactData']),
     boxType: state.getIn(['createMessage', 'boxType']),
-    userId: state.getIn(['login', 'userId']),
+    userInfo: state.getIn(['login', 'userInfo'])&& state.getIn(['login', 'userInfo']).toJS?state.getIn(['login', 'userInfo']).toJS():state.getIn(['login', 'userInfo']),
   }),
   dispatch => {
     return {

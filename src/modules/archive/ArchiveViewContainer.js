@@ -6,8 +6,8 @@ import * as ArchiveStateActions from '../archive/ArchiveState';
 
 export default connect(
   state => ({
-    value: state.getIn(['archive', 'value']),
-    userId: state.getIn(['login', 'userId']),
+    value: state.getIn(['inbox', 'value'])&& state.getIn(['inbox', 'value']).toJS?state.getIn(['inbox', 'value']).toJS():state.getIn(['inbox', 'value']),
+    userInfo: state.getIn(['login', 'userInfo'])&& state.getIn(['login', 'userInfo']).toJS?state.getIn(['login', 'userInfo']).toJS():state.getIn(['login', 'userInfo']),
     loadMore: state.getIn(['inbox', 'loadMore'])
   }),
   dispatch => {

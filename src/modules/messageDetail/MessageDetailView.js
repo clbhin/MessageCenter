@@ -14,7 +14,7 @@ import {
 
 import Icon from 'react-native-vector-icons/Entypo';
 import { MessageFormatAllDate } from '../../utils/dateTimeHelper';
-import { getNames, formatStyle } from '../../services/mcServices';
+import { getNames, formatStyle} from '../../services/mcServices';
 import lodash from 'lodash';
 import HTML from 'react-native-fence-html';
 
@@ -59,9 +59,9 @@ class MessageDetailView extends Component {
   back = () => {
     this.props.navigation.goBack(null)
     if(this.state.currentMessage.UserMessage.Type == 'Inbox'){
-      this.props.InboxStateActions.getMessages(this.props.userId,'Inbox');
+      this.props.InboxStateActions.getMessages(this.props.userInfo.Id,'Inbox');
     }else if(this.state.currentMessage.UserMessage.Type == 'Sent'){
-      this.props.InboxStateActions.getMessages(this.props.userId,'Sent');
+      this.props.InboxStateActions.getMessages(this.props.userInfo.Id,'Sent');
     } 
   }
   reply = (currentMessage) => {
@@ -100,7 +100,7 @@ class MessageDetailView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Image style={{ width: 30, height: 30 }} source={require('./../../../images/user_1.png')}></Image>
-          <Text style={{ flex: 5, textAlign: 'left', marginLeft: 5 }}>{this.state.currentMessage.Message && this.state.currentMessage.Message.From.Id}</Text>
+          <Text style={{ flex: 5, textAlign: 'left', marginLeft: 5 }}>{this.state.currentMessage.Message && this.state.currentMessage.Message.From.PersonName}</Text>
           {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark === 'Marked') ? <Icon name='star' size={18} color={'orange'} /> : <Icon name='star-outlined' size={18} color={'#ccc'} />}
         </View>
         <View style={{ marginLeft: 10, marginTop: 10, marginRight: 10, flexDirection: 'column' }}>

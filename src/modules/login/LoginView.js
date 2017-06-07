@@ -45,8 +45,8 @@ class LoginView extends Component {
         }
     }
 
-    loginIn(userId) {
-        this.props.LoginStateActions.loginIn(userId);
+    loginIn(loginUserInfo) {
+        this.props.LoginStateActions.loginIn(loginUserInfo);
         this.props.navigate({ routeName: 'InboxStack' });
     }
 
@@ -57,7 +57,7 @@ class LoginView extends Component {
                 <ListView style={{ paddingTop: 10 }}
                     dataSource={this.state.dataSource}
                     renderRow={(rowData) =>
-                        <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData.FullName)}>
+                        <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData)}>
                             <Text style={styles.loginText}>{rowData.FullName}</Text>
                         </TouchableOpacity>
                     } />

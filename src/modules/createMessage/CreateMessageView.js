@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
-import { getNames, spliceMessage } from '../../services/mcServices';
+import { getNames, spliceMessage} from '../../services/mcServices';
 import lodash from 'lodash';
 import ModalComponent from './../../components/Modal';
 
@@ -101,7 +101,7 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
-    message.From = { PersonName: this.props.userId, Id: this.props.userId }; 
+    message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id }; 
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
     } 
@@ -110,10 +110,10 @@ class CreateMessageView extends Component {
      if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
       this.props.navigation.goBack(null);
     }else if(this.state.type == 'Draft'){
-      this.props.InboxStateActions.getMessages(this.props.userId, 'Draft');
+      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Draft');
       this.props.navigate({routeName: 'DraftStack'});
     }else{
-      this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
       this.props.navigate({routeName: 'InboxStack'});
     } 
   }
@@ -143,7 +143,7 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
-    message.From = { PersonName: this.props.userId, Id: this.props.userId  };
+    message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id  };
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
     } 

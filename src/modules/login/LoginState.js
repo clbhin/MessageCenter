@@ -1,11 +1,12 @@
 import {Map} from 'immutable';
 import {loop, Effects} from 'redux-loop-symbol-ponyfill';
 import {generateRandomNumber} from '../../services/randomNumberService';
-import { SearchUsers } from '../../services/messageCenterServices';
+import {SearchUsers} from '../../services/messageCenterServices';
 
 // Initial state
 const initialState = Map({
-  userId: '', users: {}
+  userInfo: {},
+  users: {}
 });
 
 // Actions
@@ -14,27 +15,24 @@ const SEARCHUSERS_REQUEST = 'LoginState/SEARCHUSERS_REQUEST';
 const SEARCHUSERS_RESPONSE = 'LoginState/SEARCHUSERS_RESPONSE';
 
 // Action creators
-export function loginIn(userId) {
-  return {type: LOGIN,payload: userId};
+export function loginIn(loginUserInfo) {
+  return {type: LOGIN, payload: loginUserInfo};
 }
 
 export function searchUsers(searchCriteria) {
-  return { type: SEARCHUSERS_REQUEST, payload: searchCriteria };
+  return {type: SEARCHUSERS_REQUEST, payload: searchCriteria};
 }
 
 export async function requestSearchUsers(searchCriteria) {
   try {
-    const result =
-      await SearchUsers(searchCriteria);
-    return {
-      type: SEARCHUSERS_RESPONSE,
-      payload: result.ModelObject
-    }
+    const result = await SearchUsers(searchCriteria);
+    let allUsers=[]
+    result.ModelObject.map((item,i)=>{
+      allUsers.push({'PersonName':item.FullName,'Id':item.Id})
+    })
+    return {type: SEARCHUSERS_RESPONSE, payload: allUsers}
   } catch (err) {
-    return {
-      type: SEARCHUSERS_RESPONSE,
-      payload: []
-    }
+    return {type: SEARCHUSERS_RESPONSE, payload: []}
   }
 }
 
@@ -42,7 +40,7 @@ export async function requestSearchUsers(searchCriteria) {
 export default function LoginStateReducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOGIN:
-      return state.set('userId', action.payload);
+      return state.set('userInfo', {'Id':action.payload.Id,'PersonName':action.payload.FullName})
     case SEARCHUSERS_REQUEST:
       return loop(state, Effects.promise(requestSearchUsers, action.payload));
     case SEARCHUSERS_RESPONSE:

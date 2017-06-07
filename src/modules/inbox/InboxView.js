@@ -32,7 +32,6 @@ class InboxView extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(data),
       criteria: '',
-      userId: '',
       type: 'Inbox',
       startIndex: 0,
       pageSize: 10,
@@ -69,8 +68,7 @@ class InboxView extends Component {
       if (nextProps.value !== this.props.value && nextProps.value) {
         this.setState({
           dataSource: this.ds.cloneWithRows(nextProps.value),
-          userId: nextProps.userId,
-          noMoreMessage: (nextProps.value.length - this.props.value.length == 10) || (nextProps.value.length == 10 && this.props.value.length == 10) ? true : false
+          noMoreMessage: (nextProps.value.length - this.props.value.length == 10) || (nextProps.value.length == 10 && this.props.value.length == 10) ? true : false,
         });
       }
     } catch (err) {
@@ -79,7 +77,7 @@ class InboxView extends Component {
   }
 
   componentWillMount() {
-    this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+    this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
   }
 
   closeDrawer() {
@@ -102,11 +100,11 @@ class InboxView extends Component {
     let messageSearchCriteria = {};
     messageSearchCriteria.SearchText = this.state.criteria;
     messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.state.userId;
+    messageSearchCriteria.UserId = this.props.userInfo.Id;
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
-      this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
     } else {
       this.props.InboxStateActions.searchMessage(messageSearchCriteria);
     }
@@ -118,12 +116,12 @@ class InboxView extends Component {
   }
 
   reloadData() {
-    this.props.InboxStateActions.getMessages(this.props.userId, 'Inbox');
+    this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
   }
 
   loadMore() {
     let messageLoadMore = {};
-    messageLoadMore.UserId = this.state.userId;
+    messageLoadMore.UserId = this.props.userInfo.Id;
     messageLoadMore.Type = this.state.type;
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;
@@ -143,10 +141,7 @@ class InboxView extends Component {
     let navigationView = (
       <DrawerView closeDrawer={this.closeDrawer} navigation={this.props.navigation} navigate={this.props.navigate} />
     );
-
     return (
-
-
       <DrawerLayoutAndroid
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
@@ -160,7 +155,7 @@ class InboxView extends Component {
           </TouchableOpacity>
           <View style={{ flex: 1, marginLeft: 20 }}>
             <Text style={{ fontSize: 18, color: 'black' }}>Inbox</Text>
-            <Text style={{ fontSize: 12 }}>welcome,{this.state.userId}</Text>
+            <Text style={{ fontSize: 12 }}>welcome,{this.props.userInfo.PersonName}</Text>
           </View>
           <View style={{}}>
             <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginRight: 7, width: 30 }} onPress={() => { this.createMessage() }}>
