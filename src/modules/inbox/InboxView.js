@@ -26,9 +26,7 @@ class InboxView extends Component {
   constructor(props) {
     super(props);
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    const data = [
-      { Message: { From: { Id: 'Xiang Zhang', PersonName: 'Xiang Zhang' }, Subject: '111', MessageBody: '<p>111</p>' } },
-      { Message: { From: { Id: 'Xiang Zhang', PersonName: 'Xiang Zhang' }, Subject: '222', MessageBody: '<p>222</p>' } }]
+    const data = [];
     this.state = {
       dataSource: ds.cloneWithRows(data),
       criteria: '',
