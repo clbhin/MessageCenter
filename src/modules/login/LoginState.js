@@ -40,7 +40,7 @@ export async function requestSearchUsers(searchCriteria) {
 export default function LoginStateReducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOGIN:
-      return state.set('userInfo', {'Id':action.payload.Id,'PersonName':action.payload.FullName})
+      return state.set('userInfo', {'Id':action.payload.Id,'PersonName':action.payload.PersonName})
     case SEARCHUSERS_REQUEST:
       return loop(state, Effects.promise(requestSearchUsers, action.payload));
     case SEARCHUSERS_RESPONSE:

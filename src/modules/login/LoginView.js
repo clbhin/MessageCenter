@@ -58,7 +58,7 @@ class LoginView extends Component {
                     dataSource={this.state.dataSource}
                     renderRow={(rowData) =>
                         <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData)}>
-                            <Text style={styles.loginText}>{rowData.FullName}</Text>
+                            <Text style={styles.loginText}>{rowData.PersonName}</Text>
                         </TouchableOpacity>
                     } />
             </View>
