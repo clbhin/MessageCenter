@@ -6,7 +6,7 @@ import * as DraftStateActions from './DraftState';
 
 export default connect(
   state => ({
-    value: state.getIn(['inbox', 'value'])&& state.getIn(['inbox', 'value']).toJS?state.getIn(['inbox', 'value']).toJS():state.getIn(['inbox', 'value']),
+    value: state.getIn(['draft', 'value'])&& state.getIn(['draft', 'value']).toJS?state.getIn(['draft', 'value']).toJS():state.getIn(['draft', 'value']),
     userInfo: state.getIn(['login', 'userInfo'])&& state.getIn(['login', 'userInfo']).toJS?state.getIn(['login', 'userInfo']).toJS():state.getIn(['login', 'userInfo']),
     loadMore: state.getIn(['draft', 'loadMore'])
   }),

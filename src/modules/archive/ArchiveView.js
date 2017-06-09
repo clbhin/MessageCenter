@@ -66,7 +66,7 @@ class ArchiveView extends Component {
   }
 
   componentWillMount() {
-    this.props.ArchiveStateActions.getMessages(this.props.userId, 'Archive');
+    this.props.ArchiveStateActions.getMessages(this.props.userInfo.Id, 'Archive');
   }
 
   closeDrawer() {
@@ -89,7 +89,7 @@ class ArchiveView extends Component {
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
-      this.props.ArchiveStateActions.getMessages(this.props.userId, 'Archive');
+      this.props.ArchiveStateActions.getMessages(this.props.userInfo.Id, 'Archive');
     } else {
       this.props.ArchiveStateActions.searchMessage(messageSearchCriteria);
     }
@@ -114,7 +114,7 @@ class ArchiveView extends Component {
   }
 
   reloadData(){
-    this.props.ArchiveStateActions.getMessages(this.props.userId,'Archive');
+    this.props.ArchiveStateActions.getMessages(this.props.userInfo.Id,'Archive');
   }
 
   render() {

@@ -61,7 +61,7 @@ class MessageDetailView extends Component {
     if(this.state.currentMessage.UserMessage.Type == 'Inbox'){
       this.props.InboxStateActions.getMessages(this.props.userInfo.Id,'Inbox');
     }else if(this.state.currentMessage.UserMessage.Type == 'Sent'){
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id,'Sent');
+      this.props.SentStateActions.getMessages(this.props.userInfo.Id,'Sent');
     } 
   }
   reply = (currentMessage) => {

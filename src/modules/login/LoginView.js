@@ -30,7 +30,7 @@ class LoginView extends Component {
     }
 
     componentWillMount() {
-        this.props.LoginStateActions.searchUsers({Start:1,PageSize:10});
+        this.props.LoginStateActions.searchUsers({Start:0,PageSize:10});
     }
 
     componentWillReceiveProps(nextProps) {

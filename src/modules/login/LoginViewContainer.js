@@ -6,7 +6,7 @@ import * as LoginStateActions from './LoginState';
 
 export default connect(
   state => ({
-    users: state.getIn(['login', 'users']),
+    users: state.getIn(['login', 'users'])&&state.getIn(['login', 'users']).toJS?state.getIn(['login', 'users']).toJS():state.getIn(['login', 'users']),
   }),
   dispatch => {
     return {

@@ -150,6 +150,9 @@ class CreateMessageView extends Component {
     formData.append('message', JSON.stringify(message));
     this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);
+    if(this.state.type == 'Draft'){
+      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
+    }
   }
 
   render() {

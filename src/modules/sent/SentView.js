@@ -67,7 +67,7 @@ class SentView extends Component {
   }
 
   componentWillMount() {
-    this.props.SentStateActions.getMessages(this.props.userId, 'Sent');
+    this.props.SentStateActions.getMessages(this.props.userInfo.Id, 'Sent');
   }
 
   closeDrawer() {
@@ -90,7 +90,7 @@ class SentView extends Component {
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
-      this.props.SentStateActions.getMessages(this.props.userId, 'Sent');
+      this.props.SentStateActions.getMessages(this.props.userInfo.Id, 'Sent');
     } else {
       this.props.SentStateActions.searchMessage(messageSearchCriteria);
     }
@@ -115,7 +115,7 @@ class SentView extends Component {
   }
 
   reloadData(){
-    this.props.SentStateActions.getMessages(this.props.userId,'Sent');
+    this.props.SentStateActions.getMessages(this.props.userInfo.Id, 'Sent');
   }
 
   render() {

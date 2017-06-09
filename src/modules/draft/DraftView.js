@@ -66,7 +66,7 @@ class DraftView extends Component {
   }
 
   componentWillMount() {
-    this.props.DraftStateActions.getMessages(this.props.userId, 'Draft');
+    this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
   }
 
   closeDrawer() {
@@ -89,7 +89,7 @@ class DraftView extends Component {
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
-      this.props.DraftStateActions.getMessages(this.props.userId, 'Draft');
+      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
     } else {
       this.props.DraftStateActions.searchMessage(messageSearchCriteria);
     }
@@ -97,7 +97,7 @@ class DraftView extends Component {
 
   loadMore() {
     let messageLoadMore = {};
-    messageLoadMore.UserId = this.state.userId;
+    messageLoadMore.UserId = this.props.userInfo.Id;
     messageLoadMore.Type = this.state.type;
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;
@@ -115,7 +115,7 @@ class DraftView extends Component {
   }
 
   reloadData(){
-    this.props.DraftStateActions.getMessages(this.props.userId,'Draft');
+    this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
   }  
 
   render() {
