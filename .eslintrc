@@ -23,7 +23,7 @@
   "rules": {
     "indent": [2, 2, {"SwitchCase": 1}],
     "quotes": [2,"single"],
-    "linebreak-style": [2,"unix"],
+    "linebreak-style": [2,"windows"],
     "semi": [2,"always"],
     "no-console": 0,
     "max-len": [1,110],
@@ -58,10 +58,10 @@
         }
       }
     ],
-    "keyword-spacing": ["error", {before: true, after: true}],
+    "keyword-spacing": ["error", {"before": true, "after": true}],
     "space-before-blocks": [2, "always"],
     "space-before-function-paren": [2, "never"],
-    "object-curly-spacing": [2, "never"],
+    "object-curly-spacing": [2, "always"],
     "array-bracket-spacing": [2, "never"],
     "computed-property-spacing": [2, "never"],
     "space-in-parens": [2, "never"],

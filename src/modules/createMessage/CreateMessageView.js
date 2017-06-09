@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
-import { getNames, spliceMessage} from '../../services/mcServices';
+import {getNames, spliceMessage} from '../../services/mcServices';
 import lodash from 'lodash';
 import ModalComponent from './../../components/Modal';
 
@@ -163,6 +163,11 @@ class CreateMessageView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
+          <TouchableOpacity style={{ flex: 1 }}
+            onPress={() => this.back()}
+          >
+            <Icon name='attachment' size={30} color={'orange'} />
+          </TouchableOpacity>
           <TouchableOpacity style={{ flex: 1 }} onPress={() => this.send()}>
             <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>
