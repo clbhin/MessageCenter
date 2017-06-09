@@ -47,6 +47,7 @@
     "react-dom": "~15.4.2",
     "react-native": "0.42.0",
     "react-native-check-box": "^1.0.4",
+    "react-native-document-picker": "^2.0.0",
     "react-native-fence-html": "^1.0.6",
     "react-native-modal": "^2.4.0",
     "react-native-swipe-list-view": "^0.4.1",
