@@ -98,7 +98,7 @@ class SentView extends Component {
 
   loadMore() {
     let messageLoadMore = {};
-    messageLoadMore.UserId = this.state.userId;
+    messageLoadMore.UserId = this.props.userInfo.Id;
     messageLoadMore.Type = this.state.type;
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;

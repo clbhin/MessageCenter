@@ -110,7 +110,7 @@ class CreateMessageView extends Component {
      if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
       this.props.navigation.goBack(null);
     }else if(this.state.type == 'Draft'){
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Draft');
+      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
       this.props.navigate({routeName: 'DraftStack'});
     }else{
       this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
@@ -150,7 +150,7 @@ class CreateMessageView extends Component {
     formData.append('message', JSON.stringify(message));
     this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);
-    if(this.state.type == 'Draft'){
+    if(this.state.type == 'Draft' || this.state.type == undefined){
       this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
     }
   }

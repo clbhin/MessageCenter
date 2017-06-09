@@ -54,7 +54,7 @@ class LoginView extends Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.loginText}>Select an user to login</Text>
-                <ListView style={{ paddingTop: 10 }}
+                <ListView style={{ paddingTop: 10 }} enableEmptySections={true}
                     dataSource={this.state.dataSource}
                     renderRow={(rowData) =>
                         <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData)}>
