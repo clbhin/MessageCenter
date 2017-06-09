@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { Platform } from 'react-native';
 import {
   Button,
   View,
@@ -8,13 +9,15 @@ import {
   TextInput,
   ListView,
   Alert,
-  WebView
+  WebView,
+  NativeModules
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
 import {getNames, spliceMessage} from '../../services/mcServices';
 import lodash from 'lodash';
 import ModalComponent from './../../components/Modal';
+import {getMimeByFileExtension} from './../../const/attachmentIcons';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -39,8 +42,9 @@ class CreateMessageView extends Component {
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
       type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
-      id: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.MessageId,     
-      isModalVisible: false
+      id: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.MessageId,
+      isModalVisible: false,
+      file: null
     };
     this.data = [];
     this.ds = ds;
@@ -163,8 +167,29 @@ class CreateMessageView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
-          <TouchableOpacity style={{ flex: 1 }}
-            onPress={() => this.back()}
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => {
+                NativeModules.RNDocumentPicker.show(
+                  {
+                    filetype: (Platform.OS === 'ios') ? ['public.item'] : ['*/*']
+                  },
+                  (error, file) => {
+                    if (!error) {
+                      this.setState({
+                        file,
+                        fileName: (Platform.OS === 'ios') ? decodeURI(file.split('/').pop()) : file.fileName,
+                        uri: (Platform.OS === 'ios') ? file : file.uri,
+                        type: (Platform.OS === 'ios') ? getMimeByFileExtension(file.split('/').pop().split('.').pop().toLowerCase()) : file.type,
+                      });
+                    } else {
+                      Alert.alert('Error', error, [{text: 'OK'}], {
+                        cancelable: true
+                      });
+                    }
+                  }
+                );
+              }}
           >
             <Icon name='attachment' size={30} color={'orange'} />
           </TouchableOpacity>
