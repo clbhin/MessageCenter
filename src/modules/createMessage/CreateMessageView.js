@@ -100,7 +100,7 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody.replace(/\n/gm,'<br />') +this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id }; 
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
@@ -213,7 +213,7 @@ class CreateMessageView extends Component {
           </View>
           <View style={{ flexDirection: 'column', height: 300 }}>
             <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }} autoFocus={true} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{minHeight:400}}/>}
+            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{height:400}}/>}
           </View>
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />
