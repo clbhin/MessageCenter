@@ -64,24 +64,24 @@ class CreateMessageView extends Component {
 
   componentWillReceiveProps(nextProps) {
     try {
-      if (nextProps.contactData !== this.props.contactData) {
-        switch (nextProps.boxType) {
+      if (nextProps.recipients !== this.props.recipients) {
+        switch (nextProps.nameType) {
           case 'ToNames':
             this.setState({
-              To: nextProps.contactData,
-              ToNames: getNames(nextProps.contactData)
+              To: nextProps.recipients,
+              ToNames: getNames(nextProps.recipients)
             })
             break;
           case 'CcNames':
             this.setState({
-              Cc: nextProps.contactData,
-              CcNames: getNames(nextProps.contactData)
+              Cc: nextProps.recipients,
+              CcNames: getNames(nextProps.recipients)
             })
             break;
           case 'BccNames':
             this.setState({
-              Bcc: nextProps.contactData,
-              BccNames: getNames(nextProps.contactData)
+              Bcc: nextProps.recipients,
+              BccNames: getNames(nextProps.recipients)
             })
             break;
           default:
@@ -120,7 +120,7 @@ class CreateMessageView extends Component {
 
   selectName(nameType) {
     this.props.CreateMessageStateActions.selectNames(nameType);
-    this.props.navigate({ routeName: 'ContactStack' });
+    this.props.navigate({ routeName: 'RecipientStack' });
   }
 
   back() {

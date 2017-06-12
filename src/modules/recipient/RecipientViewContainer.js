@@ -1,16 +1,17 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { NavigationActions } from 'react-navigation';
-import ContactView from './ContactView';
-import * as ContactStateActions from '../contact/ContactState';
+import RecipientView from './RecipientView';
+import * as RecipientStateActions from '../recipient/RecipientState';
 export default connect(
   state => ({
     users: state.getIn(['login', 'users'])&& state.getIn(['login', 'users']).toJS?state.getIn(['login', 'users']).toJS():state.getIn(['login', 'users']),
+    userInfos:state.getIn(['recipient', 'userInfos'])&& state.getIn(['recipient', 'userInfos']).toJS?state.getIn(['recipient', 'userInfos']).toJS():state.getIn(['recipient', 'userInfos'])
   }),
   dispatch => {
     return {
       navigate: bindActionCreators(NavigationActions.navigate, dispatch),
-      ContactStateActions: bindActionCreators(ContactStateActions, dispatch)
+      RecipientStateActions: bindActionCreators(RecipientStateActions, dispatch)
     };
   }
-)(ContactView);
+)(RecipientView);
