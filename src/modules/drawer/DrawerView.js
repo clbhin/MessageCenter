@@ -6,17 +6,19 @@ import {
     Text,
     View,
     ListView,
-    ScrollView
+    ScrollView,
+    Dimensions
 } from 'react-native';
 import DrawerModel from './../../components/Drawer';
-
+import Icon from 'react-native-vector-icons/Entypo';
+const {height,width} = Dimensions.get('window'); 
 class DrawerView extends Component {
 
     constructor(props) {
         super(props);
         let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         const data = [
-            'Inbox', 'Sent', 'Draft', 'Archive','Login Out'
+            'Inbox', 'Sent', 'Draft', 'Archive'
         ]
         this.state = {
             dataSource: ds.cloneWithRows(data),
@@ -24,7 +26,8 @@ class DrawerView extends Component {
             drawerNavigate: ''
         };
         this.ds = ds;
-        this.transformMessage = this.transformMessage.bind(this);
+        this.transformMessage = this.transformMessage.bind(this); 
+             
     }
 
     transformMessage = (currentMessage) => {
@@ -36,14 +39,16 @@ class DrawerView extends Component {
             this.props.navigate({ routeName: 'DraftStack' });
         } else if (currentMessage === 'Archive') {
             this.props.navigate({ routeName: 'ArchiveStack' });
-        } else if (currentMessage === 'Login Out') {
-            this.props.navigate({ routeName: 'Home' });
-        }
+        } 
     };
+
+    logOut(){
+        this.props.navigate({ routeName: 'Home' });
+    }
 
     render() {
         return (
-            <ScrollView style={{ paddingLeft: 5 }}>
+            <View style={styles.container}>
                 <TouchableOpacity onPress={() => this.props.closeDrawer()} >
                     <Image style={{ width: 30, height: 40 }} source={require('./../../../images/headbar.png')} />
                 </TouchableOpacity>
@@ -53,9 +58,21 @@ class DrawerView extends Component {
                     renderRow={(rowData) =>
                         <DrawerModel messageData={rowData} transformMessage={this.transformMessage} />
                     } />
-            </ScrollView>
+                <TouchableOpacity style={{flex :1,position:'absolute',bottom: '14%',left: '5%',
+                 flexDirection: 'row', alignItems: 'center'}} onPress={()=>this.logOut()}>                   
+                        <Icon name='log-out' size={20} color={'#398CF3'} style={{marginRight: 5}}></Icon>
+                        <Text style={{fontSize: 16, color: '#398CF3',fontWeight: 'bold'}}>Log Out</Text>                    
+                </TouchableOpacity>
+            </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+   container: {
+    paddingLeft: 5 ,
+    height: height
+  }, 
+})
 
 export default DrawerView;
