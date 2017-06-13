@@ -33,7 +33,11 @@ class CreateMessageView extends Component {
       Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
       MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody : '',
       LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
-      To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
+        [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      // To: this.props.navigation.state.params.origin == 'fw'? [] :this.props.navigation.state.params.origin =='reply'?
+      //    [this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      //To: (this.props.navigation.state.params.origin ==='fw'?[] :this.props.navigation.state.params.origin =='reply')?[this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
         getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
