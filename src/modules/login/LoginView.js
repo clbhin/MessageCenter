@@ -11,6 +11,7 @@ import {
     Picker
 } from 'react-native';
 const {height,width} = Dimensions.get('window'); 
+import lodash from 'lodash';
 
 class LoginView extends Component {
     constructor(props) {
@@ -63,15 +64,15 @@ class LoginView extends Component {
                     <Image style={styles.logoImage} source={require('./../../../images/feisystemslogo.png')} />
                 </View>            
                 <View style={styles.wrap}>                  
-                    <Picker  style={{width: 240,marginBottom: 5,backgroundColor: '#EEE'}} mode="dropdown" selectedValue={this.state.user} 
+                    <Picker  style={{width: 240,marginBottom: 5,}} mode="dropdown" selectedValue={this.state.user} 
                     onValueChange={(value)=>this.setState({user: value})} >
                     
-                        {[<Picker.Item  label={''} value={{}} key={1}  />, ...this.props.users&&this.props.users.map((user)=> 
+                        {[<Picker.Item  label={'Please select user'} value={{}} key={1}  />, ...this.props.users&&this.props.users.map((user)=> 
                             (<Picker.Item label={user.PersonName} style={{width: '150%'}} value={user} key={user.Id}/> )
                         )]}
                                                
                     </Picker>
-                    {this.state.user==null ?
+                    {lodash.isEmpty(this.state.user) ?
                         <Button  title='login' disabled onPress={()=>this.loginIn(this.state.user)}>LOGIN</Button>:
                         <Button  title='login'  onPress={()=>this.loginIn(this.state.user)}>LOGIN</Button>
                     }
