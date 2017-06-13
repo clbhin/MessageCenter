@@ -141,6 +141,11 @@ class CreateMessageView extends Component {
     message.Bcc = this.state.Bcc;
     message.Cc = this.state.Cc;
     message.To = this.state.To;
+    if(message.To[0] ==undefined){
+      message.To[0] = {};
+      message.To[0].PersonName = '' ;
+      message.To[0].Id = '';
+    }
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id  };
