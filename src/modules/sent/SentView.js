@@ -53,7 +53,6 @@ class SentView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     try {
       if (nextProps.value !== this.props.value && nextProps.value) {
         this.setState({

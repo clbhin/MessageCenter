@@ -43,7 +43,6 @@ class LoginView extends Component {
         try {
             if (nextProps.users !== this.props.users ) {
                 this.setState({
-                    //dataSource: this.state.dataSource.cloneWithRows(nextProps.users),
                     users: nextProps.users
                 });
             }
@@ -55,7 +54,6 @@ class LoginView extends Component {
     loginIn(loginUserInfo) {
         this.props.LoginStateActions.loginIn(loginUserInfo);
         this.props.navigate({ routeName: 'InboxStack' });
-        console.log(loginUserInfo);
     }
 
     render() {
@@ -63,20 +61,12 @@ class LoginView extends Component {
             <View style={styles.container}>
                 <View style={styles.logo}>
                     <Image style={styles.logoImage} source={require('./../../../images/feisystemslogo.png')} />
-                </View>
-                {/*<Text style={styles.loginText}>Select an user to login</Text>
-                <ListView style={{ paddingTop: 10 }} enableEmptySections={true}
-                    dataSource={this.state.dataSource}
-                    renderRow={(rowData) =>
-                        <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData)}>
-                            <Text style={styles.loginText}>{rowData.PersonName}</Text>
-                        </TouchableOpacity>
-                    } />*/}
+                </View>            
                 <View style={styles.wrap}>                  
-                    <Picker  style={{width: 240,backgroundColor:'#eee',marginBottom: 5}} mode="dropdown" selectedValue={this.state.user} 
+                    <Picker  style={{width: 240,marginBottom: 5,backgroundColor: '#EEE'}} mode="dropdown" selectedValue={this.state.user} 
                     onValueChange={(value)=>this.setState({user: value})} >
                     
-                        {[<Picker.Item  label={''} value={{}} key={1}  />, ...this.props.users.map((user)=> 
+                        {[<Picker.Item  label={''} value={{}} key={1}  />, ...this.props.users&&this.props.users.map((user)=> 
                             (<Picker.Item label={user.PersonName} style={{width: '150%'}} value={user} key={user.Id}/> )
                         )]}
                                                

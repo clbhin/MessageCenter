@@ -126,7 +126,6 @@ export async function requestSearchMessage(criteriaCollection) {
 export async function requestLoadMoreMessage(userMessage) {
   try {
     const result = await LoadMoreMessages(userMessage)
-    console.log(result);
     return {
       type: RESPONSE_LOAD_MORE_MESSAGES,
       payload: result
