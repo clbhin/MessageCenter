@@ -6,13 +6,13 @@ import {SearchUsers} from '../../services/messageCenterServices';
 // Initial state
 const initialState = Map({
   userInfo: {},
-  users: {}
+  users: []
 });
 
 // Actions
 const LOGIN = 'LoginState/LOGIN';
-const SEARCHUSERS_REQUEST = 'LoginState/SEARCHUSERS_REQUEST';
-const SEARCHUSERS_RESPONSE = 'LoginState/SEARCHUSERS_RESPONSE';
+const REQUEST_SEARCH_USERS = 'LoginState/REQUEST_SEARCH_USERS';
+const RESPONSE_SEARCH_USERS = 'LoginState/RESPONSE_SEARCH_USERS';
 
 // Action creators
 export function loginIn(loginUserInfo) {
@@ -20,7 +20,7 @@ export function loginIn(loginUserInfo) {
 }
 
 export function searchUsers(searchCriteria) {
-  return {type: SEARCHUSERS_REQUEST, payload: searchCriteria};
+  return {type: REQUEST_SEARCH_USERS, payload: searchCriteria};
 }
 
 export async function requestSearchUsers(searchCriteria) {
@@ -30,9 +30,9 @@ export async function requestSearchUsers(searchCriteria) {
     result.ModelObject.map((item,i)=>{
       allUsers.push({'PersonName':item.FullName,'Id':item.Id})
     })
-    return {type: SEARCHUSERS_RESPONSE, payload: allUsers}
+    return {type: RESPONSE_SEARCH_USERS, payload: allUsers}
   } catch (err) {
-    return {type: SEARCHUSERS_RESPONSE, payload: []}
+    return {type: RESPONSE_SEARCH_USERS, payload: []}
   }
 }
 
@@ -41,9 +41,9 @@ export default function LoginStateReducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOGIN:
       return state.set('userInfo', {'Id':action.payload.Id,'PersonName':action.payload.PersonName})
-    case SEARCHUSERS_REQUEST:
+    case REQUEST_SEARCH_USERS:
       return loop(state, Effects.promise(requestSearchUsers, action.payload));
-    case SEARCHUSERS_RESPONSE:
+    case RESPONSE_SEARCH_USERS:
       return state.set('users', [...action.payload]);
     default:
       return state;

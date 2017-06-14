@@ -5,7 +5,7 @@ import InboxViewContainer from '../inbox/InboxViewContainer';
 import ColorViewContainer from '../colors/ColorViewContainer';
 import MessageDetailViewContainer from './../messageDetail/MessageDetailViewContainer';
 import CreateMessageViewContainer from './../createMessage/CreateMessageViewContainer';
-import ContactViewContainer from './../contact/ContactViewContainer';
+import RecipientViewContainer from './../recipient/RecipientViewContainer';
 import SentViewContainer from './../sent/SentViewContainer';
 import DraftViewContainer from './../draft/DraftViewContainer';
 import AddProfileViewContainer from './../addProfile/addProfileViewContainer';
@@ -48,7 +48,7 @@ const AppNavigator = StackNavigator({
   InfiniteColorStack: { screen: ColorViewContainer },
   MessageDetailStack: { screen: MessageDetailViewContainer },
   CreateMessageStack: { screen: CreateMessageViewContainer },
-  ContactStack: { screen: ContactViewContainer },
+  RecipientStack: { screen: RecipientViewContainer },
   SentStack: { screen: SentViewContainer },
   DraftStack: { screen: DraftViewContainer },
   AddProfileStack: { screen: AddProfileViewContainer },

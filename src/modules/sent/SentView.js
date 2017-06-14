@@ -27,7 +27,6 @@ class SentView extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(data),
       criteria: '',
-      userId: '',
       type: 'Sent',
       startIndex: 0,
       pageSize: 10,
@@ -53,12 +52,10 @@ class SentView extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     try {
       if (nextProps.value !== this.props.value && nextProps.value) {
         this.setState({
           dataSource: this.ds.cloneWithRows(nextProps.value),
-          userId: nextProps.userId,
         });
       }
     } catch (err) {
@@ -86,7 +83,7 @@ class SentView extends Component {
     let messageSearchCriteria = {};
     messageSearchCriteria.SearchText = this.state.criteria;
     messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.state.userId;
+    messageSearchCriteria.UserId = this.props.userInfo.Id;
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
@@ -98,7 +95,7 @@ class SentView extends Component {
 
   loadMore() {
     let messageLoadMore = {};
-    messageLoadMore.UserId = this.state.userId;
+    messageLoadMore.UserId = this.props.userInfo.Id;
     messageLoadMore.Type = this.state.type;
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;

@@ -26,7 +26,6 @@ class DraftView extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(data),
       criteria: '',
-      userId: '',
       type: 'Draft',
       startIndex: 0,
       pageSize: 10,
@@ -57,7 +56,6 @@ class DraftView extends Component {
       if (nextProps.value !== this.props.value && nextProps.value) {
         this.setState({
           dataSource: this.ds.cloneWithRows(nextProps.value),
-          userId: nextProps.userId,
         });
       }
     } catch (err) {
@@ -85,7 +83,7 @@ class DraftView extends Component {
     let messageSearchCriteria = {};
     messageSearchCriteria.SearchText = this.state.criteria;
     messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.state.userId;
+    messageSearchCriteria.UserId = this.props.userInfo.Id;
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {

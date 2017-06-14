@@ -6,8 +6,12 @@ import {
     Text,
     View,
     ListView,
-    Button
+    Button,
+    Dimensions,
+    Picker
 } from 'react-native';
+const {height,width} = Dimensions.get('window'); 
+import lodash from 'lodash';
 
 class LoginView extends Component {
     constructor(props) {
@@ -16,8 +20,11 @@ class LoginView extends Component {
         let dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
             dataSource,
+            user:{}, 
+            users: []          
         }
         this.data = [];
+        this.loginIn = this.loginIn.bind(this);
     }
 
     static propTypes = {
@@ -37,7 +44,7 @@ class LoginView extends Component {
         try {
             if (nextProps.users !== this.props.users ) {
                 this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(nextProps.users),
+                    users: nextProps.users
                 });
             }
         } catch (err) {
@@ -53,14 +60,26 @@ class LoginView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.loginText}>Select an user to login</Text>
-                <ListView style={{ paddingTop: 10 }}
-                    dataSource={this.state.dataSource}
-                    renderRow={(rowData) =>
-                        <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }} onPress={() => this.loginIn(rowData)}>
-                            <Text style={styles.loginText}>{rowData.PersonName}</Text>
-                        </TouchableOpacity>
-                    } />
+                <View style={styles.logo}>
+                    <Image style={styles.logoImage} source={require('./../../../images/feisystemslogo.png')} />
+                </View>            
+                <View style={styles.wrap}>                  
+                    <Picker  style={{width: 240,marginBottom: 5,}} mode="dropdown" selectedValue={this.state.user} 
+                    onValueChange={(value)=>this.setState({user: value})} >
+                    
+                        {[<Picker.Item  label={'Please select user'} value={{}} key={1}  />, ...this.props.users&&this.props.users.map((user)=> 
+                            (<Picker.Item label={user.PersonName} style={{width: '150%'}} value={user} key={user.Id}/> )
+                        )]}
+                                               
+                    </Picker>
+                    {lodash.isEmpty(this.state.user) ?
+                        <Button  title='login' disabled onPress={()=>this.loginIn(this.state.user)}>LOGIN</Button>:
+                        <Button  title='login'  onPress={()=>this.loginIn(this.state.user)}>LOGIN</Button>
+                    }
+                        
+         
+                    
+                </View>
             </View>
         )
     }
@@ -71,7 +90,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        height:height
     },
     userContainer: {
         justifyContent: 'center',
@@ -97,6 +117,22 @@ const styles = StyleSheet.create({
     loginText: {
         fontSize: 20,
         backgroundColor: '#eee'
+    },
+    logo :{
+        position: 'absolute',
+        top: '15%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    logoImage: {
+        width: 200,
+        height: 80
+    },
+    wrap: {
+        position: 'absolute',
+        top: '50%',
+        left: '20%',
+        backgroundColor: '#fff'
     }
 });
 

@@ -36,7 +36,11 @@ class CreateMessageView extends Component {
       Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
       MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody : '',
       LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
-      To: [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
+        [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      // To: this.props.navigation.state.params.origin == 'fw'? [] :this.props.navigation.state.params.origin =='reply'?
+      //    [this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      //To: (this.props.navigation.state.params.origin ==='fw'?[] :this.props.navigation.state.params.origin =='reply')?[this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
         getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
@@ -68,24 +72,24 @@ class CreateMessageView extends Component {
 
   componentWillReceiveProps(nextProps) {
     try {
-      if (nextProps.contactData !== this.props.contactData) {
-        switch (nextProps.boxType) {
+      if (nextProps.recipients !== this.props.recipients) {
+        switch (nextProps.nameType) {
           case 'ToNames':
             this.setState({
-              To: nextProps.contactData,
-              ToNames: getNames(nextProps.contactData)
+              To: nextProps.recipients,
+              ToNames: getNames(nextProps.recipients)
             })
             break;
           case 'CcNames':
             this.setState({
-              Cc: nextProps.contactData,
-              CcNames: getNames(nextProps.contactData)
+              Cc: nextProps.recipients,
+              CcNames: getNames(nextProps.recipients)
             })
             break;
           case 'BccNames':
             this.setState({
-              Bcc: nextProps.contactData,
-              BccNames: getNames(nextProps.contactData)
+              Bcc: nextProps.recipients,
+              BccNames: getNames(nextProps.recipients)
             })
             break;
           default:
@@ -104,7 +108,7 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody + '\n\n' + this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody.replace(/\n/gm,'<br />') +this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id }; 
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
@@ -114,7 +118,7 @@ class CreateMessageView extends Component {
      if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
       this.props.navigation.goBack(null);
     }else if(this.state.type == 'Draft'){
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Draft');
+      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
       this.props.navigate({routeName: 'DraftStack'});
     }else{
       this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
@@ -124,7 +128,7 @@ class CreateMessageView extends Component {
 
   selectName(nameType) {
     this.props.CreateMessageStateActions.selectNames(nameType);
-    this.props.navigate({ routeName: 'ContactStack' });
+    this.props.navigate({ routeName: 'RecipientStack' });
   }
 
   back() {
@@ -145,6 +149,11 @@ class CreateMessageView extends Component {
     message.Bcc = this.state.Bcc;
     message.Cc = this.state.Cc;
     message.To = this.state.To;
+    if(message.To[0] ==undefined){
+      message.To[0] = {};
+      message.To[0].PersonName = '' ;
+      message.To[0].Id = '';
+    }
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id  };
@@ -154,7 +163,7 @@ class CreateMessageView extends Component {
     formData.append('message', JSON.stringify(message));
     this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);
-    if(this.state.type == 'Draft'){
+    if(this.state.type == 'Draft' || this.state.type == undefined){
       this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
     }
   }
@@ -258,7 +267,7 @@ class CreateMessageView extends Component {
           </View>
           <View style={{ flexDirection: 'column', height: 300 }}>
             <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }} autoFocus={true} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{minHeight:400}}/>}
+            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{height:400}}/>}
           </View>
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />

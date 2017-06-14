@@ -5,7 +5,7 @@ import CounterStateReducer from '../modules/counter/CounterState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 import InboxStateReducer from '../modules/inbox/InboxState';
 import CreateMessageStateReducer from '../modules/createMessage/CreateMessageState';
-import ContactStateReducer from '../modules/contact/ContactState';
+import RecipientStateReducer from '../modules/recipient/RecipientState';
 import SentStateReducer from '../modules/sent/SentState';
 import DraftStateReducer from '../modules/draft/DraftState';
 import AddProfileStateReducer from '../modules/addProfile/addProfileState';
@@ -24,7 +24,7 @@ const reducers = {
 
   session: SessionStateReducer,
 
-  contact: ContactStateReducer,
+  recipient: RecipientStateReducer,
 
   sent: SentStateReducer,
 

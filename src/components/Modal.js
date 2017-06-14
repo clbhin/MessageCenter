@@ -21,7 +21,7 @@ class ModalComponent extends Component {
                         <Text style={styles.textDelete}>Discard Changes</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalSave} onPress={()=>this.props.save()}>
-                        <Text style={styles.textSave}>Save</Text>
+                        <Text style={styles.textSave}>Save As Draft</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.modalCancel} onPress={()=>this.props.hideModal()}>

@@ -3,7 +3,7 @@ import { loop, Effects } from 'redux-loop-symbol-ponyfill';
 import { SendMessage,SaveAsDraft } from './../../services/messageCenterServices';
 
 // Initial state
-const initialState = Map({ value: [], boxType: '' });
+const initialState = Map({ value: [], nameType: '' });
 
 // Actions
 
@@ -90,7 +90,7 @@ export default function CreateMessageStateReducer(state = initialState, action =
       return state;
 
     case REQUEST_SELECT_NAME:
-      return state.set('boxType', action.payload);
+      return state.set('nameType', action.payload);
 
     default:
       return state;
