@@ -44,7 +44,7 @@ class CreateMessageView extends Component {
       type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
       id: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.MessageId,
       isModalVisible: false,
-      file: null
+      files: []
     };
     this.data = [];
     this.ds = ds;
@@ -176,12 +176,10 @@ class CreateMessageView extends Component {
                   },
                   (error, file) => {
                     if (!error) {
-                      this.setState({
-                        file,
-                        fileName: (Platform.OS === 'ios') ? decodeURI(file.split('/').pop()) : file.fileName,
-                        uri: (Platform.OS === 'ios') ? file : file.uri,
-                        type: (Platform.OS === 'ios') ? getMimeByFileExtension(file.split('/').pop().split('.').pop().toLowerCase()) : file.type,
-                      });
+                      console.log(file);
+                      this.setState({ files: [...this.state.files, file] });
+                      console.log(this.state.files.length);
+                      console.log(this.state.files[0].fileName);
                     } else {
                       Alert.alert('Error', error, [{text: 'OK'}], {
                         cancelable: true
@@ -236,6 +234,23 @@ class CreateMessageView extends Component {
             <TouchableOpacity onPress={() => this.selectName('BccNames')}>
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+            <Text style={{ fontSize: 16, textAlign: 'center' }}>Attachments:</Text>
+            {this.state.files.map((file, key) => {
+              return <View key={key} style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+                      <Text>{file.fileName}</Text>
+                      <TouchableOpacity onPress={() => {
+                        console.log(key);
+                        console.log(lodash.filter(this.state.files, function(file, k){ return k !== key; }));
+                        this.setState({files: 
+                            lodash.filter(this.state.files, function(file, k){ return k !== key; })
+                          })
+                        }}
+                      >
+                        <Icon name='circle-with-minus' size={30} color={'#007FFB'} />
+                      </TouchableOpacity>
+                     </View>})}
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
             <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
