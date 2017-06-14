@@ -165,7 +165,7 @@ class DraftView extends Component {
                 <View style={styles.rowBack}>
                   <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
                     <TouchableOpacity onPress={() => { this.markMessage(rowData); rowMap[`${secId}${rowId}`].closeRow() }}>
-                      <Icon name='star' size={20} color={'#33373D'} />
+                      {(rowData.UserMessage && rowData.UserMessage.Mark === 'Marked') ? <Icon name='star' size={20} color={'orange'} /> : <Icon name='star-outlined' size={20} color={'#ccc'} />}
                       <Text style={styles.backRightBtnRightMark}>Mark</Text>
                     </TouchableOpacity>
                   </View>

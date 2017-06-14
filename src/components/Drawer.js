@@ -8,7 +8,8 @@ import {
   ListView,
   TouchableHighlight
 } from 'react-native';
-import {MessageFormatDate} from './../utils/dateTimeHelper'
+import {MessageFormatDate} from './../utils/dateTimeHelper';
+import Icon from 'react-native-vector-icons/Entypo';
 
 
 class DrawerModel extends Component{
@@ -23,16 +24,16 @@ render() {
       flex: 1,
       flexDirection: 'row',
       marginLeft: 10,
-      marginRight: 10     
+      marginRight: 10 ,
+      backgroundColor: '#fff'    
     }}>
       <View style={circle}>
-        <Image
-          style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20
-        }}
-          source={require('./../../images/headportrait.png')}></Image>
+      
+          {this.props.messageData && this.props.messageData =='Inbox'?<Icon name='box' size={30} color={'#868A8F'} />:
+           this.props.messageData && this.props.messageData =='Sent'?<Icon name='direction' size={30} color={'#868A8F'} />:
+           this.props.messageData && this.props.messageData =='Draft'?<Icon name='news' size={30} color={'#868A8F'} />:
+           <Icon name='archive' size={30} color={'#868A8F'} />}
+
       </View>
       <View
         style={{
@@ -46,7 +47,7 @@ render() {
       }}
         
       >     
-        <Text  style={{color: '#000', fontSize:16}}>
+        <Text  style={{color: '#32363C', fontSize:16}}>
             {this.props.messageData}
         </Text>        
       </View>

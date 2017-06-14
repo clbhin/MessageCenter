@@ -27,5 +27,5 @@ export function formatStyle(labelString){
 }
 
 export function formatLabelStyle(labelString) {
-  return labelString.replace(/\<.*?\>/gi, '')
+  return labelString.replace(/\<.*?\>/gi, '').replace(/Sent/,'  Sent')
 }

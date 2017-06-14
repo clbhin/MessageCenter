@@ -66,6 +66,7 @@ class MessageDetailView extends Component {
   }
   reply = (currentMessage) => {
     let data = lodash.cloneDeep(currentMessage);
+    data.origin = 'reply';
     data.Message.Cc = [];
     data.Message.Bcc = [];
     data.Message.Subject = 'RE:' +(lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
@@ -85,7 +86,8 @@ class MessageDetailView extends Component {
 
   forward = (currentMessage) => {
     let data = lodash.cloneDeep(currentMessage);
-    data.Message.From = {}
+    //data.Message.From = {}
+    data.origin = 'fw';
     data.Message.Cc = [];
     data.Message.Bcc = [];
     data.Message.Subject = 'FW:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
