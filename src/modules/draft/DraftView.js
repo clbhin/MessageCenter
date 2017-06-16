@@ -208,7 +208,7 @@ class DraftView extends Component {
             closeOnScroll={true}
           />
           <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+            {this.props.loadMore ? <Text>load more </Text> : <Text>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
         <FilterFooterView filterType={this.state.filterType}  searchMessageByCriteriaAndFilterType={(filterType)=>this.searchMessageByCriteriaAndFilterType(filterType)} />
