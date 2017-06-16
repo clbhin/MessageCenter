@@ -124,8 +124,13 @@ class CreateMessageView extends Component {
   }
 
   selectName(nameType) {
+    let data = [];
+    if(nameType=='ToNames'){ data = this.state.To;}
+    else if(nameType=='CcNames'){ data = this.state.Cc;}
+    else if(nameType=='BccNames'){ data = this.state.Bcc;}
     this.props.CreateMessageStateActions.selectNames(nameType);
-    this.props.navigate({ routeName: 'RecipientStack' });
+    this.props.navigate({ routeName: 'RecipientStack' ,params: data});
+    console.log();
   }
 
   back() {
