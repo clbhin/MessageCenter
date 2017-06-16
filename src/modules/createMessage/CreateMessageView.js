@@ -39,7 +39,7 @@ class CreateMessageView extends Component {
           this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] :
           [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
-        getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.origin == 'fw'? '':
+        getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.origin == 'fw'? '':lodash.isEmpty(this.props.navigation.state.params)? '':
          this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
@@ -98,6 +98,10 @@ class CreateMessageView extends Component {
     }
   }
 
+  componentWillMount() {
+    console.log(this.props);
+}
+
   send() {
     let formData = new FormData();
     let message = {}
@@ -130,7 +134,6 @@ class CreateMessageView extends Component {
     else if(nameType=='BccNames'){ data = this.state.Bcc;}
     this.props.CreateMessageStateActions.selectNames(nameType);
     this.props.navigate({ routeName: 'RecipientStack' ,params: data});
-    console.log();
   }
 
   back() {
