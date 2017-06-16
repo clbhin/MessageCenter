@@ -17,6 +17,8 @@ import MessageView from './../../components/Message';
 import { GetMessages } from './../../services/messageCenterServices';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
+import {combineCriteria} from '../../services/mcServices';
+import FilterFooterView from '../../components/FilterFooter';
 
 class SentView extends Component {
   constructor(props) {
@@ -30,6 +32,9 @@ class SentView extends Component {
       type: 'Sent',
       startIndex: 0,
       pageSize: 10,
+      isread : '',
+      mark : '',
+      filterType:'All'
     };
     this.ds = ds;
     this.closeDrawer = this.closeDrawer.bind(this);
@@ -48,7 +53,8 @@ class SentView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    this.props.navigate({ routeName: 'MessageDetailStack', params: currentMessage, action: this.props.SentStateActions.getMessages('Xiang Zhang', 'Sent') });
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.navigate({ routeName: 'MessageDetailStack', params: {currentMessage,messageSearchCriteria}});
   };
 
   componentWillReceiveProps(nextProps) {
@@ -76,21 +82,13 @@ class SentView extends Component {
   }
 
   deleteMessage(data) {
-    this.props.SentStateActions.deleteMessage(data.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.SentStateActions.deleteMessage(data.UserMessage,messageSearchCriteria);
   }
 
   searchMessage() {
-    let messageSearchCriteria = {};
-    messageSearchCriteria.SearchText = this.state.criteria;
-    messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.props.userInfo.Id;
-    messageSearchCriteria.PageSize = this.state.pageSize;
-    messageSearchCriteria.Start = this.state.startIndex;
-    if (messageSearchCriteria.SearchText == '') {
-      this.props.SentStateActions.getMessages(this.props.userInfo.Id, 'Sent');
-    } else {
-      this.props.SentStateActions.searchMessage(messageSearchCriteria);
-    }
+    let messageSearchCriteria = combineCriteria(this);  
+    this.props.SentStateActions.searchMessage(messageSearchCriteria);
   }
 
   loadMore() {
@@ -100,6 +98,8 @@ class SentView extends Component {
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;
     messageLoadMore.SearchText = this.state.criteria;
+    messageLoadMore.Mark=this.state.mark;
+    messageLoadMore.IsRead=this.state.isread;
     this.props.SentStateActions.loadMoreMessages(messageLoadMore);
   }
 
@@ -108,12 +108,35 @@ class SentView extends Component {
   }
 
   markMessage(currentMessage){
-    this.props.SentStateActions.markMessage(currentMessage.UserMessage);
+    let messageSearchCriteria = combineCriteria(this); 
+    this.props.SentStateActions.markMessage(currentMessage.UserMessage,messageSearchCriteria);
   }
 
   reloadData(){
-    this.props.SentStateActions.getMessages(this.props.userInfo.Id, 'Sent');
+    let messageSearchCriteria = combineCriteria(this);  
+    this.props.SentStateActions.searchMessage(messageSearchCriteria);;
   }
+
+  searchMessageByCriteriaAndFilterType(filterType){
+    this.state.filterType=filterType;
+    switch (filterType) {
+      case "All":
+          this.state.isread = '';
+          this.state.mark = '';
+          break;
+      case "IsRead":
+          this.state.isread = false;
+          this.state.mark = "";
+          break;
+      case "Marked":
+          this.state.isread = "";
+          this.state.mark = "Marked";
+          break;
+      default: break;
+    }
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.SentStateActions.searchMessage(messageSearchCriteria);
+}
 
   render() {
     let navigationView = (
@@ -184,9 +207,10 @@ class SentView extends Component {
             closeOnScroll={true}
           />
           <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+            {this.props.loadMore ? <Text>load more </Text> : <Text>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
+        <FilterFooterView filterType={this.state.filterType}  searchMessageByCriteriaAndFilterType={(filterType)=>this.searchMessageByCriteriaAndFilterType(filterType)} />
       </DrawerLayoutAndroid>
 
     );

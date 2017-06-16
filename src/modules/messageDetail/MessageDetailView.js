@@ -16,7 +16,6 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { MessageFormatAllDate } from '../../utils/dateTimeHelper';
 import { getNames, formatStyle} from '../../services/mcServices';
 import lodash from 'lodash';
-import HTML from 'react-native-fence-html';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -28,7 +27,7 @@ class MessageDetailView extends Component {
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       background: 'red',
-      currentMessage: this.props.navigation.state.params,
+      currentMessage: this.props.navigation.state.params.currentMessage,
     };
     this.data = [];
     this.ds = ds;
@@ -59,9 +58,9 @@ class MessageDetailView extends Component {
   back = () => {
     this.props.navigation.goBack(null)
     if(this.state.currentMessage.UserMessage.Type == 'Inbox'){
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id,'Inbox');
+      this.props.InboxStateActions.searchMessage(this.props.navigation.state.params.messageSearchCriteria);
     }else if(this.state.currentMessage.UserMessage.Type == 'Sent'){
-      this.props.SentStateActions.getMessages(this.props.userInfo.Id,'Sent');
+      this.props.SentStateActions.searchMessage(this.props.navigation.state.params.messageSearchCriteria);
     } 
   }
   reply = (currentMessage) => {
@@ -79,8 +78,8 @@ class MessageDetailView extends Component {
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
-  deleteMessage(currentMessage) {
-    this.props.InboxStateActions.deleteMessage(currentMessage.UserMessage);
+  deleteMessage() {
+    this.props.InboxStateActions.deleteMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria);
     this.props.navigation.goBack(null);
   }
 
@@ -95,6 +94,7 @@ class MessageDetailView extends Component {
   }
 
   render() {
+    console.log(this)
     return (
       <View>
         <View style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd', paddingLeft: 10, paddingRight: 20 }}>
@@ -126,11 +126,11 @@ class MessageDetailView extends Component {
             <Icon name='forward' size={20} color={'blue'} />
             <Text>FORWARD</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.deleteMessage(this.state.currentMessage) }}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.deleteMessage() }}>
             <Icon name='trash' size={20} color={'blue'} />
             <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage)}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria)}>
             {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark === 'Marked') ? <Icon name='star' size={20} color={'orange'} /> : <Icon name='star-outlined' size={20} color={'#ccc'} />}
             <Text>MARK</Text>
           </TouchableOpacity>

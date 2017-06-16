@@ -29,3 +29,15 @@ export function formatStyle(labelString){
 export function formatLabelStyle(labelString) {
   return labelString.replace(/\<.*?\>/gi, '').replace(/Sent/,'  Sent')
 }
+
+export function combineCriteria(_this){
+  let messageSearchCriteria = {};
+  messageSearchCriteria.SearchText = _this.state.criteria;
+  messageSearchCriteria.Type = _this.state.type;
+  messageSearchCriteria.UserId = _this.props.userInfo.Id;
+  messageSearchCriteria.PageSize = _this.state.pageSize;
+  messageSearchCriteria.Start = _this.state.startIndex;
+  messageSearchCriteria.Mark=_this.state.mark;
+  messageSearchCriteria.IsRead=_this.state.isread;
+  return messageSearchCriteria;
+}
