@@ -78,9 +78,13 @@ class MessageDetailView extends Component {
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
-  deleteMessage() {
-    this.props.InboxStateActions.deleteMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria);
+  deleteMessage(userMessage,criteriaCollection) {
     this.props.navigation.goBack(null);
+    if (userMessage.Type === 'Inbox') {
+      this.props.InboxStateActions.deleteMessage(userMessage, criteriaCollection)
+    } else if (userMessage.Type === 'Sent') {
+      this.props.SentStateActions.deleteMessage(userMessage, criteriaCollection)
+    }
   }
 
   forward = (currentMessage) => {
@@ -94,17 +98,17 @@ class MessageDetailView extends Component {
   }
 
   markMessage=(userMessage,criteriaCollection)=>{
-     if(userMessage.Mark === 'Marked'){
-       const markState=Object.assign({},this.state.currentMessage.UserMessage,{'Mark':'UnMark'})
-       this.setState({markState})
-     }else{
-      const markState=Object.assign({},this.state.currentMessage.UserMessage,{'Mark':'Marked'})
-       this.setState({markState})
-     }
-    if(userMessage.Type==='Inbox'){
-      this.props.InboxStateActions.markMessage(userMessage,criteriaCollection)
-    }else if(userMessage.Type==='Sent'){
-      this.props.SentStateActions.markMessage(userMessage,criteriaCollection)
+    if (userMessage.Mark === 'Marked') {
+      const markState = Object.assign({}, this.state.currentMessage.UserMessage, {'Mark': 'UnMark'})
+      this.setState({markState})
+    } else {
+      const markState = Object.assign({}, this.state.currentMessage.UserMessage, {'Mark': 'Marked'})
+      this.setState({markState})
+    }
+    if (userMessage.Type === 'Inbox') {
+      this.props.InboxStateActions.markMessage(userMessage, criteriaCollection)
+    } else if (userMessage.Type === 'Sent') {
+      this.props.SentStateActions.markMessage(userMessage, criteriaCollection)
     }
   }
 
@@ -140,7 +144,7 @@ class MessageDetailView extends Component {
             <Icon name='forward' size={20} color={'blue'} />
             <Text>FORWARD</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.deleteMessage() }}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.deleteMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria) }}>
             <Icon name='trash' size={20} color={'blue'} />
             <Text>DELETE</Text>
           </TouchableOpacity>

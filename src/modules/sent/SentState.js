@@ -69,7 +69,7 @@ export async function requestGetMessages(userId, sentType) {
   }
 }
 
-export async function requestDeleteMessage(message) {
+export async function requestDeleteMessage(message,criteriaCollection) {
   try {
     const result = await DeleteMessage(message);
     return {
