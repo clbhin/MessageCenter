@@ -93,8 +93,22 @@ class MessageDetailView extends Component {
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }
 
+  markMessage=(userMessage,criteriaCollection)=>{
+     if(userMessage.Mark === 'Marked'){
+       const markState=Object.assign({},this.state.currentMessage.UserMessage,{'Mark':'UnMark'})
+       this.setState({markState})
+     }else{
+      const markState=Object.assign({},this.state.currentMessage.UserMessage,{'Mark':'Marked'})
+       this.setState({markState})
+     }
+    if(userMessage.Type==='Inbox'){
+      this.props.InboxStateActions.markMessage(userMessage,criteriaCollection)
+    }else if(userMessage.Type==='Sent'){
+      this.props.SentStateActions.markMessage(userMessage,criteriaCollection)
+    }
+  }
+
   render() {
-    console.log(this)
     return (
       <View>
         <View style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd', paddingLeft: 10, paddingRight: 20 }}>
@@ -130,7 +144,7 @@ class MessageDetailView extends Component {
             <Icon name='trash' size={20} color={'blue'} />
             <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this.props.InboxStateActions.markMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria)}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this.markMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria)}>
             {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark === 'Marked') ? <Icon name='star' size={20} color={'orange'} /> : <Icon name='star-outlined' size={20} color={'#ccc'} />}
             <Text>MARK</Text>
           </TouchableOpacity>
