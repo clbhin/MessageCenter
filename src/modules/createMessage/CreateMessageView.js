@@ -109,7 +109,7 @@ class CreateMessageView extends Component {
     message.Cc = this.state.Cc;
     message.To = this.state.To;
     message.Subject = this.state.Subject;
-    message.MessageBody = this.state.MessageBody.replace(/\n/gm,'<br />') +this.state.LastMessageBody;
+    message.MessageBody = this.state.MessageBody.replace(/\n/gm,'<br />') +'<div style="font-size:14px;margin-top:10px">Sent from my phone</div>'+this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id }; 
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
