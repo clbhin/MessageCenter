@@ -17,6 +17,7 @@ import MessageView from './../../components/Message';
 import { GetMessages } from './../../services/messageCenterServices';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
+import {combineCriteria} from '../../services/mcServices';
 
 class ArchiveView extends Component {
   constructor(props) {
@@ -31,6 +32,9 @@ class ArchiveView extends Component {
       type: 'Archive',
       startIndex: 0,
       pageSize: 10,
+      isread : '',
+      mark : '',
+      filterType:'All'
     };
     this.ds = ds;
     this.closeDrawer = this.closeDrawer.bind(this);
@@ -49,7 +53,8 @@ class ArchiveView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    this.props.navigate({ routeName: 'MessageDetailStack', params: currentMessage});
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.navigate({ routeName: 'MessageDetailStack', params: {currentMessage,messageSearchCriteria}});
   };
 
   componentWillReceiveProps(nextProps) {
