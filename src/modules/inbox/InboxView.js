@@ -21,6 +21,8 @@ import DrawerView from './../drawer/DrawerView';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
 import LoadMoreFooter from './../../components/LoadMoreFooter';
+import {combineCriteria} from '../../services/mcServices';
+import FilterFooterView from '../../components/FilterFooter';
 
 class InboxView extends Component {
   constructor(props) {
@@ -34,6 +36,9 @@ class InboxView extends Component {
       startIndex: 0,
       pageSize: 10,
       onEndReached: false,
+      isread : '',
+      mark : '',
+      filterType:'All'
     }
     this.ds = ds;
     this.closeDrawer = this.closeDrawer.bind(this);
@@ -57,8 +62,9 @@ class InboxView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    this.props.InboxStateActions.readMessage(currentMessage.UserMessage);
-    this.props.navigate({ routeName: 'MessageDetailStack', params: currentMessage });
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.readMessage(currentMessage.UserMessage,messageSearchCriteria);
+    this.props.navigate({ routeName: 'MessageDetailStack', params: {currentMessage,messageSearchCriteria}});
   };
 
   componentWillReceiveProps(nextProps) {
@@ -87,25 +93,18 @@ class InboxView extends Component {
   }
 
   deleteMessage(data) {
-    this.props.InboxStateActions.deleteMessage(data.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.deleteMessage(data.UserMessage,messageSearchCriteria);
   }
 
   markMessage(currentMessage) {
-    this.props.InboxStateActions.markMessage(currentMessage.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.markMessage(currentMessage.UserMessage,messageSearchCriteria);
   }
 
   searchMessage() {
-    let messageSearchCriteria = {};
-    messageSearchCriteria.SearchText = this.state.criteria;
-    messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.props.userInfo.Id;
-    messageSearchCriteria.PageSize = this.state.pageSize;
-    messageSearchCriteria.Start = this.state.startIndex;
-    if (messageSearchCriteria.SearchText == '') {
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
-    } else {
-      this.props.InboxStateActions.searchMessage(messageSearchCriteria);
-    }
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
   }
 
   createMessage() {
@@ -114,7 +113,8 @@ class InboxView extends Component {
   }
 
   reloadData() {
-    this.props.InboxStateActions.getMessages(this.props.userInfo.Id, 'Inbox');
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
   }
 
   loadMore() {
@@ -124,7 +124,30 @@ class InboxView extends Component {
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;
     messageLoadMore.SearchText = this.state.criteria;
+    messageLoadMore.Mark=this.state.mark;
+    messageLoadMore.IsRead=this.state.isread;
     this.props.InboxStateActions.loadMoreMessages(messageLoadMore);
+  }
+
+  searchMessageByCriteriaAndFilterType(filterType){
+    this.state.filterType=filterType;
+    switch (filterType) {
+      case "All":
+          this.state.isread = '';
+          this.state.mark = '';
+          break;
+      case "IsRead":
+          this.state.isread = false;
+          this.state.mark = "";
+          break;
+      case "Marked":
+          this.state.isread = "";
+          this.state.mark = "Marked";
+          break;
+      default: break;
+    }
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.InboxStateActions.searchMessage(messageSearchCriteria);
   }
 
   renderFooter() {
@@ -169,7 +192,6 @@ class InboxView extends Component {
               <Icon name='magnifying-glass' size={24}></Icon>
             </TouchableOpacity>
           </View>
-
         </View>
         <ScrollView
           refreshControl={
@@ -208,9 +230,10 @@ class InboxView extends Component {
           //renderFooter={()=>{return this.renderFooter()}}             
           />
           <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+            {this.props.loadMore ? <Text>load more </Text> : <Text>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
+        <FilterFooterView filterType={this.state.filterType}  searchMessageByCriteriaAndFilterType={(filterType)=>this.searchMessageByCriteriaAndFilterType(filterType)} />
       </DrawerLayoutAndroid>
 
     );

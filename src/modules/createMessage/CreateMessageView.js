@@ -36,13 +36,14 @@ class CreateMessageView extends Component {
       Subject: this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Subject,
       MessageBody: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.MessageBody : '',
       LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.Message) || (this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.Message),
-      To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
-        [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
-      // To: this.props.navigation.state.params.origin == 'fw'? [] :this.props.navigation.state.params.origin =='reply'?
-      //    [this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
-      //To: (this.props.navigation.state.params.origin ==='fw'?[] :this.props.navigation.state.params.origin =='reply')?[this.props.navigation.state.params.Message.To] : [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      // To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
+      //   [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
+      To: this.props.navigation.state.params.origin == 'fw'? [] : 
+          this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] :
+          [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
-        getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
+        getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.origin == 'fw'? '':lodash.isEmpty(this.props.navigation.state.params)? '':
+         this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From.PersonName,
       BccNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc),
       CcNames: getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc),
       type: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type,
@@ -101,6 +102,10 @@ class CreateMessageView extends Component {
     }
   }
 
+  componentWillMount() {
+    console.log(this.props);
+}
+
   send() {
     let formData = new FormData();
     let message = {}
@@ -127,8 +132,12 @@ class CreateMessageView extends Component {
   }
 
   selectName(nameType) {
+    let data = [];
+    if(nameType=='ToNames'){ data = this.state.To;}
+    else if(nameType=='CcNames'){ data = this.state.Cc;}
+    else if(nameType=='BccNames'){ data = this.state.Bcc;}
     this.props.CreateMessageStateActions.selectNames(nameType);
-    this.props.navigate({ routeName: 'RecipientStack' });
+    this.props.navigate({ routeName: 'RecipientStack' ,params: data});
   }
 
   back() {
@@ -176,6 +185,7 @@ class CreateMessageView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
+<<<<<<< HEAD
           <TouchableOpacity
             style={{ flex: 1 }}
             onPress={() => {
@@ -200,9 +210,16 @@ class CreateMessageView extends Component {
           >
             <Icon name='attachment' size={30} color={'orange'} />
           </TouchableOpacity>
+=======
+          {this.state.To[0]==undefined? 
+            <View style={{flex: 1}}>
+            <Icon name='direction' size={30} color={'grey'} />
+            </View>:
+>>>>>>> master
           <TouchableOpacity style={{ flex: 1 }} onPress={() => this.send()}>
             <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>
+          }
         </View>
         <View style={{ marginLeft: 10, marginTop: 10, marginRight: 10, flexDirection: 'column' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
@@ -216,7 +233,7 @@ class CreateMessageView extends Component {
               })
             }}
               style={{ flex: 1 }}>
-            </TextInput>
+            </TextInput>            
             <TouchableOpacity onPress={() => this.selectName('ToNames')}>
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>

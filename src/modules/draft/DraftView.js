@@ -17,6 +17,8 @@ import MessageView from './../../components/Message';
 import { GetMessages } from './../../services/messageCenterServices';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Icon from 'react-native-vector-icons/Entypo';
+import {combineCriteria} from '../../services/mcServices';
+import FilterFooterView from '../../components/FilterFooter';
 
 class DraftView extends Component {
   constructor(props) {
@@ -29,6 +31,9 @@ class DraftView extends Component {
       type: 'Draft',
       startIndex: 0,
       pageSize: 10,
+      isread : '',
+      mark : '',
+      filterType:'All'
     };
     this.ds = ds;
     this.closeDrawer = this.closeDrawer.bind(this);
@@ -47,7 +52,8 @@ class DraftView extends Component {
   };
 
   transformMessage = (currentMessage) => {
-    this.props.DraftStateActions.readMessage(currentMessage.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.readMessage(currentMessage.UserMessage,messageSearchCriteria);
     this.props.navigate({ routeName: 'CreateMessageStack', params: currentMessage });
   };
 
@@ -76,21 +82,13 @@ class DraftView extends Component {
   }
 
   deleteMessage(data) {
-    this.props.DraftStateActions.deleteMessage(data.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.deleteMessage(data.UserMessage,messageSearchCriteria);
   }
 
   searchMessage() {
-    let messageSearchCriteria = {};
-    messageSearchCriteria.SearchText = this.state.criteria;
-    messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.props.userInfo.Id;
-    messageSearchCriteria.PageSize = this.state.pageSize;
-    messageSearchCriteria.Start = this.state.startIndex;
-    if (messageSearchCriteria.SearchText == '') {
-      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
-    } else {
-      this.props.DraftStateActions.searchMessage(messageSearchCriteria);
-    }
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.searchMessage(messageSearchCriteria);
   }
 
   loadMore() {
@@ -100,6 +98,8 @@ class DraftView extends Component {
     messageLoadMore.Start = 0 || (this.props.value && this.props.value.length);
     messageLoadMore.PageSize = this.state.pageSize;
     messageLoadMore.SearchText = this.state.criteria;
+    messageLoadMore.Mark=this.state.mark;
+    messageLoadMore.IsRead=this.state.isread;
     this.props.DraftStateActions.loadMoreMessages(messageLoadMore);
   }
 
@@ -109,12 +109,35 @@ class DraftView extends Component {
   }
 
   markMessage(currentMessage){
-    this.props.DraftStateActions.markMessage(currentMessage.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.markMessage(currentMessage.UserMessage,messageSearchCriteria);
   }
 
   reloadData(){
-    this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.searchMessage(messageSearchCriteria);
   }  
+
+  searchMessageByCriteriaAndFilterType(filterType){
+    this.state.filterType=filterType;
+    switch (filterType) {
+      case "All":
+          this.state.isread = '';
+          this.state.mark = '';
+          break;
+      case "IsRead":
+          this.state.isread = false;
+          this.state.mark = "";
+          break;
+      case "Marked":
+          this.state.isread = "";
+          this.state.mark = "Marked";
+          break;
+      default: break;
+    }
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.DraftStateActions.searchMessage(messageSearchCriteria);
+  }
 
   render() {
     let navigationView = (
@@ -165,7 +188,7 @@ class DraftView extends Component {
                 <View style={styles.rowBack}>
                   <View style={[styles.backRightBtn, styles.backRightBtnLeft]}>
                     <TouchableOpacity onPress={() => { this.markMessage(rowData); rowMap[`${secId}${rowId}`].closeRow() }}>
-                      <Icon name='star' size={20} color={'#33373D'} />
+                      {(rowData.UserMessage && rowData.UserMessage.Mark === 'Marked') ? <Icon name='star' size={20} color={'orange'} /> : <Icon name='star-outlined' size={20} color={'#ccc'} />}
                       <Text style={styles.backRightBtnRightMark}>Mark</Text>
                     </TouchableOpacity>
                   </View>
@@ -185,9 +208,10 @@ class DraftView extends Component {
             closeOnScroll={true}
           />
           <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+            {this.props.loadMore ? <Text>load more </Text> : <Text>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
+        <FilterFooterView filterType={this.state.filterType}  searchMessageByCriteriaAndFilterType={(filterType)=>this.searchMessageByCriteriaAndFilterType(filterType)} />
       </DrawerLayoutAndroid>
 
     );

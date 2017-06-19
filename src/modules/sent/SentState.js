@@ -20,10 +20,6 @@ const REQUEST_LOAD_MORE_MESSAGES = 'SentState/REQUEST_LOAD_MORE_MESSAGES';
 const RESPONSE_LOAD_MORE_MESSAGES = 'SentState/RESPONSE_LOAD_MORE_MESSAGES';
 const REQUEST_MARK_MESSAGE='SentState/REQUEST_MARK_MESSAGE';
 
-export function transformMessage() {
-  return type = "";
-}
-
 // Action creators
 export function getMessages(userId, sentType) {
   return {
@@ -35,10 +31,10 @@ export function getMessages(userId, sentType) {
   };
 }
 
-export function deleteMessage(message) {
+export function deleteMessage(message,criteriaCollection) {
   return {
     type: REQUEST_DELETE_MESSAGE,
-    payload: message
+    payload: {message,criteriaCollection}
   };
 }
 
@@ -56,11 +52,11 @@ export function loadMoreMessages(userMessage) {
   };
 }
 
-export function markMessage(userMessage){
+export function markMessage(userMessage,criteriaCollection){
   userMessage.Mark==='Marked'?userMessage.Mark='UnMark':userMessage.Mark='Marked';
   return{
     type:REQUEST_MARK_MESSAGE,
-    payload:userMessage
+    payload:{userMessage,criteriaCollection}
   }
 }
 
@@ -73,15 +69,12 @@ export async function requestGetMessages(userId, sentType) {
   }
 }
 
-export async function deleteSent(message) {
+export async function requestDeleteMessage(message,criteriaCollection) {
   try {
     const result = await DeleteMessage(message);
     return {
-      type: REQUEST_GET_MESSAGES,
-      payload: {
-        userId: message.UserId,
-        sentType: message.Type
-      }
+      type: REQUEST_SEARCH_MESSAGES,
+      payload:criteriaCollection
     };
   } catch (error) {
     console.log(error);
@@ -113,15 +106,12 @@ export async function requestLoadMoreMessage(userMessage) {
   }
 }
 
-export async function requestMarkUserMessage(userMessage){
+export async function requestMarkUserMessage(userMessage,criteriaCollection){
   try{
     const result=await MarkUserMessage(userMessage)
     return {
-      type:REQUEST_GET_MESSAGES,
-      payload:{
-        userId:userMessage.UserId,
-        sentType:userMessage.Type
-      }
+      type:REQUEST_SEARCH_MESSAGES,
+      payload:criteriaCollection
     }
   }catch(err){
     return {type: RESPONSE_GET_MESSAGES, payload: []}
@@ -143,7 +133,7 @@ export default function SentStateReducer(state = initialState, action = {}) {
       }
 
     case REQUEST_DELETE_MESSAGE:
-      return loop(state, Effects.promise(deleteSent, action.payload));
+      return loop(state, Effects.promise(requestDeleteMessage, action.payload.message,action.payload.criteriaCollection));
 
     case REQUEST_SEARCH_MESSAGES:
       return loop(state, Effects.promise(requestSearchMessage, action.payload));
@@ -169,7 +159,7 @@ export default function SentStateReducer(state = initialState, action = {}) {
       }
 
     case REQUEST_MARK_MESSAGE:
-      return loop(state,Effects.promise(requestMarkUserMessage,action.payload))
+      return loop(state,Effects.promise(requestMarkUserMessage,action.payload.userMessage,action.payload.criteriaCollection))
 
     default:
       return state;

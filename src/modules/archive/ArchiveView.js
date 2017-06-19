@@ -85,7 +85,7 @@ class ArchiveView extends Component {
     let messageSearchCriteria = {};
     messageSearchCriteria.SearchText = this.state.criteria;
     messageSearchCriteria.Type = this.state.type;
-    messageSearchCriteria.UserId = this.state.userId;
+    messageSearchCriteria.UserId =this.props.userInfo.Id;
     messageSearchCriteria.PageSize = this.state.pageSize;
     messageSearchCriteria.Start = this.state.startIndex;
     if (messageSearchCriteria.SearchText == '') {
@@ -186,7 +186,7 @@ class ArchiveView extends Component {
             closeOnScroll={true}
           />
           <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text>click more </Text> : <Text>No More Message </Text>}
+            {this.props.loadMore ? <Text>load more </Text> : <Text>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
       </DrawerLayoutAndroid>

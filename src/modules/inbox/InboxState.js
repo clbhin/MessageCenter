@@ -21,10 +21,6 @@ const RESPONSE_SEARCH_MESSAGES = 'InboxState/RESPONSE_SEARCH_MESSAGES';
 const REQUEST_LOAD_MORE_MESSAGES = 'InboxState/REQUEST_LOAD_MORE_MESSAGES';
 const RESPONSE_LOAD_MORE_MESSAGES = 'InboxState/RESPONSE_LOAD_MORE_MESSAGES';
 
-export function transformMessage() {
-  return type = "";
-}
-
 // Action creators
 export function getMessages(userId, inboxType) {
   return {
@@ -36,25 +32,25 @@ export function getMessages(userId, inboxType) {
   };
 }
 
-export function readMessage(userMessage) {
+export function readMessage(userMessage,criteriaCollection) {
   return {
     type: REQUEST_READ_USER_MESSAGE,
-    payload: userMessage
+    payload: {userMessage,criteriaCollection}
   }
 }
 
-export function deleteMessage(message) {
+export function deleteMessage(message,criteriaCollection) {
   return {
     type: REQUEST_DELETE_MESSAGE,
-    payload: message
+    payload: {message,criteriaCollection}
   };
 }
 
-export function markMessage(userMessage) {
+export function markMessage(userMessage,criteriaCollection) {
   userMessage.Mark === 'Marked' ? userMessage.Mark = 'UnMark' : userMessage.Mark = 'Marked';
   return {
     type: REQUEST_MARK_MESSAGE,
-    payload: userMessage
+    payload: {userMessage,criteriaCollection}
   }
 }
 
@@ -83,15 +79,12 @@ export async function requestGetMessages(userId, inboxType) {
 
 
 
-export async function deleteInbox(message) {
+export async function requestDeleteMessage(message,criteriaCollection) {
   try {
     const result = await DeleteMessage(message);
     return {
-      type: REQUEST_GET_MESSAGES,
-      payload: {
-        userId: message.UserId,
-        inboxType: message.Type
-      }
+      type: REQUEST_SEARCH_MESSAGES,
+      payload:criteriaCollection
     };
   } catch (error) {
     console.log(error);
@@ -99,30 +92,24 @@ export async function deleteInbox(message) {
   }
 }
 
-export async function requestReadUserMessage(userMessage) {
+export async function requestReadUserMessage(userMessage,criteriaCollection) {
   try {
     const result = await ReadUserMessage(userMessage)
     return {
-      type: REQUEST_GET_MESSAGES,
-      payload: {
-        userId: userMessage.UserId,
-        inboxType: userMessage.Type
-      }
+      type: REQUEST_SEARCH_MESSAGES,
+      payload:criteriaCollection
     }
   } catch (err) {
     return { type: RESPONSE_GET_MESSAGES, payload: [] }
   }
 }
 
-export async function requestMarkUserMessage(userMessage) {
+export async function requestMarkUserMessage(userMessage,criteriaCollection) {
   try {
     const result = await MarkUserMessage(userMessage)
     return {
-      type: REQUEST_GET_MESSAGES,
-      payload: {
-        userId: userMessage.UserId,
-        inboxType: userMessage.Type
-      }
+      type: REQUEST_SEARCH_MESSAGES,
+      payload: criteriaCollection
     }
   } catch (err) {
     return { type: RESPONSE_GET_MESSAGES, payload: [] }
@@ -168,13 +155,13 @@ export default function InboxStateReducer(state = initialState, action = {}) {
       }
 
     case REQUEST_DELETE_MESSAGE:
-      return loop(state, Effects.promise(deleteInbox, action.payload));
+      return loop(state, Effects.promise(requestDeleteMessage, action.payload.message,action.payload.criteriaCollection));
 
     case REQUEST_READ_USER_MESSAGE:
-      return loop(state, Effects.promise(requestReadUserMessage, action.payload));
+      return loop(state, Effects.promise(requestReadUserMessage, action.payload.userMessage,action.payload.criteriaCollection));
 
     case REQUEST_MARK_MESSAGE:
-      return loop(state, Effects.promise(requestMarkUserMessage, action.payload))
+      return loop(state, Effects.promise(requestMarkUserMessage, action.payload.userMessage,action.payload.criteriaCollection))
 
     case REQUEST_SEARCH_MESSAGES:
 

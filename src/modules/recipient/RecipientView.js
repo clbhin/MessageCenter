@@ -7,11 +7,13 @@ import {
   Text,
   TextInput,
   ListView,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
 import CheckBox from 'react-native-check-box';
+import lodash from 'lodash';
 
 
 class RecipientView extends Component {
@@ -23,9 +25,8 @@ class RecipientView extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(data),
       recipients: [],
-      criteria:''
+      criteria:'',
     };
-    this.data = data;
     this.ds=ds;
   }
   static navigationOptions = {
@@ -61,14 +62,29 @@ class RecipientView extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    try {
-      if (this.props.userInfos !==  nextProps.userInfos) {
-        this.data=nextProps.userInfos;
-        this.setState({
+  componentWillMount() {
+    if(lodash.isEmpty(this.props.navigation.state.params)){this.data = [];}
+    else if(this.props.navigation.state.params[0]===undefined){this.data = [];}
+    else{
+      this.data = this.props.navigation.state.params;
+      this.data[0].checked = true;
+    }
+    this.setState({
           dataSource: this.ds.cloneWithRows(this.data),
         });
-      }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    try {
+      console.log(nextProps);
+      if (this.props.userInfos !==  nextProps.userInfos) {
+        let dataCopy = [];  
+        this.data=this.data.concat(nextProps.userInfos);     
+        dataCopy = lodash.uniqBy(this.data,'Id')
+        this.setState({
+          dataSource: this.ds.cloneWithRows(dataCopy),
+        }); 
+      }     
     } catch (err) {
       console.log(err)
     }
@@ -76,7 +92,7 @@ class RecipientView extends Component {
 
   render() {
     return (
-      <View>
+      <ScrollView>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#ccc', marginTop: 10, paddingBottom: 4 }}>
           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
             <Icon name='cross' size={30}></Icon>
@@ -106,7 +122,7 @@ class RecipientView extends Component {
             </TouchableOpacity>;
           }
           } />
-      </View>
+      </ScrollView>
     );
   }
 }
