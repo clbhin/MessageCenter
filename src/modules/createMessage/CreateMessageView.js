@@ -185,7 +185,6 @@ class CreateMessageView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
-<<<<<<< HEAD
           <TouchableOpacity
             style={{ flex: 1 }}
             onPress={() => {
@@ -210,12 +209,10 @@ class CreateMessageView extends Component {
           >
             <Icon name='attachment' size={30} color={'orange'} />
           </TouchableOpacity>
-=======
           {this.state.To[0]==undefined? 
             <View style={{flex: 1}}>
             <Icon name='direction' size={30} color={'grey'} />
             </View>:
->>>>>>> master
           <TouchableOpacity style={{ flex: 1 }} onPress={() => this.send()}>
             <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>
