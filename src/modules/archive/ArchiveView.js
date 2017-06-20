@@ -84,7 +84,8 @@ class ArchiveView extends Component {
   }
 
   deleteMessage(data) {
-    this.props.ArchiveStateActions.deleteMessage(data.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.ArchiveStateActions.deleteMessage(data.UserMessage,messageSearchCriteria);
   }
 
   searchMessage() {
@@ -109,7 +110,8 @@ class ArchiveView extends Component {
   }
 
   markMessage(currentMessage){
-    this.props.ArchiveStateActions.markMessage(currentMessage.UserMessage);
+    let messageSearchCriteria = combineCriteria(this);
+    this.props.ArchiveStateActions.markMessage(currentMessage.UserMessage,messageSearchCriteria);
   }
 
   reloadData(){
