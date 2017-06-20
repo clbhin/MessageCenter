@@ -84,6 +84,8 @@ class MessageDetailView extends Component {
       this.props.InboxStateActions.deleteMessage(userMessage, criteriaCollection)
     } else if (userMessage.Type === 'Sent') {
       this.props.SentStateActions.deleteMessage(userMessage, criteriaCollection)
+    } else if(userMessage.Type === 'Archive'){
+      this.props.ArchiveStateActions.deleteMessage(userMessage, criteriaCollection)
     }
   }
 
@@ -109,6 +111,8 @@ class MessageDetailView extends Component {
       this.props.InboxStateActions.markMessage(userMessage, criteriaCollection)
     } else if (userMessage.Type === 'Sent') {
       this.props.SentStateActions.markMessage(userMessage, criteriaCollection)
+    }else if(userMessage.Type === 'Archive'){
+      this.props.ArchiveStateActions.markMessage(userMessage, criteriaCollection)
     }
   }
 
