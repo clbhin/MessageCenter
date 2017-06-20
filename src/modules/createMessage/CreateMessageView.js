@@ -114,11 +114,19 @@ class CreateMessageView extends Component {
     message.To = this.state.To;
     message.Subject = this.state.Subject;
     message.MessageBody = this.state.MessageBody.replace(/\n/gm,'<br />') +this.state.LastMessageBody;
-    message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id }; 
+    message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id };
     if(this.state.type && this.state.type == 'Draft'){
       message.Id = this.state.id;
     } 
-    formData.append('message', JSON.stringify(message))
+    formData.append('message', JSON.stringify(message));
+    lodash.forEach(this.state.files, function(file, key) {
+      formData.append('message.AttachmentFiles[' + key + ']', {
+        uri: file.uri,
+        name: file.fileName,
+        type: 'multipart/form-data'
+      })  
+    }, this);
+    
     this.props.CreateMessageStateActions.sendMessage(formData);
      if(this.state.type == 'Inbox' || this.state.type == 'Sent'){     
       this.props.navigation.goBack(null);
@@ -194,10 +202,7 @@ class CreateMessageView extends Component {
                   },
                   (error, file) => {
                     if (!error) {
-                      console.log(file);
                       this.setState({ files: [...this.state.files, file] });
-                      console.log(this.state.files.length);
-                      console.log(this.state.files[0].fileName);
                     } else {
                       Alert.alert('Error', error, [{text: 'OK'}], {
                         cancelable: true
