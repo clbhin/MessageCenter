@@ -174,9 +174,13 @@ class InboxView extends Component {
           <TouchableOpacity onPress={() => { this.openDrawer() }}>
             <Image style={{ width: 30, height: 40 }} source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
-          <View style={{ flex: 1, marginLeft: 20 }}>
-            <Text style={{ fontSize: 18, color: 'black' }}>Inbox</Text>
-            <Text style={{ fontSize: 12 }}>welcome,{this.props.userInfo.PersonName}</Text>
+          <View style={{ flex: 1, marginLeft: 20 ,flexDirection:'row',alignItems:'center'}}>
+            <Text style={{ fontSize: 18, color: 'black',flex:3 }}>Inbox</Text>
+            <View style={{ flex:4,flexDirection:'row'}}>
+              <Text style={{fontSize: 12,textAlign:'right',fontWeight:'bold'}}>Welcome, </Text>
+              <Text style={{fontSize: 12,textAlign:'right',fontWeight:'bold',color:'#43B1CC'}}>{this.props.userInfo.PersonName}</Text>
+            </View>
+            
           </View>
           <View style={{}}>
             <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginRight: 7, width: 30 }} onPress={() => { this.createMessage() }}>
