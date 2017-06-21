@@ -74,6 +74,7 @@ class MessageDetailView extends Component {
 
   replyAll = (currentMessage) => {
     let data = lodash.cloneDeep(currentMessage);
+    data.origin = 'replyAll';
     data.Message.Subject = 'RE:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
     this.props.navigate({ routeName: 'CreateMessageStack', params: data });
   }

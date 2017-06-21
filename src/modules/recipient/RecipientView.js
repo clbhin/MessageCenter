@@ -67,7 +67,7 @@ class RecipientView extends Component {
     else if(this.props.navigation.state.params[0]===undefined){this.data = [];}
     else{
       this.data = this.props.navigation.state.params;
-      this.data[0].checked = true;
+      this.data.map((item,i)=>{this.data[i].checked = true})
     }
     this.setState({
           dataSource: this.ds.cloneWithRows(this.data),
@@ -107,7 +107,7 @@ class RecipientView extends Component {
         </View>
         <View style={{ flexDirection: 'row', backgroundColor: '#ccc', height: 24, borderRadius: 12, marginLeft: 10, marginRight: 10, marginTop: 6 }}>
           <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
-            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }} autoFocus={true} underlineColorAndroid="transparent" value={this.state.criteria}
+            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }}  underlineColorAndroid="transparent" value={this.state.criteria}
               onChangeText={(criteria) => this.setState({ criteria })} />
             <TouchableOpacity onPress={() => { this.searchUsers() }}>
               <Icon name='magnifying-glass' size={24}></Icon>

@@ -129,7 +129,8 @@ class CreateMessageView extends Component {
 
   selectName(nameType) {
     let data = [];
-    if(nameType=='ToNames'){ data = this.state.To;}
+    if(nameType=='ToNames'&& this.state.type !=='Draft'){ data = this.state.To;}
+    else if(nameType=='ToNames'&& this.state.type ==='Draft'){data = this.state.To[0]}
     else if(nameType=='CcNames'){ data = this.state.Cc;}
     else if(nameType=='BccNames'){ data = this.state.Bcc;}
     this.props.CreateMessageStateActions.selectNames(nameType);
@@ -137,7 +138,26 @@ class CreateMessageView extends Component {
   }
 
   back() {
-    return this.setState({ isModalVisible: true })
+    let toName = '';
+    let messageBody = '';
+    if(!lodash.isEmpty(this.props.navigation.state.params) && this.props.navigation.state.params.origin == 'fw'){
+      toName = ''}else if(this.props.navigation.state.params.origin == 'reply' || this.props.navigation.state.params.origin == 'replyAll' )
+      {toName = this.props.navigation.state.params.Message.From.PersonName}else if(!lodash.isEmpty(this.props.navigation.state.params) && this.props.navigation.state.params.UserMessage.Type == 'Draft')
+      {toName = getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.To)}
+    if(!lodash.isEmpty(this.props.navigation.state.params) && this.props.navigation.state.params.UserMessage.Type == 'Draft'){
+      messageBody = this.props.navigation.state.params.Message.MessageBody;
+    }else{messageBody = ''}
+    if(lodash.isEmpty(this.props.navigation.state.params)){
+      if( lodash.isEmpty(this.state.ToNames) && lodash.isEmpty(this.state.Subject) && lodash.isEmpty(this.state.CcNames) && lodash.isEmpty(this.state.BccNames)  && lodash.isEmpty(this.state.MessageBody) ){this.props.navigation.goBack(null);}
+      else{    return this.setState({ isModalVisible: true })}
+    }else{
+      if( this.state.ToNames == toName &&
+      this.state.Subject == this.props.navigation.state.params.Message.Subject &&
+      this.state.CcNames == getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Cc) && 
+      this.state.BccNames == getNames(this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.Bcc)  && 
+      this.state.MessageBody == messageBody){this.props.navigation.goBack(null);}
+      else{    return this.setState({ isModalVisible: true })}
+    }
   }
 
   hideModal() {
@@ -163,6 +183,7 @@ class CreateMessageView extends Component {
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id  };
     if(this.state.type && this.state.type == 'Draft'){
+      message.To = this.state.To[0];
       message.Id = this.state.id;
     } 
     formData.append('message', JSON.stringify(message));
@@ -235,7 +256,7 @@ class CreateMessageView extends Component {
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
           </View>
           <View style={{ flexDirection: 'column', height: 300 }}>
-            <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }} autoFocus={true} onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+            <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
             {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{height:400}}/>}
           </View>
         </View>
