@@ -4,6 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import MessageDetailView from './MessageDetailView';
 import * as InboxStateActions from '../inbox/InboxState';
 import * as SentStateActions from '../sent/SentState';
+import * as ArchiveStateActions from '../archive/ArchiveState';
 
 export default connect(
   state => ({    
@@ -13,7 +14,8 @@ export default connect(
     return {
       navigate: bindActionCreators(NavigationActions.navigate, dispatch),
       InboxStateActions: bindActionCreators(InboxStateActions, dispatch),
-      SentStateActions: bindActionCreators(SentStateActions, dispatch)
+      SentStateActions: bindActionCreators(SentStateActions, dispatch),
+      ArchiveStateActions:bindActionCreators(ArchiveStateActions,dispatch)
     };
   }
 )(MessageDetailView);

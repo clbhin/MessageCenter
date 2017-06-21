@@ -67,7 +67,7 @@ class RecipientView extends Component {
     else if(this.props.navigation.state.params[0]===undefined){this.data = [];}
     else{
       this.data = this.props.navigation.state.params;
-      this.data[0].checked = true;
+      this.data.map((item,i)=>{this.data[i].checked = true})
     }
     this.setState({
           dataSource: this.ds.cloneWithRows(this.data),
@@ -76,10 +76,13 @@ class RecipientView extends Component {
 
   componentWillReceiveProps(nextProps) {
     try {
-      console.log(nextProps);
       if (this.props.userInfos !==  nextProps.userInfos) {
-        let dataCopy = [];  
-        this.data=this.data.concat(nextProps.userInfos);     
+        let dataCopy = []; 
+        let userChecked = []; 
+        if(!lodash.isEmpty(this.data)){
+          this.data.map((item,i)=>{if(item.checked){userChecked.push(item)}})
+        }
+        this.data=(!lodash.isEmpty(this.data))? userChecked.concat(nextProps.userInfos) : nextProps.userInfos;     
         dataCopy = lodash.uniqBy(this.data,'Id')
         this.setState({
           dataSource: this.ds.cloneWithRows(dataCopy),
@@ -92,7 +95,7 @@ class RecipientView extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#ccc', marginTop: 10, paddingBottom: 4 }}>
           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
             <Icon name='cross' size={30}></Icon>
@@ -104,7 +107,7 @@ class RecipientView extends Component {
         </View>
         <View style={{ flexDirection: 'row', backgroundColor: '#ccc', height: 24, borderRadius: 12, marginLeft: 10, marginRight: 10, marginTop: 6 }}>
           <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
-            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }} underlineColorAndroid="transparent" value={this.state.criteria}
+            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }}  underlineColorAndroid="transparent" value={this.state.criteria}
               onChangeText={(criteria) => this.setState({ criteria })} />
             <TouchableOpacity onPress={() => { this.searchUsers() }}>
               <Icon name='magnifying-glass' size={24}></Icon>
@@ -115,14 +118,14 @@ class RecipientView extends Component {
           dataSource={this.state.dataSource}
           enableEmptySections
           renderRow={(rowData) =>{
-            return <TouchableOpacity style={{ flexDirection: 'row', marginLeft: 10 }}>
+            return <View style={{ flexDirection: 'row', marginLeft: 10 }}>
               <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../../../images/headportrait.png')}></Image>
               <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.PersonName}</Text>
               <CheckBox style={{ flex: 1, padding: 0, alignSelf: 'center' }} onClick={() => this.selectRecipient(rowData)} isChecked={rowData.checked} />
-            </TouchableOpacity>;
+            </View>;
           }
           } />
-      </ScrollView>
+      </View>
     );
   }
 }
