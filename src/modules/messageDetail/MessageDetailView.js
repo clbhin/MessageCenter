@@ -127,6 +127,14 @@ class MessageDetailView extends Component {
           <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
           {getNames(this.state.currentMessage.Message.Cc) ? <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Cc:{getNames(this.state.currentMessage.Message.Cc)}</Text> : null}
           {getNames(this.state.currentMessage.Message.Bcc) ? <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text> : null}
+          {this.state.currentMessage.Message.AttachmentFiles.length > 0 ?
+            <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+              <Text style={{ fontSize: 16, height: 20, justifyContent: 'center' }}>Attachments:</Text>
+              {this.state.currentMessage.Message.AttachmentFiles.map((file, key) => {
+                return <View key={key} style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+                        <Text>{file.FileName}</Text>
+                      </View>})}
+            </View> : null}
           <Text style={{ fontSize: 16, height: 20, justifyContent: 'center' }}>Subject:{this.state.currentMessage.Message.Subject}</Text>
           <Text style={{ fontSize: 10, height: 20, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
           <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:400}}/>
