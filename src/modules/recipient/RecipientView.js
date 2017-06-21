@@ -65,6 +65,7 @@ class RecipientView extends Component {
   componentWillMount() {
     if(lodash.isEmpty(this.props.navigation.state.params)){this.data = [];}
     else if(this.props.navigation.state.params[0]===undefined){this.data = [];}
+    else if(this.props.navigation.state.params[0].Id === ''){this.data = [];}
     else{
       this.data = this.props.navigation.state.params;
       this.data.map((item,i)=>{this.data[i].checked = true})

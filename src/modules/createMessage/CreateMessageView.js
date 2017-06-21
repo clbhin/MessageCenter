@@ -36,7 +36,7 @@ class CreateMessageView extends Component {
       // To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
       //   [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       To: this.props.navigation.state.params.origin == 'fw'? [] : 
-          this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] :
+          this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? this.props.navigation.state.params.Message.To :
           [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
       ToNames: this.props.navigation.state.params.Message && this.props.navigation.state.params.UserMessage.Type == 'Draft'?
         getNames(this.props.navigation.state.params.Message.To) : this.props.navigation.state.params.origin == 'fw'? '':lodash.isEmpty(this.props.navigation.state.params)? '':
@@ -129,8 +129,7 @@ class CreateMessageView extends Component {
 
   selectName(nameType) {
     let data = [];
-    if(nameType=='ToNames'&& this.state.type !=='Draft'){ data = this.state.To;}
-    else if(nameType=='ToNames'&& this.state.type ==='Draft'){data = this.state.To[0]}
+    if(nameType=='ToNames'){ data = this.state.To;}
     else if(nameType=='CcNames'){ data = this.state.Cc;}
     else if(nameType=='BccNames'){ data = this.state.Bcc;}
     this.props.CreateMessageStateActions.selectNames(nameType);
@@ -183,7 +182,6 @@ class CreateMessageView extends Component {
     message.MessageBody = this.state.MessageBody + this.state.LastMessageBody;
     message.From = { PersonName: this.props.userInfo.PersonName, Id: this.props.userInfo.Id  };
     if(this.state.type && this.state.type == 'Draft'){
-      message.To = this.state.To[0];
       message.Id = this.state.id;
     } 
     formData.append('message', JSON.stringify(message));
