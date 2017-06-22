@@ -200,7 +200,7 @@ class CreateMessageView extends Component {
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
           <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
-          {this.state.To[0]==undefined? 
+          {this.state.To[0]==undefined || this.state.To[0].Id == ''? 
             <View style={{flex: 1}}>
             <Icon name='direction' size={30} color={'grey'} />
             </View>:
