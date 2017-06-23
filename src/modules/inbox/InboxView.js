@@ -108,8 +108,9 @@ class InboxView extends Component {
   }
 
   createMessage() {
-    let data = {};
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+    let messageSearchCriteria = combineCriteria(this);
+    let currentMessage = {};
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage,messageSearchCriteria} });
   }
 
   reloadData() {

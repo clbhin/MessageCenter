@@ -28,6 +28,7 @@ class MessageDetailView extends Component {
     this.state = {
       background: 'red',
       currentMessage: this.props.navigation.state.params.currentMessage,
+      type: this.props.navigation.state.params.messageSearchCriteria
     };
     this.data = [];
     this.ds = ds;
@@ -63,20 +64,22 @@ class MessageDetailView extends Component {
       this.props.SentStateActions.searchMessage(this.props.navigation.state.params.messageSearchCriteria);
     } 
   }
-  reply = (currentMessage) => {
-    let data = lodash.cloneDeep(currentMessage);
-    data.origin = 'reply';
-    data.Message.Cc = [];
-    data.Message.Bcc = [];
-    data.Message.Subject = 'RE:' +(lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+  reply = (data, type) => {
+    let currentMessage = lodash.cloneDeep(data);
+    let messageSearchCriteria = type;
+    currentMessage.origin = 'reply';
+    currentMessage.Message.Cc = [];
+    currentMessage.Message.Bcc = [];
+    currentMessage.Message.Subject = 'RE:' +(lodash.isEmpty(currentMessage.Message.Subject)?'':currentMessage.Message.Subject);
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage, messageSearchCriteria} });
   };
 
-  replyAll = (currentMessage) => {
-    let data = lodash.cloneDeep(currentMessage);
-    data.origin = 'replyAll';
-    data.Message.Subject = 'RE:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+  replyAll = (data, type) => {
+    let currentMessage = lodash.cloneDeep(data);
+    let messageSearchCriteria = type;
+    currentMessage.origin = 'replyAll';
+    currentMessage.Message.Subject = 'RE:' + (lodash.isEmpty(currentMessage.Message.Subject)?'':currentMessage.Message.Subject);
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage, messageSearchCriteria} });
   }
 
   deleteMessage(userMessage,criteriaCollection) {
@@ -90,14 +93,15 @@ class MessageDetailView extends Component {
     }
   }
 
-  forward = (currentMessage) => {
-    let data = lodash.cloneDeep(currentMessage);
+  forward = (data, type) => {
+    let currentMessage = lodash.cloneDeep(data);
+    let messageSearchCriteria = type;
     //data.Message.From = {}
-    data.origin = 'fw';
-    data.Message.Cc = [];
-    data.Message.Bcc = [];
-    data.Message.Subject = 'FW:' + (lodash.isEmpty(data.Message.Subject)?'':data.Message.Subject);
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+    currentMessage.origin = 'fw';
+    currentMessage.Message.Cc = [];
+    currentMessage.Message.Bcc = [];
+    currentMessage.Message.Subject = 'FW:' + (lodash.isEmpty(currentMessage.Message.Subject)?'':currentMessage.Message.Subject);
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage, messageSearchCriteria} });
   }
 
   markMessage=(userMessage,criteriaCollection)=>{
@@ -137,15 +141,15 @@ class MessageDetailView extends Component {
           <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:400}}/>
         </View>
         <View style={{ height: 40, borderRadius: 20, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', position: 'absolute', top: this.screenSize.height - 80, left: 0, right: 0, opacity: 0.8 }}>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.reply.bind(this, this.state.currentMessage)}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.reply.bind(this, this.state.currentMessage, this.state.type)}>
             <Icon name='reply' size={20} color={'blue'} />
             <Text>REPLY</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.replyAll.bind(this, this.state.currentMessage)}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.replyAll.bind(this, this.state.currentMessage, this.state.type)}>
             <Icon name='reply-all' size={20} color={'blue'} />
             <Text>REPLYALL</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.forward(this.state.currentMessage) }}>
+          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.forward(this.state.currentMessage, this.state.type) }}>
             <Icon name='forward' size={20} color={'blue'} />
             <Text>FORWARD</Text>
           </TouchableOpacity>

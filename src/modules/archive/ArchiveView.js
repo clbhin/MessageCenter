@@ -106,7 +106,9 @@ class ArchiveView extends Component {
   }
 
   createMessage() {
-    this.props.navigate({ routeName: 'CreateMessageStack', params: {} });
+    let messageSearchCriteria = combineCriteria(this);
+    let currentMessage = {};
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage,messageSearchCriteria} });
   }
 
   markMessage(currentMessage){

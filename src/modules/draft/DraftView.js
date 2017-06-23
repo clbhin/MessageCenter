@@ -54,7 +54,7 @@ class DraftView extends Component {
   transformMessage = (currentMessage) => {
     let messageSearchCriteria = combineCriteria(this);
     this.props.DraftStateActions.readMessage(currentMessage.UserMessage,messageSearchCriteria);
-    this.props.navigate({ routeName: 'CreateMessageStack', params: currentMessage });
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage,messageSearchCriteria}} );
   };
 
   componentWillReceiveProps(nextProps) {
@@ -103,9 +103,10 @@ class DraftView extends Component {
     this.props.DraftStateActions.loadMoreMessages(messageLoadMore);
   }
 
-  createMessage() {
-    let data = {};
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+    createMessage() {
+    let messageSearchCriteria = combineCriteria(this);
+    let currentMessage = {};
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage,messageSearchCriteria} });
   }
 
   markMessage(currentMessage){
