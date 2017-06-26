@@ -24,27 +24,26 @@ class CreateMessageView extends Component {
   constructor(props) {
     super(props);
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    let currentMessage = this.props.navigation.state.params.currentMessage;
     this.state = {
       background: 'red',
-      currentMessage: this.props.navigation.state.params.currentMessage,
-      Bcc: this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Bcc,
-      Cc: this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Cc,
-      From: this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.From,
-      Subject: this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Subject,
-      MessageBody: this.props.navigation.state.params.currentMessage.UserMessage && this.props.navigation.state.params.currentMessage.UserMessage.Type === 'Draft' ? this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.MessageBody : '',
-      LastMessageBody: lodash.isEmpty(this.props.navigation.state.params.currentMessage.Message) || (this.props.navigation.state.params.currentMessage.UserMessage && this.props.navigation.state.params.currentMessage.UserMessage.Type === 'Draft') ? '' : spliceMessage(this.props.navigation.state.params.currentMessage.Message),
-      // To: this.props.navigation.state.params.UserMessage && this.props.navigation.state.params.UserMessage.Type == 'Draft'? [this.props.navigation.state.params.Message.To] : 
-      //   [this.props.navigation.state.params.Message && this.props.navigation.state.params.Message.From],
-      To: this.props.navigation.state.params.currentMessage.origin == 'fw'? [] : 
-          this.props.navigation.state.params.currentMessage.UserMessage && this.props.navigation.state.params.currentMessage.UserMessage.Type == 'Draft'? this.props.navigation.state.params.currentMessage.Message.To :
-          [this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.From],
-      ToNames: this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.UserMessage.Type == 'Draft'?
-        getNames(this.props.navigation.state.params.currentMessage.Message.To) : this.props.navigation.state.params.currentMessage.origin == 'fw'? '':lodash.isEmpty(this.props.navigation.state.params.currentMessage)? '':
-         this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.From.PersonName,
-      BccNames: getNames(this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Bcc),
-      CcNames: getNames(this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Cc),
-      type: this.props.navigation.state.params.currentMessage.UserMessage && this.props.navigation.state.params.currentMessage.UserMessage.Type,
-      id: this.props.navigation.state.params.currentMessage.UserMessage && this.props.navigation.state.params.currentMessage.UserMessage.MessageId,     
+      currentMessage: currentMessage,
+      Bcc: currentMessage.Message && currentMessage.Message.Bcc,
+      Cc: currentMessage.Message && currentMessage.Message.Cc,
+      From: currentMessage.Message && currentMessage.Message.From,
+      Subject: currentMessage.Message && currentMessage.Message.Subject,
+      MessageBody: currentMessage.UserMessage && currentMessage.UserMessage.Type === 'Draft' ? currentMessage.Message && currentMessage.Message.MessageBody : '',
+      LastMessageBody: lodash.isEmpty(currentMessage.Message) || (currentMessage.UserMessage && currentMessage.UserMessage.Type === 'Draft') ? '' : spliceMessage(currentMessage.Message),
+      To: currentMessage.origin == 'fw'? [] : 
+          currentMessage.UserMessage && currentMessage.UserMessage.Type == 'Draft'? currentMessage.Message.To :
+          [currentMessage.Message && currentMessage.Message.From],
+      ToNames: currentMessage.Message && currentMessage.UserMessage.Type == 'Draft'?
+        getNames(currentMessage.Message.To) : currentMessage.origin == 'fw'? '':lodash.isEmpty(currentMessage)? '':
+         currentMessage.Message && currentMessage.Message.From.PersonName,
+      BccNames: getNames(currentMessage.Message && currentMessage.Message.Bcc),
+      CcNames: getNames(currentMessage.Message && currentMessage.Message.Cc),
+      type: currentMessage.UserMessage && currentMessage.UserMessage.Type,
+      id: currentMessage.UserMessage && currentMessage.UserMessage.MessageId,     
       isModalVisible: false
     };
     this.data = [];
@@ -98,13 +97,11 @@ class CreateMessageView extends Component {
     }
   }
 
-  componentWillMount() {
-    console.log(this.props);
-}
-
   send() {
     let formData = new FormData();
     let message = {}
+    let messageSearchCriteria=this.props.navigation.state.params.messageSearchCriteria
+    let type =messageSearchCriteria.Type;
     message.Bcc = this.state.Bcc;
     message.Cc = this.state.Cc;
     message.To = this.state.To;
@@ -116,16 +113,8 @@ class CreateMessageView extends Component {
     } 
     formData.append('message', JSON.stringify(message))
     this.props.CreateMessageStateActions.sendMessage(formData);
-     if(this.state.type == 'Inbox' || this.state.type == 'Sent' || this.state.type == 'Archive'){     
-      this.props.navigation.goBack(null);
-    }else if(this.state.type == 'Draft'){
-      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
-      this.props.navigate({routeName: 'DraftStack'});
-    }else{
-      let type = this.props.navigation.state.params.messageSearchCriteria.Type;
-      this.props.InboxStateActions.getMessages(this.props.userInfo.Id, type);
-      this.props.navigate({routeName: type + 'Stack'});
-    } 
+    this.props.navigation.goBack(null);
+    this.props[type+'StateActions'].searchMessage(messageSearchCriteria);
   }
 
   selectName(nameType) {
@@ -140,21 +129,22 @@ class CreateMessageView extends Component {
   back() {
     let toName = '';
     let messageBody = '';
-    if(!lodash.isEmpty(this.props.navigation.state.params.currentMessage) && this.props.navigation.state.params.currentMessage.origin == 'fw'){
-      toName = ''}else if(this.props.navigation.state.params.currentMessage.origin == 'reply' || this.props.navigation.state.params.currentMessage.origin == 'replyAll' )
-      {toName = this.props.navigation.state.params.currentMessage.Message.From.PersonName}else if(!lodash.isEmpty(this.props.navigation.state.params.currentMessage) && this.props.navigation.state.params.currentMessage.UserMessage.Type == 'Draft')
-      {toName = getNames(this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.To)}
-    if(!lodash.isEmpty(this.props.navigation.state.params.currentMessage) && this.props.navigation.state.params.currentMessage.UserMessage.Type == 'Draft'){
-      messageBody = this.props.navigation.state.params.currentMessage.Message.MessageBody;
+    let currentMessage = this.props.navigation.state.params.currentMessage;
+    if(!lodash.isEmpty(currentMessage) && currentMessage.origin == 'fw'){
+      toName = ''}else if(currentMessage.origin == 'reply' || currentMessage.origin == 'replyAll' )
+      {toName = currentMessage.Message.From.PersonName}else if(!lodash.isEmpty(currentMessage) && currentMessage.UserMessage.Type == 'Draft')
+      {toName = getNames(currentMessage.Message && currentMessage.Message.To)}
+    if(!lodash.isEmpty(currentMessage) && currentMessage.UserMessage.Type == 'Draft'){
+      messageBody = currentMessage.Message.MessageBody;
     }else{messageBody = ''}
-    if(lodash.isEmpty(this.props.navigation.state.params.currentMessage)){
+    if(lodash.isEmpty(currentMessage)){
       if( lodash.isEmpty(this.state.ToNames) && lodash.isEmpty(this.state.Subject) && lodash.isEmpty(this.state.CcNames) && lodash.isEmpty(this.state.BccNames)  && lodash.isEmpty(this.state.MessageBody) ){this.props.navigation.goBack(null);}
       else{    return this.setState({ isModalVisible: true })}
     }else{
       if( this.state.ToNames == toName &&
-      this.state.Subject == this.props.navigation.state.params.currentMessage.Message.Subject &&
-      this.state.CcNames == getNames(this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Cc) && 
-      this.state.BccNames == getNames(this.props.navigation.state.params.currentMessage.Message && this.props.navigation.state.params.currentMessage.Message.Bcc)  && 
+      this.state.Subject == currentMessage.Message.Subject &&
+      this.state.CcNames == getNames(currentMessage.Message && currentMessage.Message.Cc) && 
+      this.state.BccNames == getNames(currentMessage.Message && currentMessage.Message.Bcc)  && 
       this.state.MessageBody == messageBody){this.props.navigation.goBack(null);}
       else{    return this.setState({ isModalVisible: true })}
     }
@@ -171,6 +161,7 @@ class CreateMessageView extends Component {
   save() {
     let formData = new FormData();
     let message = {}
+    let messageSearchCriteria=this.props.navigation.state.params.messageSearchCriteria
     message.Bcc = this.state.Bcc;
     message.Cc = this.state.Cc;
     message.To = this.state.To;
@@ -188,8 +179,8 @@ class CreateMessageView extends Component {
     formData.append('message', JSON.stringify(message));
     this.props.CreateMessageStateActions.saveAsDraft(formData);
     this.props.navigation.goBack(null);
-    if(this.state.type == 'Draft' || this.state.type == undefined){
-      this.props.DraftStateActions.getMessages(this.props.userInfo.Id, 'Draft');
+    if(messageSearchCriteria.Type == 'Draft'){
+      this.props.DraftStateActions.searchMessage(messageSearchCriteria);
     }
   }
 
