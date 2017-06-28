@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import styles from './../styles/FilterFooter';
 
 class FilterFooterView extends Component{
   constructor(props) {
@@ -17,57 +18,44 @@ class FilterFooterView extends Component{
   };
   
 render() {
-  return <View style={{flexDirection:'row',height:50}}>
+  return <View style={styles.container}>
           {
             this.props.filterType === 'All'
-              ? <TouchableOpacity style={{flex: 1,alignItems: 'center',backgroundColor: '#FFF'}} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('All')}}>
+              ? <TouchableOpacity style={styles.color} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('All')}}>
                   <Icon name='home' size={20} color={'#43B1CC'}></Icon>
-                  <Text style={{color: '#43B1CC',fontSize: 16}}>All</Text>
+                  <Text style={styles.focusTextAll}>All</Text>
                 </TouchableOpacity>
               : <TouchableOpacity
-                  style={{flex: 1,alignItems: 'center',backgroundColor:'#43B1CC'}}
+                  style={styles.defaultColor}
                   onPress={() => {this.props.searchMessageByCriteriaAndFilterType('All')}}>
                   <Icon name='home' size={20} color={'#FFF'}></Icon>
-                  <Text style={{color: '#FFF',fontSize: 16}}>All</Text>
+                  <Text style={styles.defaultTextAll}>All</Text>
                 </TouchableOpacity>
           }
           {
             this.props.filterType==='IsRead'
-            ? <TouchableOpacity style={{flex: 1,alignItems: 'center',backgroundColor: '#FFF'}} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('IsRead')}}>
+            ? <TouchableOpacity style={styles.color} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('IsRead')}}>
                 <Icon name='unread' size={20} color={'#43B1CC'}></Icon>
-                <Text style={{color: '#43B1CC'}}>Unread</Text>
+                <Text style={styles.focusText}>Unread</Text>
               </TouchableOpacity>
-            : <TouchableOpacity style={{flex: 1,alignItems: 'center',backgroundColor: '#43B1CC'}}onPress={() => {this.props.searchMessageByCriteriaAndFilterType('IsRead')}}>
+            : <TouchableOpacity style={styles.defaultColor}onPress={() => {this.props.searchMessageByCriteriaAndFilterType('IsRead')}}>
                 <Icon name='unread' size={20} color={'#FFF'}></Icon>
-                <Text style={{color: '#FFF'}}>Unread</Text>
+                <Text style={styles.defaultText}>Unread</Text>
               </TouchableOpacity>
           }
           {
             this.props.filterType==='Marked'
-            ? <TouchableOpacity style={{flex: 1,alignItems: 'center',backgroundColor: '#FFF'}} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('Marked')}}>
+            ? <TouchableOpacity style={styles.color} onPress={() => {this.props.searchMessageByCriteriaAndFilterType('Marked')}}>
                 <Icon name='star' size={20} color={'#43B1CC'}></Icon>
-                <Text style={{color: '#43B1CC'}}>Flagged</Text>
+                <Text style={styles.focusText}>Flagged</Text>
               </TouchableOpacity>
-            : <TouchableOpacity style={{flex: 1,alignItems: 'center',backgroundColor: '#43B1CC'}}onPress={() => {this.props.searchMessageByCriteriaAndFilterType('Marked')}}>
+            : <TouchableOpacity style={styles.defaultColor}onPress={() => {this.props.searchMessageByCriteriaAndFilterType('Marked')}}>
                 <Icon name='star' size={20} color={'#FFF'}></Icon>
-                <Text style={{color: '#FFF'}}>Flagged</Text>
+                <Text style={styles.defaultText}>Flagged</Text>
               </TouchableOpacity>
           }
         </View>
   }
 }
-
-
-
-const styles = StyleSheet.create({
-  rowFront: {
-		alignItems: 'center',
-		backgroundColor: '#FFF',
-		borderBottomColor: 'black',		
-		justifyContent: 'center'		
-	}
-});
-
-
 
 export default FilterFooterView;

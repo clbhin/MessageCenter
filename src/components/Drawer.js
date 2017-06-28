@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {MessageFormatDate} from './../utils/dateTimeHelper';
 import Icon from 'react-native-vector-icons/Entypo';
-
+import styles from './../styles/Drawer';
 
 class DrawerModel extends Component{
   static propTypes = {
@@ -20,13 +20,7 @@ class DrawerModel extends Component{
 render() {
   return <TouchableOpacity onPress={this.props.transformMessage.bind(this,this.props.messageData)}>
     <View
-      style={{
-      flex: 1,
-      flexDirection: 'row',
-      marginLeft: 10,
-      marginRight: 10 ,
-      backgroundColor: '#fff'    
-    }}>
+      style={styles.icon}>
       <View style={circle}>
       
           {this.props.messageData && this.props.messageData =='Inbox'?<Icon name='box' size={30} color={'#868A8F'} />:
@@ -36,18 +30,9 @@ render() {
 
       </View>
       <View
-        style={{
-        flex: 3,
-        marginLeft: 10,
-        borderBottomColor: '#ddd',
-        borderBottomWidth: 1,
-        paddingBottom: 4,
-        alignItems: 'flex-start', 
-        justifyContent: 'center' 
-      }}
-        
-      >     
-        <Text  style={{color: '#32363C', fontSize:16}}>
+        style={styles.messageView}
+        >     
+        <Text  style={styles.messageText}>
             {this.props.messageData}
         </Text>        
       </View>
