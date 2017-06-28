@@ -1,84 +1,80 @@
 import {StyleSheet} from 'react-native';
 
  export default StyleSheet.create({
-container: {
+ container: {
     flex: 1,
     backgroundColor: 'white',
     paddingTop: 10
   },
- drawerAndroid: {
-    backgroundColor: '#fff', 
-    paddingBottom: 260
-  },   
-title: {
+ title: {
     flexDirection: 'row', 
     paddingLeft: 10, 
     paddingRight: 10, 
     borderBottomWidth: 1,
     borderBottomColor: '#ccc'
-  }, 
-image: {
+  },
+  image: {
     width: 30, 
     height: 40 
   },
-archive:{
+  draft: {
     flex: 1, 
     marginLeft: 20 ,
     flexDirection:'row',
     alignItems:'center'
-},
-archiveText:{ 
-    fontSize: 18,
-     color: 'black' 
-    },
-iconPlus: {
+  },
+  draftText:{ 
+      fontSize: 18, 
+      color: 'black' 
+  },
+   iconPlus: {
     flex: 1, 
     alignItems: 'center', 
     justifyContent: 'center', 
     marginRight: 7, 
     width: 30
   },
-searchContainer:{
-    flexDirection: 'row',
-    backgroundColor: '#ccc',
+   searchContainer: {
+    flexDirection: 'row', 
+    backgroundColor: '#ccc', 
     height: 24, 
     borderRadius: 12, 
     marginLeft: 10, 
     marginRight: 10, 
-    marginTop: 6 
-},
- searchView: {
+    marginTop: 6
+  },
+    searchView: {
     flexDirection: 'row', 
     flex: 3, 
     alignItems: 'center', 
     justifyContent: 'center'
-  }, 
-searchTextInput:{ 
+  },
+   searchTextInput: {
     flex: 10, 
     padding: 0, 
     paddingLeft: 10, 
-    color: 'black' 
-},
-swipeListViewContainer: {
+    color: 'black'
+  },
+    swipeListViewContainer: {
     paddingTop: 10, 
     flex: 1 
   },
-loadMoreText: {
-    fontSize:16, 
-    color: '#2A83F2', 
-    fontFamily: 'sans-serif-condensed'
-  },
-loadMoreContainer: {
+  loadMoreContainer: {
     justifyContent: 'center', 
     alignItems: 'center' ,
     height: 46
   }, 
- noMoreMessage: {
+  loadMoreText: {
+    fontSize:16, 
+    color: '#2A83F2', 
+    fontFamily: 'sans-serif-condensed'
+  },
+   noMoreMessage: {
     color: '#F05D5D',
     fontSize:16 ,
     fontFamily: 'sans-serif-condensed'
   },
-rowBack: {
+  rowBack: {
     alignItems: 'center',
     backgroundColor: '#DDD',
     flex: 1,
@@ -102,6 +98,8 @@ rowBack: {
     backgroundColor: '#F5F5F5',
     right: 75
   },
+
+
   backRightBtnRightDelete: {
     color: '#EE3B3B',
     marginTop: 5,

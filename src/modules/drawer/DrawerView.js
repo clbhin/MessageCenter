@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import DrawerModel from './../../components/Drawer';
 import Icon from 'react-native-vector-icons/Entypo';
+
 const {height,width} = Dimensions.get('window'); 
 class DrawerView extends Component {
 

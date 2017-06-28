@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { getNames, spliceMessage} from '../../services/mcServices';
 import lodash from 'lodash';
 import ModalComponent from './../../components/Modal';
+import styles from './../../styles/CreateMessageView';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -187,23 +188,23 @@ class CreateMessageView extends Component {
   render() {
     return (
       <View>
-        <View style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd' }}>
-          <TouchableOpacity onPress={() => this.back()} style={{ flex: 1 }}>
+        <View style={styles.messageHead}>
+          <TouchableOpacity onPress={() => this.back()} style={styles.flex}>
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
-          <Text style={{ flex: 5, textAlign: 'left' }}>CreateMessage</Text>
+          <Text style={styles.messageTitile}>CreateMessage</Text>
           {this.state.To[0]==undefined || this.state.To[0].Id == ''? 
             <View style={{flex: 1}}>
             <Icon name='direction' size={30} color={'grey'} />
             </View>:
-          <TouchableOpacity style={{ flex: 1 }} onPress={() => this.send()}>
+          <TouchableOpacity style={styles.flex} onPress={() => this.send()}>
             <Icon name='direction' size={30} color={'orange'} />
           </TouchableOpacity>
           }
         </View>
-        <View style={{ marginLeft: 10, marginTop: 10, marginRight: 10, flexDirection: 'column' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-            <Text style={{ fontSize: 16, textAlign: 'center' }}>To:</Text>
+        <View style={styles.messageContent}>
+          <View style={styles.messageBorderBottom}>
+            <Text style={styles.messageText}>To:</Text>
             <TextInput value={this.state.ToNames} onChangeText={(PersonName) => {
               this.setState({
                 'To': {
@@ -218,8 +219,8 @@ class CreateMessageView extends Component {
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-            <Text style={{ fontSize: 16, textAlign: 'center' }}>Cc:</Text>
+          <View style={styles.messageBorderBottom}>
+            <Text style={styles.messageText}>Cc:</Text>
             <TextInput value={this.state.CcNames} onChangeText={(text) => {
               this.setState({
                 'Cc': {
@@ -228,26 +229,26 @@ class CreateMessageView extends Component {
                 }
               })
             }}
-              style={{ flex: 1 }}>
+              style={styles.flex}>
             </TextInput>
             <TouchableOpacity onPress={() => this.selectName('CcNames')} >
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-            <Text style={{ fontSize: 16, textAlign: 'center' }}>Bcc:</Text>
-            <TextInput value={this.state.BccNames} style={{ flex: 1 }}></TextInput>
+          <View style={styles.messageBorderBottom}>
+            <Text style={styles.messageText}>Bcc:</Text>
+            <TextInput value={this.state.BccNames} style={styles.flex}></TextInput>
             <TouchableOpacity onPress={() => this.selectName('BccNames')}>
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-            <Text style={{ fontSize: 16, textAlign: 'center' }}>Subject:</Text>
-            <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={{ flex: 1 }}></TextInput>
+          <View style={styles.messageBorderBottom}>
+            <Text style={styles.messageText}>Subject:</Text>
+            <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={styles.flex}></TextInput>
           </View>
           <View style={{ flexDirection: 'column', height: 300 }}>
-            <TextInput style={{ flex: 1, borderColor: 'gray', borderLeftWidth: 0, borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0.1, textAlignVertical: 'top' }}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
-            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={{height:400}}/>}
+            <TextInput style={styles.messageBody}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
+            {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={styles.height}/>}
           </View>
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />
@@ -255,13 +256,5 @@ class CreateMessageView extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-});
 
 export default CreateMessageView;

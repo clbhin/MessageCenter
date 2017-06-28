@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { MessageFormatAllDate } from '../../utils/dateTimeHelper';
 import { getNames, formatStyle} from '../../services/mcServices';
 import lodash from 'lodash';
+import styles from './../../styles/MessageDetailView';
 
 /**
  * Sample view to demonstrate StackNavigator
@@ -120,40 +121,40 @@ class MessageDetailView extends Component {
   render() {
     return (
       <View>
-        <View style={{ flexDirection: 'row', height: 50, borderBottomWidth: 1, borderBottomColor: '#ccc', alignItems: 'center', backgroundColor: '#39babd', paddingLeft: 10, paddingRight: 20 }}>
-          <TouchableOpacity onPress={() => this.back()} style={{ flex: 1 }}>
+        <View style={styles.messageHead}>
+          <TouchableOpacity onPress={() => this.back()} style={styles.flex}>
             <Icon name='arrow-left' size={30} color={'orange'} />
           </TouchableOpacity>
-          <Image style={{ width: 30, height: 30 }} source={require('./../../../images/user_1.png')}></Image>
-          <Text style={{ flex: 5, textAlign: 'left', marginLeft: 5 }}>{this.state.currentMessage.Message && this.state.currentMessage.Message.From.PersonName}</Text>
+          <Image style={styles.image} source={require('./../../../images/user_1.png')}></Image>
+          <Text style={styles.messageName}>{this.state.currentMessage.Message && this.state.currentMessage.Message.From.PersonName}</Text>
           {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark === 'Marked') ? <Icon name='star' size={18} color={'orange'} /> : <Icon name='star-outlined' size={18} color={'#ccc'} />}
         </View>
-        <View style={{ marginLeft: 10, marginTop: 10, marginRight: 10, flexDirection: 'column' }}>
-          <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
-          {getNames(this.state.currentMessage.Message.Cc) ? <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Cc:{getNames(this.state.currentMessage.Message.Cc)}</Text> : null}
-          {getNames(this.state.currentMessage.Message.Bcc) ? <Text style={{ fontSize: 16, minHeight: 30, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text> : null}
-          <Text style={{ fontSize: 16, height: 20, justifyContent: 'center' }}>Subject:{this.state.currentMessage.Message.Subject}</Text>
-          <Text style={{ fontSize: 10, height: 20, justifyContent: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
+        <View style={styles.messageContent}>
+          <Text style={styles.messageBorderBottom}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
+          {getNames(this.state.currentMessage.Message.Cc) ? <Text style={styles.messageBorderBottom}>Cc:{getNames(this.state.currentMessage.Message.Cc)}</Text> : null}
+          {getNames(this.state.currentMessage.Message.Bcc) ? <Text style={styles.messageBorderBottom}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text> : null}
+          <Text style={styles.messageCenter}>Subject:{this.state.currentMessage.Message.Subject}</Text>
+          <Text style={styles.messageDate}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
           <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:400}}/>
         </View>
         <View style={{ height: 40, borderRadius: 20, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', position: 'absolute', top: this.screenSize.height - 80, left: 0, right: 0, opacity: 0.8 }}>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.reply.bind(this, this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria)}>
+          <TouchableOpacity style={styles.messageBottomCenter} onPress={this.reply.bind(this, this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria)}>
             <Icon name='reply' size={20} color={'blue'} />
             <Text>REPLY</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={this.replyAll.bind(this, this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria)}>
+          <TouchableOpacity style={styles.messageBottomCenter} onPress={this.replyAll.bind(this, this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria)}>
             <Icon name='reply-all' size={20} color={'blue'} />
             <Text>REPLYALL</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.forward(this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria) }}>
+          <TouchableOpacity style={styles.messageBottomCenter} onPress={() => { this.forward(this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria) }}>
             <Icon name='forward' size={20} color={'blue'} />
             <Text>FORWARD</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => { this.deleteMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria) }}>
+          <TouchableOpacity style={styles.messageBottomCenter} onPress={() => { this.deleteMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria) }}>
             <Icon name='trash' size={20} color={'blue'} />
             <Text>DELETE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flexDirection: 'column', alignItems: 'center' }} onPress={() => this.markMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria)}>
+          <TouchableOpacity style={styles.messageBottomCenter} onPress={() => this.markMessage(this.state.currentMessage.UserMessage,this.props.navigation.state.params.messageSearchCriteria)}>
             {(this.state.currentMessage.UserMessage && this.state.currentMessage.UserMessage.Mark === 'Marked') ? <Icon name='star' size={20} color={'orange'} /> : <Icon name='star-outlined' size={20} color={'#ccc'} />}
             <Text>MARK</Text>
           </TouchableOpacity>
@@ -163,13 +164,5 @@ class MessageDetailView extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-});
 
 export default MessageDetailView;

@@ -167,8 +167,8 @@ class ArchiveView extends Component {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.searchView}>
-          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
+        <View style={styles.searchContainer}>
+          <View style={styles.searchView}>
             <TextInput placeholder='Search' style={styles.searchTextInput} underlineColorAndroid="transparent" value={this.state.criteria}
               onChangeText={(criteria) => this.setState({ criteria })} />
             <TouchableOpacity onPress={() => { this.searchMessage() }}>
@@ -219,7 +219,5 @@ class ArchiveView extends Component {
     );
   }
 }
-
-
 
 export default ArchiveView;
