@@ -14,7 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/Entypo';
 import CheckBox from 'react-native-check-box';
 import lodash from 'lodash';
-
+import styles from './../../styles/RecipientView';
 
 class RecipientView extends Component {
   static displayName = 'RecipientView';
@@ -65,6 +65,7 @@ class RecipientView extends Component {
   componentWillMount() {
     if(lodash.isEmpty(this.props.navigation.state.params)){this.data = [];}
     else if(this.props.navigation.state.params[0]===undefined){this.data = [];}
+    else if(this.props.navigation.state.params[0].Id === ''){this.data = [];}
     else{
       this.data = this.props.navigation.state.params;
       this.data.map((item,i)=>{this.data[i].checked = true})
@@ -96,7 +97,7 @@ class RecipientView extends Component {
   render() {
     return (
       <View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#ccc', marginTop: 10, paddingBottom: 4 }}>
+        <View style={styles.RecipientView}>
           <TouchableOpacity onPress={() => this.props.navigation.goBack(null)}>
             <Icon name='cross' size={30}></Icon>
           </TouchableOpacity>
@@ -105,9 +106,9 @@ class RecipientView extends Component {
             <Icon name='check' size={30}></Icon>
           </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: 'row', backgroundColor: '#ccc', height: 24, borderRadius: 12, marginLeft: 10, marginRight: 10, marginTop: 6 }}>
-          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
-            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }}  underlineColorAndroid="transparent" value={this.state.criteria}
+        <View style={styles.searchContainer}>
+          <View style={styles.searchView}>
+            <TextInput placeholder='Search' style={styles.searchTextInput}  underlineColorAndroid="transparent" value={this.state.criteria}
               onChangeText={(criteria) => this.setState({ criteria })} />
             <TouchableOpacity onPress={() => { this.searchUsers() }}>
               <Icon name='magnifying-glass' size={24}></Icon>
@@ -118,10 +119,10 @@ class RecipientView extends Component {
           dataSource={this.state.dataSource}
           enableEmptySections
           renderRow={(rowData) =>{
-            return <View style={{ flexDirection: 'row', marginLeft: 10 }}>
-              <Image style={{ width: 40, height: 40, borderRadius: 20 }} source={require('../../../images/headportrait.png')}></Image>
-              <Text style={{ flex: 2, marginLeft: 10, marginTop: 1, alignSelf: 'center', textAlign: 'center' }}>{rowData.PersonName}</Text>
-              <CheckBox style={{ flex: 1, padding: 0, alignSelf: 'center' }} onClick={() => this.selectRecipient(rowData)} isChecked={rowData.checked} />
+            return <View style={styles.recipientData}>
+              <Image style={styles.image} source={require('../../../images/headportrait.png')}></Image>
+              <Text style={styles.recipientName}>{rowData.PersonName}</Text>
+              <CheckBox style={styles.selectRecipient} onClick={() => this.selectRecipient(rowData)} isChecked={rowData.checked} />
             </View>;
           }
           } />

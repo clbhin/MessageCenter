@@ -10,7 +10,7 @@ import {
 import {MessageFormatDate} from './../utils/dateTimeHelper';
 import Icon from 'react-native-vector-icons/Entypo';
 import {getNames,formatLabelStyle} from '../services/mcServices';
-
+import styles from './../styles/Message';
 
 class MessageView extends Component{
   constructor(props) {
@@ -27,50 +27,30 @@ render() {
   let rowMap = this.props.rowMap;  
   return <TouchableOpacity activeOpacity={1} 
     onPress={()=>{this.props.transformMessage(this.props.messageData);rowMap[`${secId}${rowId}`].closeRow()}} style={styles.rowFront}>
-    <View style={{flexDirection: 'row',marginLeft: 4,marginRight: 10}}>
-      <View style={{flexDirection:'row',alignItems:'center'}}>
+    <View style={styles.messageView}>
+      <View style={styles.messageTitle}>
         {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.IsRead)?<View style={{height:8,width:8,borderRadius:4}}></View>:<View style={{height:8,width:8,borderRadius:4,backgroundColor:'#43B1CC'}}></View>}
-        <Image style={{width: 40,height: 40,borderRadius: 20,marginLeft:6}}
+        <Image style={styles.messageImage}
           source={require('./../../images/headportrait.png')}>
         </Image>
       </View>
-      <View style={{flex: 3,marginLeft: 10,borderBottomColor: '#ddd',borderBottomWidth: 1,paddingBottom: 4}}>
-        <View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
-          <View style={{flexDirection:'row',alignItems:'center'}}>
+      <View style={styles.messageContent}>
+        <View style={styles.messageBody}>
+          <View style={styles.messageType}>
             {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.Type==='Sent' || (this.props.messageData.UserMessage && this.props.messageData.UserMessage.Type==='Draft'))?<Text style={{fontSize: 18,overflow:'hidden'}}>{getNames(this.props.messageData.Message.To)}</Text>:<Text style={{fontSize: 18,overflow:'hidden'}}>{this.props.messageData.Message.From.PersonName}</Text>}
             {(this.props.messageData.UserMessage && this.props.messageData.UserMessage.Mark==='Marked')?<Icon name='star' size={18} color={'orange'}/>:null}
           </View>
           <Text>{MessageFormatDate(this.props.messageData.Message.Timestamp)}</Text>
         </View>
-        <Text style={{fontSize: 14}}>{this.props.messageData.Message.Subject}</Text>
-        <View style={{height:14,overflow:'hidden'}}>
-          {(this.props.messageData.Message && this.props.messageData.Message.MessageBody)?<Text style={{fontSize: 14}}>{formatLabelStyle(this.props.messageData.Message.MessageBody)}</Text>:null}  
+        <Text style={styles.messageText}>{this.props.messageData.Message.Subject}</Text>
+        <View style={styles.messageData}>
+          {(this.props.messageData.Message && this.props.messageData.Message.MessageBody)?<Text style={styles.messageText}>{formatLabelStyle(this.props.messageData.Message.MessageBody)}</Text>:null}  
         </View>
       </View>
     </View>
   </TouchableOpacity>
   }
 }
-const circle = {
-  borderWidth: 0,
-  width: 60,
-  height: 60,
-  borderRadius: 30,
-  justifyContent:'center',
-  alignItems:'center',
-  overflow:'hidden'
-};
-
-
-const styles = StyleSheet.create({
-  rowFront: {
-		alignItems: 'center',
-		backgroundColor: '#FFF',
-		borderBottomColor: 'black',		
-		justifyContent: 'center'		
-	}
-});
-
 
 
 export default MessageView;

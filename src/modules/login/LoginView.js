@@ -10,8 +10,8 @@ import {
     Dimensions,
     Picker
 } from 'react-native';
-const {height,width} = Dimensions.get('window'); 
 import lodash from 'lodash';
+import styles from './../../styles/LoginView';
 
 class LoginView extends Component {
     constructor(props) {
@@ -64,11 +64,11 @@ class LoginView extends Component {
                     <Image style={styles.logoImage} source={require('./../../../images/feisystemslogo.png')} />
                 </View>            
                 <View style={styles.wrap}>                  
-                    <Picker  style={{width: 240,marginBottom: 5,}} mode="dropdown" selectedValue={this.state.user} 
+                    <Picker  style={styles.picker} mode="dropdown" selectedValue={this.state.user} 
                     onValueChange={(value)=>this.setState({user: value})} >
                     
                         {[<Picker.Item  label={'Please select user'} value={{}} key={1}  />, ...this.props.users&&this.props.users.map((user)=> 
-                            (<Picker.Item label={user.PersonName} style={{width: '150%'}} value={user} key={user.Id}/> )
+                            (<Picker.Item label={user.PersonName} style={styles.pickerItem} value={user} key={user.Id}/> )
                         )]}
                                                
                     </Picker>
@@ -84,56 +84,5 @@ class LoginView extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        height:height
-    },
-    userContainer: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    counter: {
-        color: 'white',
-        fontSize: 20,
-        textAlign: 'center'
-    },
-    welcome: {
-        textAlign: 'center',
-        color: 'black',
-        marginBottom: 5,
-        padding: 5
-    },
-    linkButton: {
-        textAlign: 'center',
-        color: '#CCCCCC',
-        marginBottom: 10,
-        padding: 5
-    },
-    loginText: {
-        fontSize: 20,
-        backgroundColor: '#eee'
-    },
-    logo :{
-        position: 'absolute',
-        top: '15%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    logoImage: {
-        width: 200,
-        height: 80
-    },
-    wrap: {
-        position: 'absolute',
-        top: '50%',
-        left: '20%',
-        backgroundColor: '#fff'
-    }
-});
 
 export default LoginView;

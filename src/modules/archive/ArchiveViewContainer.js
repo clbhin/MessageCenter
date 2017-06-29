@@ -8,7 +8,7 @@ export default connect(
   state => ({
     value: state.getIn(['archive', 'value'])&& state.getIn(['archive', 'value']).toJS?state.getIn(['archive', 'value']).toJS():state.getIn(['archive', 'value']),
     userInfo: state.getIn(['login', 'userInfo'])&& state.getIn(['login', 'userInfo']).toJS?state.getIn(['login', 'userInfo']).toJS():state.getIn(['login', 'userInfo']),
-    loadMore: state.getIn(['inbox', 'loadMore'])
+    loadMore: state.getIn(['archive', 'loadMore'])
   }),
   dispatch => {
     return {

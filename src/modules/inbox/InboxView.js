@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import LoadMoreFooter from './../../components/LoadMoreFooter';
 import {combineCriteria} from '../../services/mcServices';
 import FilterFooterView from '../../components/FilterFooter';
+import styles from './../../styles/InboxView';
 
 class InboxView extends Component {
   constructor(props) {
@@ -108,8 +109,9 @@ class InboxView extends Component {
   }
 
   createMessage() {
-    let data = {};
-    this.props.navigate({ routeName: 'CreateMessageStack', params: data });
+    let messageSearchCriteria = combineCriteria(this);
+    let currentMessage = {};
+    this.props.navigate({ routeName: 'CreateMessageStack', params: {currentMessage,messageSearchCriteria} });
   }
 
   reloadData() {
@@ -168,29 +170,29 @@ class InboxView extends Component {
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={() => navigationView}
         ref={'DRAWER'}
-        style={{ backgroundColor: '#fff', paddingBottom: 260 }}
+        style={styles.drawerAndroid}
       >
-        <View style={{ flexDirection: 'row', paddingLeft: 10, paddingRight: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
+        <View style={styles.title}>
           <TouchableOpacity onPress={() => { this.openDrawer() }}>
-            <Image style={{ width: 30, height: 40 }} source={require('./../../../images/headbar.png')}></Image>
+            <Image style={styles.image} source={require('./../../../images/headbar.png')}></Image>
           </TouchableOpacity>
-          <View style={{ flex: 1, marginLeft: 20 ,flexDirection:'row',alignItems:'center'}}>
-            <Text style={{ fontSize: 18, color: 'black',flex:3 }}>Inbox</Text>
-            <View style={{ flex:4,flexDirection:'row'}}>
-              <Text style={{fontSize: 12,textAlign:'right',fontWeight:'bold'}}>Welcome, </Text>
-              <Text style={{fontSize: 12,textAlign:'right',fontWeight:'bold',color:'#43B1CC'}}>{this.props.userInfo.PersonName}</Text>
+          <View style={styles.inbox}>
+            <Text style={styles.inboxText}>Inbox</Text>
+            <View style={styles.userDisplay}>
+              <Text style={styles.welcome}>Welcome, </Text>
+              <Text style={styles.displayPersonName}>{this.props.userInfo.PersonName}</Text>
             </View>
             
           </View>
-          <View style={{}}>
-            <TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginRight: 7, width: 30 }} onPress={() => { this.createMessage() }}>
+          <View>
+            <TouchableOpacity style={styles.iconPlus} onPress={() => { this.createMessage() }}>
               <Icon name='plus' size={20} color={'#33373D'}></Icon>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', backgroundColor: '#ccc', height: 24, borderRadius: 12, marginLeft: 10, marginRight: 10, marginTop: 6 }}>
-          <View style={{ flexDirection: 'row', flex: 3, alignItems: 'center', justifyContent: 'center', }}>
-            <TextInput placeholder='Search' style={{ flex: 10, padding: 0, paddingLeft: 10, color: 'black' }} underlineColorAndroid="transparent" value={this.state.criteria}
+        <View style={styles.searchContainer}>
+          <View style={styles.searchView}>
+            <TextInput placeholder='Search' style={styles.searchTextInput} underlineColorAndroid="transparent" value={this.state.criteria}
               onChangeText={(criteria) => this.setState({ criteria })} />
             <TouchableOpacity onPress={() => { this.searchMessage() }}>
               <Icon name='magnifying-glass' size={24}></Icon>
@@ -201,7 +203,7 @@ class InboxView extends Component {
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={() => { this.reloadData() }}
             />}>
-          <SwipeListView style={{ paddingTop: 10, flex: 1 }}
+          <SwipeListView style={styles.swipeListViewContainer}
             dataSource={this.state.dataSource}
             renderRow={(rowData, secId, rowId, rowMap) =>
               <MessageView messageData={rowData} secId={secId} rowId={rowId} rowMap={rowMap} transformMessage={this.transformMessage} />
@@ -233,8 +235,8 @@ class InboxView extends Component {
             closeOnScroll={true}
           //renderFooter={()=>{return this.renderFooter()}}             
           />
-          <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' ,height: 46}} onPress={() => this.loadMore()}>
-            {this.props.loadMore ? <Text style={{fontSize:16, color: '#2A83F2', fontFamily: 'sans-serif-condensed'}}>Load more </Text> : <Text style={{color: '#F05D5D',fontSize:16 ,fontFamily: 'sans-serif-condensed'}}>No More Message </Text>}
+          <TouchableOpacity style={styles.loadMoreContainer} onPress={() => this.loadMore()}>
+            {this.props.loadMore ? <Text style={styles.loadMoreText}>Load more </Text> : <Text style={styles.noMoreMessage}>No More Message </Text>}
           </TouchableOpacity>
         </ScrollView>
         <FilterFooterView filterType={this.state.filterType}  searchMessageByCriteriaAndFilterType={(filterType)=>this.searchMessageByCriteriaAndFilterType(filterType)} />
@@ -254,86 +256,5 @@ const circle = {
   alignItems: 'center',
   overflow: 'hidden'
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingTop: 10
-  },
-  userContainer: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  userProfilePhoto: {
-    ...circle,
-    alignSelf: 'center'
-  },
-  counterButton: {
-    ...circle,
-    backgroundColor: '#349d4a',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20
-  },
-  counter: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center'
-  },
-  welcome: {
-    textAlign: 'center',
-    color: 'black',
-    marginBottom: 5,
-    padding: 5
-  },
-  linkButton: {
-    textAlign: 'center',
-    color: '#CCCCCC',
-    marginBottom: 10,
-    padding: 5
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#DDD',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75
-  },
-  backRightBtnRight: {
-    backgroundColor: '#F5F5F5',
-    right: 0
-  },
-  backRightBtnLeft: {
-    backgroundColor: '#F5F5F5',
-    right: 75
-  },
-  backTextWhite: {
-    color: '#FFF'
-  },
-  loadMessage: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backRightBtnRightDelete: {
-    color: '#EE3B3B',
-    marginTop: 5,
-    fontSize: 12
-  },
-  backRightBtnRightMark: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#33373D'
-  }
-});
 
 export default InboxView;
