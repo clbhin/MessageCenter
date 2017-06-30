@@ -61,7 +61,28 @@ import {StyleSheet} from 'react-native';
     },
     messageBottomCenter:{ 
         flexDirection: 'column',
-         alignItems: 'center' 
+        alignItems: 'center' 
     },
-    
+    attachmentContent: {
+        
+    },
+    scrollView: {
+        height: 300,
+    },
+    horizontalScrollView: {
+        height: 100,
+    },
+    attachmentView: {
+        backgroundColor: '#DDD',
+        width: 150,
+        marginLeft: 5,
+        marginRight: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#DDD'
+    },
+    attachmentTouch: {
+        width: 150,
+        height: 100
+    }
  });

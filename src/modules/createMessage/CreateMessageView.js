@@ -10,7 +10,8 @@ import {
   ListView,
   Alert,
   WebView,
-  NativeModules
+  NativeModules,
+  ScrollView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -217,7 +218,7 @@ class CreateMessageView extends Component {
                       if (!sameFile) {
                         this.setState({files: [...this.state.files, file]});
                       } else {
-                        Alert.alert( sameFile.fileName + ' is in attachments.\n\rPlease select another file.', error, [{text: 'OK'}], {
+                        Alert.alert( sameFile.fileName + ' is in attachments.\nPlease select another file.', error, [{text: 'OK'}], {
                           cancelable: true
                         });
                       }
@@ -281,22 +282,6 @@ class CreateMessageView extends Component {
               <Icon name='circle-with-plus' size={30} color={'#007FFB'} />
             </TouchableOpacity>
           </View>
-          {this.state.files.length > 0 ? 
-            <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-              <Text style={{ fontSize: 16, textAlign: 'center' }}>Attachments:</Text>
-              {this.state.files.map((file, key) => {
-                return <View key={key} style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-                        <Text>{file.fileName}</Text>
-                        <TouchableOpacity onPress={() => {
-                          this.setState({files: 
-                              lodash.filter(this.state.files, function(file, k){ return k !== key; })
-                            })
-                          }}
-                        >
-                          <Icon name='circle-with-minus' size={30} color={'#007FFB'} />
-                        </TouchableOpacity>
-                      </View>})}
-            </View> : null}
           <View style={styles.messageBorderBottom}>
             <Text style={styles.messageText}>Subject:</Text>
             <TextInput value={this.state.Subject} onChangeText={(Subject) => { this.setState({ Subject }) }} style={styles.flex}></TextInput>
@@ -305,6 +290,37 @@ class CreateMessageView extends Component {
             <TextInput style={styles.messageBody}  onChangeText={(text) => this.setState({ 'MessageBody': text })} value={this.state.MessageBody} multiline={true} />
             {lodash.isEmpty(this.state.LastMessageBody) ? null : <WebView source={{html: this.state.LastMessageBody}} style={styles.height}/>}
           </View>
+          {this.state.files.length > 0 ? 
+          <View>
+            <ScrollView
+              horizontal={true}
+              style={[styles.scrollView, styles.horizontalScrollView]}
+            >
+            {this.state.files.map((file, i) =>
+              <View key = {i} style={styles.attachmentView}>
+                <TouchableOpacity
+                  style={styles.attachmentTouch}
+                  onPress={() => {
+                    Alert.alert(
+                      '',
+                      'Remove this file?',
+                      [
+                        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                        {text: 'OK', onPress: () => 
+                            this.setState({files: 
+                              lodash.filter(this.state.files, function(file, k){ return k !== i; })
+                            })
+                        }
+                      ]
+                    );
+                  }}
+                >
+                  <Text style={{ margin: 10 }}>{file.fileName}</Text>
+                </TouchableOpacity>
+              </View>
+            )}  
+            </ScrollView>
+         </View> : null}
         </View>
         <ModalComponent isModalVisible={this.state.isModalVisible} hideModal={this.hideModal} deleteModal={this.deleteModal} save={this.save} />
       </View>

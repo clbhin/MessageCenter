@@ -133,17 +133,28 @@ class MessageDetailView extends Component {
           <Text style={styles.messageBorderBottom}>To:{getNames(this.state.currentMessage.Message.To)}</Text>
           {getNames(this.state.currentMessage.Message.Cc) ? <Text style={styles.messageBorderBottom}>Cc:{getNames(this.state.currentMessage.Message.Cc)}</Text> : null}
           {getNames(this.state.currentMessage.Message.Bcc) ? <Text style={styles.messageBorderBottom}>Bcc:{getNames(this.state.currentMessage.Message.Bcc)}</Text> : null}
-          {this.state.currentMessage.Message.AttachmentFiles.length > 0 ?
-            <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-              <Text style={{ fontSize: 16, height: 20, justifyContent: 'center' }}>Attachments:</Text>
-              {this.state.currentMessage.Message.AttachmentFiles.map((file, key) => {
-                return <View key={key} style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-                        <Text>{file.FileName}</Text>
-                      </View>})}
-            </View> : null}
           <Text style={styles.messageCenter}>Subject:{this.state.currentMessage.Message.Subject}</Text>
           <Text style={styles.messageDate}>Date:{MessageFormatAllDate(this.state.currentMessage.Message.Timestamp)}</Text>
-          <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:400}}/>
+          {this.state.currentMessage.Message.AttachmentFiles.length > 0 ? 
+          <View style={styles.attachmentContent}>
+            <ScrollView
+              horizontal={true}
+              style={[styles.scrollView, styles.horizontalScrollView]}
+            >
+            {this.state.currentMessage.Message.AttachmentFiles.map((file, i) =>
+              <View key = {i} style={styles.attachmentView}>
+                <TouchableOpacity
+                  style={styles.attachmentTouch}
+                  onPress={() => {
+                  }}
+                >
+                  <Text style={{ margin: 10 }}>{file.FileName}</Text>
+                </TouchableOpacity>
+              </View>
+            )}  
+            </ScrollView>
+          </View> : null}
+          <WebView source={{html: this.state.currentMessage.Message.MessageBody}} style={{minHeight:340}}/>
         </View>
         <View style={{ height: 40, borderRadius: 20, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 24, paddingRight: 24, alignItems: 'center', position: 'absolute', top: this.screenSize.height - 80, left: 0, right: 0, opacity: 0.8 }}>
           <TouchableOpacity style={styles.messageBottomCenter} onPress={this.reply.bind(this, this.state.currentMessage, this.props.navigation.state.params.messageSearchCriteria)}>

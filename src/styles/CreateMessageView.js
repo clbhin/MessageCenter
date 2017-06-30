@@ -43,6 +43,25 @@ import {StyleSheet} from 'react-native';
     },
     height:{
         height:400
+    },
+    scrollView: {
+        height: 300,
+    },
+    horizontalScrollView: {
+        height: 120,
+    },
+    attachmentView: {
+        flex: 1,
+        backgroundColor: '#DDD',
+        width: 150,
+        marginLeft: 5,
+        marginRight: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#DDD'
+    },
+    attachmentTouch: {
+        width: 150,
+        height: 120
     }
-
  });
